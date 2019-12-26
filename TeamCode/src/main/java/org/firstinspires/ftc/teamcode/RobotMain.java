@@ -58,6 +58,12 @@ public class RobotMain {
     private double P, I, D;
     private double kP, kI, kD;
 
+    //Miscellaneous
+    public static final String VUFORIA_KEY = "Aa4qojf/////AAABmUtRp+oA10Tyg9NdvwIzzH4eVE09jioK/9lv2fPHeJLN4mXBj/AfGpZM/0ym7+uvZfeSNpIhhU3UJt" +
+            "Fl9JRatjump2m7urI4tq+M1FtU/sEdTD4uHJjGuoI4HW7BTvLvxNxuEQZ3f3sexDW8F8FJPOkkJHnbycwT1m+h7EQqjnwiySsMWeKoN/Fu2cGljvuZ5LAGpVVosB2plP" +
+            "1dtviSkJbGy7MsHmJjL/NqEv/fjuiFqlra9Y29n8oZRoDsvwJkHJw/oQIv4kpTRHMSKV6NZZeyRm46zsb7mFkW0yXDpANgWqCjvAJVPm5W5JTcq8IZqDUn0bJyQJu/F0" +
+            "OFbg2JsKHBcxNA1hasVyUxPrlIQCYc";
+
     public RobotMain(HardwareMap hardwareMap) {
         this.hardwareMap = hardwareMap;
         init(hardwareMap);
@@ -240,6 +246,41 @@ public class RobotMain {
         bottomRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
     }
 
+    /**
+     * @param degrees degree amount to turn
+     *                negative value = clockwise (about unit circle)
+     *                positive value = counterclockwise
+     * @param PID whether or not to use PID
+     */
+    public void rotateDegrees(double power, double degrees, boolean PID) {
+        //Convert degrees in terms of absolute angle
+        double requestedAngle = getAngle() + degrees;
+
+        //Ensure that requested angle is "in bounds"
+        if (requestedAngle < 0) {
+            requestedAngle += 360;
+        } else if (requestedAngle >= 360) {
+            requestedAngle -= 360;
+        }
+
+        //Call rotateTo() and pass in absolute angle
+        rotateTo(power, requestedAngle, PID);
+    }
+
+    /**
+     * @param degrees degree value to turn to
+     *                negative value = clockwise (about unit circle)
+     *                positive value = counterclockwise
+     * @param PID whether or not to use PID
+     */
+    public void rotateTo(double power, double degrees, boolean PID) {
+        if (PID) {
+
+        } else {
+
+        }
+    }
+
     //Gyro controls
     public double getAngle() {
         //Retrieve raw angle
@@ -277,6 +318,10 @@ public class RobotMain {
     }
 
     //Miscellaneous
+    /**
+     * @param inches distance in inches requested to convert
+     * @return number of ticks needed to travel x inches
+     */
     private int toTicks(double inches) {
         double rotations = inches / WHEEL_CIRCUMFRENCE;
         return (int) (rotations * TICKS_PER_ROTATION / GEAR_RATIO);
