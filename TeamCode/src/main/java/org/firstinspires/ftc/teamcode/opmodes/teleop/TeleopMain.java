@@ -40,7 +40,7 @@ public class TeleopMain extends OpMode {
 
     private RobotMain robot;
 
-    private final double ELEVATOR_ARM_POWER = 0.5;
+    private final double ELEVATOR_ARM_POWER = 0.25;
     private final double GRIPPER_SUCC_POWER = 0.5;
 
     @Override
