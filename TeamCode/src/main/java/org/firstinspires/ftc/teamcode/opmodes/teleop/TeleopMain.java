@@ -22,6 +22,7 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 
 import org.firstinspires.ftc.teamcode.RobotMain;
+import org.firstinspires.ftc.teamcode.subsystems.Subsystem;
 
 /**
  * This file contains an example of an iterative (Non-Linear) "OpMode".
@@ -44,12 +45,11 @@ public class TeleopMain extends OpMode {
 
     @Override
     public void init() {
-        robot = new RobotMain(hardwareMap);
+        robot = new RobotMain(hardwareMap, gamepad1, gamepad2);
     }
 
     @Override
     public void init_loop() {
-
     }
 
     @Override
@@ -60,6 +60,10 @@ public class TeleopMain extends OpMode {
 
     @Override
     public void loop() {
+        /*for (Subsystem subsystem : RobotMain.allSubsystems) {
+            subsystem.teleopTick();
+        }*/
+
         //Drivetrain controls
         robot.driveMecanum(-gamepad1.left_stick_y, gamepad1.left_stick_x, gamepad1.right_stick_x, false);
 
