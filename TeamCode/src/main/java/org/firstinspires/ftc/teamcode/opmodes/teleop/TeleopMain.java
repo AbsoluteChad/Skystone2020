@@ -54,7 +54,7 @@ public class TeleopMain extends OpMode {
 
     @Override
     public void start() {
-        telemetry.addData("GO GO GO GO GO GO", "You pressed play early didn't you (@vid_dude)?");
+        telemetry.addData("GO GO GO GO GO GO (AS)", "You pressed play early didn't you (@vid_dude)?");
         telemetry.update();
     }
 

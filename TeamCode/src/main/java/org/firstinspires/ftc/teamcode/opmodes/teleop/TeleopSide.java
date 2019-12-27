@@ -50,8 +50,8 @@ public class TeleopSide extends OpMode {
 
     @Override
     public void init() {
-        robot = new RobotMain(hardwareMap);
-    } //test
+        robot = new RobotMain(hardwareMap, gamepad1, gamepad2);
+    }
 
     /*
      * Code to run REPEATEDLY after the driver hits INIT, but before they hit PLAY
