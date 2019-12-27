@@ -72,10 +72,7 @@ public class TeleopSide extends OpMode {
      */
     @Override
     public void loop() {
-        robot.topLeft.setPower(-gamepad1.left_stick_y);
-        robot.bottomLeft.setPower(-gamepad1.left_stick_y);
-        robot.topRight.setPower(-gamepad1.left_stick_y);
-        robot.bottomRight.setPower(-gamepad1.left_stick_y);
+
     }
 
     /*
@@ -83,6 +80,6 @@ public class TeleopSide extends OpMode {
      */
     @Override
     public void stop() {
-        robot.driveTank(0, 0);
+
     }
 }

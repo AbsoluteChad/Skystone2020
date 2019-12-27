@@ -11,8 +11,8 @@ public class Gripper extends Subsystem {
     private static final Subsystem instance = new Gripper();
 
     //Declare CRServos
-    //public CRServo gripperClose;
-    //public CRServo gripperFar;
+    public CRServo gripperClose;
+    public CRServo gripperFar;
 
     //Declare constants
     private final double GRIPPER_SUCC_POWER = 0.5;
@@ -25,12 +25,13 @@ public class Gripper extends Subsystem {
     @Override
     public void subsystemInit(HardwareMap hardwareMap) {
         //Init CRServos
-        //gripperClose = hardwareMap.get(CRServo.class, "gripperClose");
-        //gripperFar = hardwareMap.get(CRServo.class, "gripperFar");
+        gripperClose = hardwareMap.get(CRServo.class, "gripperClose");
+        gripperFar = hardwareMap.get(CRServo.class, "gripperFar");
     }
 
     @Override
     public void teleopTick() {
+        //CRServo controls
         double gripperClosePower;
         double gripperFarPower;
         if (RobotMain.gamepad1.y || RobotMain.gamepad2.y) {
@@ -52,8 +53,8 @@ public class Gripper extends Subsystem {
      * @param gripperFarPower power applied to far compliant wheel
      */
     public void gripperSucc(double gripperClosePower, double gripperFarPower) {
-        //gripperClose.setPower(gripperClosePower);
-        //gripperFar.setPower(-gripperFarPower);
+        gripperClose.setPower(gripperClosePower);
+        gripperFar.setPower(-gripperFarPower);
     }
 
     /**

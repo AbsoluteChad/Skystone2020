@@ -22,6 +22,7 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 
 import org.firstinspires.ftc.teamcode.RobotMain;
+import org.firstinspires.ftc.teamcode.subsystems.DriveTrain;
 import org.firstinspires.ftc.teamcode.subsystems.Subsystem;
 
 /**
@@ -40,9 +41,6 @@ public class TeleopMain extends OpMode {
 
     private RobotMain robot;
 
-    private final double ELEVATOR_ARM_POWER = 0.25;
-    private final double GRIPPER_SUCC_POWER = 0.5;
-
     @Override
     public void init() {
         robot = new RobotMain(hardwareMap, gamepad1, gamepad2);
@@ -60,47 +58,17 @@ public class TeleopMain extends OpMode {
 
     @Override
     public void loop() {
-        /*for (Subsystem subsystem : RobotMain.allSubsystems) {
+        for (Subsystem subsystem : RobotMain.allSubsystems) {
             subsystem.teleopTick();
-        }*/
-
-        //Drivetrain controls
-        robot.driveMecanum(-gamepad1.left_stick_y, gamepad1.left_stick_x, gamepad1.right_stick_x, false);
-
-        //Elevator arm controls
-        if (gamepad1.dpad_up || gamepad2.dpad_up) {
-            robot.driveElevatorArm(ELEVATOR_ARM_POWER);
-        } else if (gamepad1.dpad_down || gamepad2.dpad_down) {
-            robot.driveElevatorArm(-ELEVATOR_ARM_POWER);
-        } else {
-            robot.driveElevatorArm(0);
         }
-
-        //Rotational arm controls
-        robot.driveRotationalArm(gamepad2.left_stick_y);
-
-        //Succ code
-        double gripperClosePower;
-        double gripperFarPower;
-        if (gamepad1.y || gamepad2.y) {
-            gripperClosePower = GRIPPER_SUCC_POWER;
-            gripperFarPower = GRIPPER_SUCC_POWER;
-        } else if (gamepad1.x || gamepad2.x) {
-            gripperClosePower = -GRIPPER_SUCC_POWER;
-            gripperFarPower = -GRIPPER_SUCC_POWER;
-        } else {
-            gripperClosePower = gamepad2.left_bumper ? -gamepad2.left_trigger : gamepad2.left_trigger;
-            gripperFarPower = gamepad2.right_bumper ? -gamepad2.right_trigger : gamepad2.right_trigger;
-        }
-        robot.gripperSucc(gripperClosePower, gripperFarPower);
     }
 
 
     @Override
     public void stop() {
-        robot.driveTank(0, 0);
+        /*driveTank(0, 0);
         robot.driveElevatorArm(0);
         robot.driveRotationalArm(0);
-        robot.gripperSucc(0, 0);
+        robot.gripperSucc(0, 0);*/
     }
 }

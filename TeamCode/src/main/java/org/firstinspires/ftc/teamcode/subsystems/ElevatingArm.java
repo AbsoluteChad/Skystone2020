@@ -12,9 +12,9 @@ public class ElevatingArm extends Subsystem {
     private static final ElevatingArm instance = new ElevatingArm();
 
     //Declare motors
-    /*public DcMotor elevatorArmLeft;
+    public DcMotor elevatorArmLeft;
     public DcMotor elevatorArmRight;
-    public DcMotor rotationalArm;*/
+    public DcMotor rotationalArm;
 
     //Declare constants
     private static final double VIDIPT_ELEVATOR_CONTROL = 0.5;
@@ -28,7 +28,7 @@ public class ElevatingArm extends Subsystem {
     @Override
     public void subsystemInit(HardwareMap hardwareMap) {
         //Init arm motors
-        /*elevatorArmLeft = hardwareMap.get(DcMotor.class, "elevatorArmLeft");
+        elevatorArmLeft = hardwareMap.get(DcMotor.class, "elevatorArmLeft");
         elevatorArmRight = hardwareMap.get(DcMotor.class, "elevatorArmRight");
         rotationalArm = hardwareMap.get(DcMotor.class, "rotationalArm");
 
@@ -42,7 +42,7 @@ public class ElevatingArm extends Subsystem {
         elevatorArmRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
         //Reverse left elevator motor
-        elevatorArmLeft.setDirection(DcMotorSimple.Direction.REVERSE);*/
+        elevatorArmLeft.setDirection(DcMotorSimple.Direction.REVERSE);
     }
 
     @Override
@@ -64,15 +64,15 @@ public class ElevatingArm extends Subsystem {
      * @param power requested power to drive elevator
      */
     public void driveElevatorArm(double power) {
-        //elevatorArmLeft.setPower(power * VIDIPT_ELEVATOR_ARM_CONTROL);
-        //elevatorArmRight.setPower(power * VIDIPT_ELEVATOR_ARM_CONTROL);
+        elevatorArmLeft.setPower(power * VIDIPT_ELEVATOR_CONTROL);
+        elevatorArmRight.setPower(power * VIDIPT_ELEVATOR_CONTROL);
     }
 
     /**
      * @param power requested power to drive rotational arm
      */
     public void driveRotationalArm(double power) {
-        //rotationalArm.setPower(power * VIDIPT_ROTATIONAL_ARM_CONTROL);
+        rotationalArm.setPower(power * VIDIPT_ROTATIONAL_ARM_CONTROL);
     }
 
     /**

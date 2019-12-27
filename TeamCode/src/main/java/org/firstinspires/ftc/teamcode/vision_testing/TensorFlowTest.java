@@ -105,9 +105,11 @@ public class TensorFlowTest extends LinearOpMode {
                 if (tfod != null) {
                     //Get all recognitions & filter out unwanted recognitions
                     List<Recognition> updatedRecognitions = tfod.getUpdatedRecognitions();
-                    for (int i = updatedRecognitions.size() - 1; i >= 0; i--) {
-                        if (!updatedRecognitions.get(i).getLabel().equals(LABEL_SKYSTONE)) {
-                            updatedRecognitions.remove(i);
+                    if (updatedRecognitions != null) {
+                        for (int i = updatedRecognitions.size() - 1; i >= 0; i--) {
+                            if (!updatedRecognitions.get(i).getLabel().equals(LABEL_SKYSTONE)) {
+                                updatedRecognitions.remove(i);
+                            }
                         }
                     }
 

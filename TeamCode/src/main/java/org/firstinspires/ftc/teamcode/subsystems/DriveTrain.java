@@ -1,9 +1,7 @@
 package org.firstinspires.ftc.teamcode.subsystems;
 
-import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
-import com.qualcomm.robotcore.hardware.Gyroscope;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
@@ -15,10 +13,10 @@ public class DriveTrain extends Subsystem {
     private static final Subsystem instance = new DriveTrain();
 
     //Declare motors
-    /*public DcMotor topLeft;
+    public DcMotor topLeft;
     public DcMotor bottomLeft;
     public DcMotor topRight;
-    public DcMotor bottomRight;*/
+    public DcMotor bottomRight;
 
     //Declare constants
     private static final double VIDIPT_DRIVE_CONTROL = 1;
@@ -48,13 +46,10 @@ public class DriveTrain extends Subsystem {
     @Override
     public void subsystemInit(HardwareMap hardwareMap) {
         //Init motors
-        /*topLeft = hardwareMap.get(DcMotor.class, "topLeft");
+        topLeft = hardwareMap.get(DcMotor.class, "topLeft");
         bottomLeft = hardwareMap.get(DcMotor.class, "bottomLeft");
         topRight = hardwareMap.get(DcMotor.class, "topRight");
         bottomRight = hardwareMap.get(DcMotor.class, "bottomRight");
-
-        //Init eemuu
-        gyro = (BNO055IMU) hardwareMap.get(Gyroscope.class, "imu");
 
         //Set motors to break
         topLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
@@ -70,7 +65,7 @@ public class DriveTrain extends Subsystem {
         topLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         bottomLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         topRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        bottomRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);*/
+        bottomRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
     }
 
     @Override
@@ -88,10 +83,10 @@ public class DriveTrain extends Subsystem {
      * @param rightPower power applied to right wheels
      */
     public void driveTank(double leftPower, double rightPower) {
-        /*topLeft.setPower(leftPower * VIDIPT_DRIVE_CONTROL);
+        topLeft.setPower(leftPower * VIDIPT_DRIVE_CONTROL);
         bottomLeft.setPower(leftPower * VIDIPT_DRIVE_CONTROL);
         topRight.setPower(rightPower * VIDIPT_DRIVE_CONTROL);
-        bottomRight.setPower(rightPower * VIDIPT_DRIVE_CONTROL);*/
+        bottomRight.setPower(rightPower * VIDIPT_DRIVE_CONTROL);
     }
 
     /**
@@ -133,10 +128,10 @@ public class DriveTrain extends Subsystem {
         bottomRightPower *= VIDIPT_DRIVE_CONTROL;
 
         //Set powers
-        /*topLeft.setPower(topLeftPower);
+        topLeft.setPower(topLeftPower);
         bottomLeft.setPower(bottomLeftPower);
         topRight.setPower(topRightPower);
-        bottomRight.setPower(bottomRightPower);*/
+        bottomRight.setPower(bottomRightPower);
     }
 
     /**
@@ -159,7 +154,7 @@ public class DriveTrain extends Subsystem {
      * @param rightInches distance traveled by right wheels of drivetrain
      */
     public void driveDistance(double power, int leftInches, int rightInches) {
-        /*int leftTicks = toTicks(leftInches);
+        int leftTicks = toTicks(leftInches);
         int rightTicks = toTicks(rightInches);
 
         topLeft.setTargetPosition(topLeft.getCurrentPosition() + leftTicks);
@@ -181,7 +176,7 @@ public class DriveTrain extends Subsystem {
         topLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         bottomLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         topRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        bottomRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);*/
+        bottomRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
     }
 
     /**
@@ -191,7 +186,7 @@ public class DriveTrain extends Subsystem {
      * @param setPoint desired robot end position
      */
     public void drivePID(double setPoint) {
-        /*setPoint = toTicks(setPoint);
+        setPoint = toTicks(setPoint);
         timer.reset();
 
         while (Math.abs(calcPIDError(topLeft, setPoint)) < 5 || timer.seconds() < 5) {
@@ -222,7 +217,11 @@ public class DriveTrain extends Subsystem {
         topLeft.setPower(0);
         bottomLeft.setPower(0);
         topRight.setPower(0);
-        bottomRight.setPower(0);*/
+        bottomRight.setPower(0);
+    }
+
+    public double calcPIDError(DcMotor motor, double setPoint) {
+        return setPoint - motor.getCurrentPosition();
     }
 
     /**
@@ -235,7 +234,7 @@ public class DriveTrain extends Subsystem {
      */
     public void rotateDegrees(double power, double degrees, boolean PID) {
         //Convert degrees in terms of absolute angle
-        /*double requestedAngle = getAngle() + degrees;
+        double requestedAngle = RobotMain.getAngle() + degrees;
 
         //Ensure that requested angle is "in bounds"
         if (requestedAngle < 0) {
@@ -245,7 +244,7 @@ public class DriveTrain extends Subsystem {
         }
 
         //Call rotateTo() and pass in absolute angle
-        rotateTo(power, requestedAngle, PID);*/
+        rotateTo(power, requestedAngle, PID);
     }
 
     /**
