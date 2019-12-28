@@ -255,44 +255,8 @@ public class RobotMain {
         return fieldCenterPosition;
     }
 
-    /**
-     * The starting skystone configuration at the beginning of autonomous can be in one of three states:
-     *        1. SS -- -- SS -- --
-     *        2. -- SS -- -- SS --
-     *        3. -- -- SS -- -- SS
-     * SS represents a skystone, while -- represents a regular stone.
-     *
-     * @return Starting skystone config. Will return -1 if cannot be sensed.
-     */
-    //TODO finish method
-    public int getSkystonePosition(boolean enableTimer) {
-        if (tfod != null) {
-            //Activate tfod
-            tfod.activate();
-
-            //Get all recognitions & filter out unwanted (within 5 seconds)
-            if (enableTimer) {
-                timer.reset();
-            }
-
-            //Get all recognitions & filter out unwanted
-            List<Recognition> updatedRecognitions = tfod.getUpdatedRecognitions();
-            if (updatedRecognitions != null) {
-                for (int i = updatedRecognitions.size() - 1; i >= 0; i--) {
-                    if (!updatedRecognitions.get(i).getLabel().equals(LABEL_SKYSTONE)) {
-                        updatedRecognitions.remove(i);
-                    }
-                }
-            }
-
-            //Shutdown tfod
-            tfod.shutdown();
-        }
-
-        return 0;
-    }
-
     //Gyro control
+
     public static double getAngle() {
         //Retrieve raw angle
         Orientation angles = gyro.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
@@ -310,5 +274,52 @@ public class RobotMain {
         }
 
         return rawAngle;
+    }
+
+    /**
+     * The starting skystone configuration at the beginning of autonomous can be in one of three states:
+     *   1. SS -- -- SS -- --
+     *   2. -- SS -- -- SS --
+     *   3. -- -- SS -- -- SS
+     * SS represents a skystone, while -- represents a regular stone.
+     *
+     * @param enableTimer whether or not to use a timer
+     * @param timeout max amount of time (ms) to sense for skystone if <i>enableTimer</i> is true before
+     *                giving up and returning -1
+     * @return Starting skystone config. Will return -1 if cannot be sensed.
+     */
+    public int getSkystonePosition(boolean enableTimer, int timeout) {
+        if (tfod != null) {
+            //Activate tfod
+            tfod.activate();
+
+            //Get all recognitions until a skystone is recognized
+            List<Recognition> updatedRecognitions = null;
+            while (updatedRecognitions == null || updatedRecognitions.size() == 0) {
+                //Refresh recognitions
+                updatedRecognitions = tfod.getUpdatedRecognitions();
+                if (updatedRecognitions != null) {
+                    //Filter out unwanted recognitions (anything that's not a skystone)
+                    for (int i = updatedRecognitions.size() - 1; i >= 0; i--) {
+                        if (!updatedRecognitions.get(i).getLabel().equals(LABEL_SKYSTONE)) {
+                            updatedRecognitions.remove(i);
+                        }
+                    }
+                }
+            }
+
+            //Skystone processing -- use rightmost stone (array index size() - 1)
+            Recognition recognition = updatedRecognitions.get(updatedRecognitions.size() - 1);
+            if (recognition.getLabel().equals(LABEL_SKYSTONE)) {
+                //TODO finish method
+                //recognition.getLeft(), recognition.getTop();
+                //recognition.getRight(), recognition.getBottom();
+            }
+
+            //Shutdown tfod
+            tfod.shutdown();
+        }
+
+        return -1;
     }
 }
