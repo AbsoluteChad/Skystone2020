@@ -50,7 +50,7 @@ public class TeleopSide extends OpMode {
 
     @Override
     public void init() {
-        robot = new RobotMain(hardwareMap, gamepad1, gamepad2);
+        robot = new RobotMain(hardwareMap, gamepad1, gamepad2, "blue", false);
     }
 
     /*
@@ -72,7 +72,7 @@ public class TeleopSide extends OpMode {
      */
     @Override
     public void loop() {
-
+        telemetry.addData("Robot angle", robot.getAngle());
     }
 
     /*

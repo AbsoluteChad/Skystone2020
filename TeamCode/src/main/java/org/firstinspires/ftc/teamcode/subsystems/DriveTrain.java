@@ -23,6 +23,7 @@ public class DriveTrain extends Subsystem {
     private static final double WHEEL_CIRCUMFRENCE = 4 * Math.PI;
     private static final int TICKS_PER_ROTATION = 1440;
     private static final double GEAR_RATIO = 1;
+    private static final double ENCODER_ERROR = 5;
 
     //Declare PID members
     private ElapsedTime timer = new ElapsedTime();
@@ -61,11 +62,9 @@ public class DriveTrain extends Subsystem {
         topLeft.setDirection(DcMotorSimple.Direction.REVERSE);
         bottomLeft.setDirection(DcMotorSimple.Direction.REVERSE);
 
-        //Enable encoders
-        topLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        bottomLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        topRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        bottomRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        //Enable & reset encoders
+        setEncoderMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        setEncoderMode(DcMotor.RunMode.RUN_USING_ENCODER);
     }
 
     @Override
@@ -139,10 +138,10 @@ public class DriveTrain extends Subsystem {
      *
      * @param degreeDirection the unit circle direction (degrees) requested to drive
      */
-    public void driveMecanum(double degreeDirection) {
+    public void driveMecanum(double power, double degreeDirection) {
         double radianDirection = Math.toRadians(degreeDirection);
-        double thrust = Math.sin(radianDirection);
-        double strafe = Math.cos(radianDirection);
+        double thrust = Math.sin(radianDirection) * power;
+        double strafe = Math.cos(radianDirection) * power;
         driveMecanum(thrust, strafe, 0, false);
     }
 
@@ -150,33 +149,25 @@ public class DriveTrain extends Subsystem {
      * Drives a certain distance using encoders
      *
      * @param power power applied to all motors
-     * @param leftInches distance traveled by left wheels of drivetrain
-     * @param rightInches distance traveled by right wheels of drivetrain
+     * @param inches distance traveled by each wheel of drivetrain
+     * @param PID whether or not to use PID
      */
-    public void driveDistance(double power, int leftInches, int rightInches) {
-        int leftTicks = toTicks(leftInches);
-        int rightTicks = toTicks(rightInches);
+    public void driveDistance(double power, int inches, boolean PID) {
+        int setPoint = toTicks(inches);
+        setEncoderMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
-        topLeft.setTargetPosition(topLeft.getCurrentPosition() + leftTicks);
-        bottomLeft.setTargetPosition(bottomLeft.getCurrentPosition() + leftTicks);
-        topRight.setTargetPosition(topRight.getCurrentPosition() + rightTicks);
-        bottomRight.setTargetPosition(bottomRight.getCurrentPosition() + rightTicks);
+        topLeft.setTargetPosition(setPoint);
+        bottomLeft.setTargetPosition(setPoint);
+        topRight.setTargetPosition(setPoint);
+        bottomRight.setTargetPosition(setPoint);
 
-        topLeft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        bottomLeft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        topRight.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        bottomRight.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-
+        setEncoderMode(DcMotor.RunMode.RUN_TO_POSITION);
         driveTank(power, power);
         while (topLeft.isBusy() || bottomLeft.isBusy() || topRight.isBusy() || bottomRight.isBusy()) {
             //Yeet
         }
         driveTank(0, 0);
-
-        topLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        bottomLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        topRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        bottomRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        setEncoderMode(DcMotor.RunMode.RUN_USING_ENCODER);
     }
 
     /**
@@ -189,9 +180,9 @@ public class DriveTrain extends Subsystem {
         setPoint = toTicks(setPoint);
         timer.reset();
 
-        while (Math.abs(calcPIDError(topLeft, setPoint)) < 5 || timer.seconds() < 5) {
+        while (Math.abs(setPoint - topLeft.getCurrentPosition()) > ENCODER_ERROR || timer.seconds() < 5) {
             //Calculate error
-            error = calcPIDError(topLeft, setPoint);
+            error = setPoint - topLeft.getCurrentPosition();
 
             //P, I, and D w/o gains
             P = error;
@@ -220,48 +211,48 @@ public class DriveTrain extends Subsystem {
         bottomRight.setPower(0);
     }
 
-    public double calcPIDError(DcMotor motor, double setPoint) {
-        return setPoint - motor.getCurrentPosition();
-    }
-
     /**
-     * Used to rotate a certain number of degrees on unit circle
+     * Used to rotate a certain number of degrees about unit circle using encoders
      *
      * @param degrees degree amount to turn
-     *                negative value = clockwise (about unit circle)
-     *                positive value = counterclockwise
-     * @param PID whether or not to use PID
-     */
-    public void rotateDegrees(double power, double degrees, boolean PID) {
-        //Convert degrees in terms of absolute angle
-        double requestedAngle = RobotMain.getAngle() + degrees;
-
-        //Ensure that requested angle is "in bounds"
-        if (requestedAngle < 0) {
-            requestedAngle += 360;
-        } else if (requestedAngle >= 360) {
-            requestedAngle -= 360;
-        }
-
-        //Call rotateTo() and pass in absolute angle
-        rotateTo(power, requestedAngle, PID);
-    }
-
-    /**
-     * Used to rotate to a certain degree position on unit circle
-     *
-     * @param degrees degree value to turn to
      *                negative value = clockwise
      *                positive value = counterclockwise
      * @param PID whether or not to use PID
      */
-    //TODO finish method
-    public void rotateTo(double power, double degrees, boolean PID) {
-        if (PID) {
+    public void rotateDegrees(double power, double degrees, boolean PID) {
+        int setPoint = (int) ((degrees / 360) * TICKS_PER_ROTATION);
+        setEncoderMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
+        topLeft.setTargetPosition(setPoint);
+        bottomLeft.setTargetPosition(setPoint);
+        topRight.setTargetPosition(setPoint);
+        bottomRight.setTargetPosition(setPoint);
+
+        setEncoderMode(DcMotor.RunMode.RUN_TO_POSITION);
+        if (setPoint < 0) {
+            driveTank(power, -power);
+        } else if (setPoint > 0) {
+            driveTank(-power, power);
         } else {
-
+            return;
         }
+        while (topLeft.isBusy() || bottomLeft.isBusy() || topRight.isBusy() || bottomRight.isBusy()) {
+            //Yeet
+        }
+        driveTank(0, 0);
+        setEncoderMode(DcMotor.RunMode.RUN_USING_ENCODER);
+    }
+
+    /**
+     * Used to set mode of all drive encoders
+     *
+     * @param mode mode for encoders to be set to
+     */
+    public void setEncoderMode(DcMotor.RunMode mode) {
+        topLeft.setMode(mode);
+        bottomLeft.setMode(mode);
+        topRight.setMode(mode);
+        bottomRight.setMode(mode);
     }
 
     /**

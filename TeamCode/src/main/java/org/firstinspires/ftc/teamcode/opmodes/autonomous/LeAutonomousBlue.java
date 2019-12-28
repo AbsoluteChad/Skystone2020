@@ -20,11 +20,8 @@ package org.firstinspires.ftc.teamcode.opmodes.autonomous;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
-import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.DcMotorSimple;
-import com.qualcomm.robotcore.util.ElapsedTime;
+
+import org.firstinspires.ftc.teamcode.RobotMain;
 
 /**
  * This file contains an minimal example of a Linear "OpMode". An OpMode is a 'program' that runs in either
@@ -39,11 +36,13 @@ import com.qualcomm.robotcore.util.ElapsedTime;
  * or add a @Disabled annotation to prevent this OpMode from being added to the Driver Station
  */
 @Autonomous(name="LeAutonomousBlue", group="Linear Opmode")
-
 public class LeAutonomousBlue extends LinearOpMode {
+
+    private RobotMain robot;
 
     @Override
     public void runOpMode() {
+        robot = new RobotMain(hardwareMap, gamepad1, gamepad2, "blue", true);
 
         telemetry.addData("Status", "Initialized");
         telemetry.update();

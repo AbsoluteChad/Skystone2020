@@ -18,7 +18,7 @@ public class ElevatingArm extends Subsystem {
 
     //Declare constants
     private static final double VIDIPT_ELEVATOR_CONTROL = 0.5;
-    private static final double VIDIPT_ROTATIONAL_ARM_CONTROL = 0.4;
+    private static final double VIDIPT_ROTATIONAL_ARM_CONTROL = 0.6;
 
     //Private constructor
     private ElevatingArm() {

@@ -74,23 +74,21 @@ public class TensorFlowTest extends LinearOpMode {
                 //Get all recognitions & filter out unwanted
                 List<Recognition> updatedRecognitions = tfod.getUpdatedRecognitions();
                 if (updatedRecognitions != null) {
-                    for (int i = updatedRecognitions.size() - 1; i >= 0; i--) {
+                    /*for (int i = updatedRecognitions.size() - 1; i >= 0; i--) {
                         if (!updatedRecognitions.get(i).getLabel().equals(LABEL_SKYSTONE)) {
                             updatedRecognitions.remove(i);
                         }
-                    }
-                }
+                    }*/
 
-                //Skystone processing
-                if (updatedRecognitions != null) {
+                    //Skystone processing
                     telemetry.addData("# of Objects Detected", updatedRecognitions.size());
                     for (int i = 0; i < updatedRecognitions.size(); i++) {
                         Recognition recognition = updatedRecognitions.get(i);
                         telemetry.addData(String.format("label (%d)", i), recognition.getLabel());
-                        telemetry.addData(String.format("left & top (%d)", i), "%.03f , %.03f",
+                        /*telemetry.addData(String.format("left & top (%d)", i), "%.03f , %.03f",
                                 recognition.getLeft(), recognition.getTop());
                         telemetry.addData(String.format("right & bottom (%d)", i), "%.03f , %.03f",
-                                recognition.getRight(), recognition.getBottom());
+                                recognition.getRight(), recognition.getBottom());*/
                     }
                     telemetry.update();
                 }

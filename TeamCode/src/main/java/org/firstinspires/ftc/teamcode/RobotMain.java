@@ -52,7 +52,10 @@ public class RobotMain {
     public static Subsystem[] allSubsystems = {driveTrain, elevatingArm, gripper};
 
     //Declare eemuu
-    public static BNO055IMU gyro;
+    //public static BNO055IMU gyro;
+
+    //Misc
+    private String alliance;
 
     //Declare vision & object dection engines
     private VuforiaLocalizer vuforia;
@@ -93,25 +96,28 @@ public class RobotMain {
     //Declare misc objects
     private ElapsedTime timer;
 
-    public RobotMain(HardwareMap hardwareMap, Gamepad gamepad1, Gamepad gamepad2) {
+    public RobotMain(HardwareMap hardwareMap, Gamepad gamepad1, Gamepad gamepad2, String alliance, boolean auto) {
         this.hardwareMap = hardwareMap;
         this.gamepad1 = gamepad1;
         this.gamepad2 = gamepad2;
-        robotInit();
+        this.alliance = alliance.toLowerCase();
+        robotInit(auto);
     }
 
-    private void robotInit() {
+    private void robotInit(boolean auto) {
         //Init all subsystems
         for (Subsystem subsystem : allSubsystems) {
             subsystem.subsystemInit(hardwareMap);
         }
 
         //Init eemuu
-        gyro = (BNO055IMU) hardwareMap.get(Gyroscope.class, "imu");
+        //gyro = (BNO055IMU) hardwareMap.get(Gyroscope.class, "imu");
 
         //Init vision
-        initVuforia();
-        initTfod();
+        if (auto) {
+            initVuforia();
+            initTfod();
+        }
 
         //Init misc objects
         timer = new ElapsedTime();
@@ -255,27 +261,6 @@ public class RobotMain {
         return fieldCenterPosition;
     }
 
-    //Gyro control
-
-    public static double getAngle() {
-        //Retrieve raw angle
-        Orientation angles = gyro.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
-        double rawAngle = angles.firstAngle;
-
-        //Manipulate angle to unit circle convention (degrees)
-        if (rawAngle < 0) {
-            rawAngle = 360 + rawAngle;
-        }
-
-        //Orient to unit circle convention (degrees)
-        rawAngle -= 90;
-        if (rawAngle < 0) {
-            rawAngle += 360;
-        }
-
-        return rawAngle;
-    }
-
     /**
      * The starting skystone configuration at the beginning of autonomous can be in one of three states:
      *   1. SS -- -- SS -- --
@@ -308,8 +293,14 @@ public class RobotMain {
                 }
             }
 
-            //Skystone processing -- use rightmost stone (array index size() - 1)
-            Recognition recognition = updatedRecognitions.get(updatedRecognitions.size() - 1);
+            //Skystone processing -- use rightmost stone (array index size() - 1) if red; leftmost if blue
+            Recognition recognition = updatedRecognitions.get(0);
+            if (updatedRecognitions.size() > 1) {
+                if (alliance.equals("red")) {
+                    recognition = updatedRecognitions.get(1);
+                }
+            }
+
             if (recognition.getLabel().equals(LABEL_SKYSTONE)) {
                 //TODO finish method
                 //recognition.getLeft(), recognition.getTop();
@@ -322,4 +313,24 @@ public class RobotMain {
 
         return -1;
     }
+
+    //Gyro control
+    /*public static double getAngle() {
+        //Retrieve raw angle
+        Orientation angles = gyro.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
+        double rawAngle = angles.firstAngle;
+
+        //Manipulate angle to unit circle convention (degrees)
+        if (rawAngle < 0) {
+            rawAngle = 360 + rawAngle;
+        }
+
+        //Orient to unit circle convention (degrees)
+        rawAngle -= 90;
+        if (rawAngle < 0) {
+            rawAngle += 360;
+        }
+
+        return rawAngle;
+    }*/
 }

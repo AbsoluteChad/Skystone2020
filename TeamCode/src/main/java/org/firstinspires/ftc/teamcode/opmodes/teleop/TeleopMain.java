@@ -43,7 +43,7 @@ public class TeleopMain extends OpMode {
 
     @Override
     public void init() {
-        robot = new RobotMain(hardwareMap, gamepad1, gamepad2);
+        robot = new RobotMain(hardwareMap, gamepad1, gamepad2, "blue", false);
     }
 
     @Override

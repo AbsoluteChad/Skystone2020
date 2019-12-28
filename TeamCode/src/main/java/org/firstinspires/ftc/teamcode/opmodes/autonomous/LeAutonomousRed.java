@@ -21,6 +21,8 @@ package org.firstinspires.ftc.teamcode.opmodes.autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
+import org.firstinspires.ftc.teamcode.RobotMain;
+
 /**
  * This file contains an minimal example of a Linear "OpMode". An OpMode is a 'program' that runs in either
  * the autonomous or the teleop period of an FTC match. The names of OpModes appear on the menu
@@ -37,8 +39,11 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 public class LeAutonomousRed extends LinearOpMode {
 
+    private RobotMain robot;
+
     @Override
     public void runOpMode() {
+        robot = new RobotMain(hardwareMap, gamepad1, gamepad2, "red", true);
 
         telemetry.addData("Status", "Initialized");
         telemetry.update();
