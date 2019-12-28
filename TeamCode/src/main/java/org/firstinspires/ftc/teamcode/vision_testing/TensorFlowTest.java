@@ -49,84 +49,50 @@ public class TensorFlowTest extends LinearOpMode {
     private static final String TFOD_MODEL_ASSET = "Skystone.tflite";
     private static final String LABEL_STONE = "Stone";
     private static final String LABEL_SKYSTONE = "Skystone";
-    private static final String DEVICE_TYPE = "Phone";
 
-    /*
-     * IMPORTANT: You need to obtain your own license key to use Vuforia. The string below with which
-     * 'parameters.vuforiaLicenseKey' is initialized is for illustration only, and will not function.
-     * A Vuforia 'Development' license key, can be obtained free of charge from the Vuforia developer
-     * web site at https://developer.vuforia.com/license-manager.
-     *
-     * Vuforia license keys are always 380 characters long, and look as if they contain mostly
-     * random data. As an example, here is a example of a fragment of a valid key:
-     *      ... yIgIzTqZ4mWjk9wd3cZO9T1axEqzuhxoGlfOOI2dRzKS4T0hQ8kT ...
-     * Once you've obtained a license key, copy the string from the Vuforia web site
-     * and paste it in to your code on the next line, between the double quotes.
-     */
-    private static final String VUFORIA_KEY = RobotMain.VUFORIA_KEY;
-
-    /**
-     * {@link #vuforia} is the variable we will use to store our instance of the Vuforia
-     * localization engine.
-     */
+    //Declare engines
     private VuforiaLocalizer vuforia;
-
-    /**
-     * {@link #tfod} is the variable we will use to store our instance of the TensorFlow Object
-     * Detection engine.
-     */
     private TFObjectDetector tfod;
 
     @Override
     public void runOpMode() {
-        //The TFObjectDetector uses the camera frames from the VuforiaLocalizer, so we create that first.
+        //Initialize engines
         initVuforia();
+        initTfod();
 
-        if (ClassFactory.getInstance().canCreateTFObjectDetector()) {
-            initTfod();
-        } else {
-            telemetry.addData("Sorry!", "This device is not compatible with TFOD");
-        }
-
-        /**
-         * Activate TensorFlow Object Detection before we wait for the start command.
-         * Do it here so that the Camera Stream window will have the TensorFlow annotations visible.
-         **/
+        //Activate tfod
         if (tfod != null) {
             tfod.activate();
         }
-        /** Wait for the game to begin */
+
         telemetry.addData(">", "Press Play to start op mode");
         telemetry.update();
         waitForStart();
 
-        if (opModeIsActive()) {
-            while (opModeIsActive()) {
-                if (tfod != null) {
-                    //Get all recognitions & filter out unwanted recognitions
-                    List<Recognition> updatedRecognitions = tfod.getUpdatedRecognitions();
-                    if (updatedRecognitions != null) {
-                        for (int i = updatedRecognitions.size() - 1; i >= 0; i--) {
-                            if (!updatedRecognitions.get(i).getLabel().equals(LABEL_SKYSTONE)) {
-                                updatedRecognitions.remove(i);
-                            }
+        while (opModeIsActive()) {
+            if (tfod != null) {
+                //Get all recognitions & filter out unwanted
+                List<Recognition> updatedRecognitions = tfod.getUpdatedRecognitions();
+                if (updatedRecognitions != null) {
+                    for (int i = updatedRecognitions.size() - 1; i >= 0; i--) {
+                        if (!updatedRecognitions.get(i).getLabel().equals(LABEL_SKYSTONE)) {
+                            updatedRecognitions.remove(i);
                         }
                     }
+                }
 
-                    //Skystone processing
-                    if (updatedRecognitions != null) {
-                        telemetry.addData("# of Objects Detected", updatedRecognitions.size());
-
-                        for (int i = 0; i < updatedRecognitions.size(); i++) {
-                            Recognition recognition = updatedRecognitions.get(i);
-                            telemetry.addData(String.format("label (%d)", i), recognition.getLabel());
-                            telemetry.addData(String.format("left & top (%d)", i), "%.03f , %.03f",
-                                    recognition.getLeft(), recognition.getTop());
-                            telemetry.addData(String.format("right & bottom (%d)", i), "%.03f , %.03f",
-                                    recognition.getRight(), recognition.getBottom());
-                        }
-                        telemetry.update();
+                //Skystone processing
+                if (updatedRecognitions != null) {
+                    telemetry.addData("# of Objects Detected", updatedRecognitions.size());
+                    for (int i = 0; i < updatedRecognitions.size(); i++) {
+                        Recognition recognition = updatedRecognitions.get(i);
+                        telemetry.addData(String.format("label (%d)", i), recognition.getLabel());
+                        telemetry.addData(String.format("left & top (%d)", i), "%.03f , %.03f",
+                                recognition.getLeft(), recognition.getTop());
+                        telemetry.addData(String.format("right & bottom (%d)", i), "%.03f , %.03f",
+                                recognition.getRight(), recognition.getBottom());
                     }
+                    telemetry.update();
                 }
             }
         }
@@ -136,27 +102,15 @@ public class TensorFlowTest extends LinearOpMode {
         }
     }
 
-    /**
-     * Initialize the Vuforia localization engine.
-     */
+    //Initialize the Vuforia localization engine
     private void initVuforia() {
-        //Init general parameters
         VuforiaLocalizer.Parameters parameters = new VuforiaLocalizer.Parameters();
-        parameters.vuforiaLicenseKey = VUFORIA_KEY;
-        //Init camera parameters based off device type
-        if (DEVICE_TYPE.equals("Webcam")) {
-            parameters.cameraName = hardwareMap.get(WebcamName.class, "Webcam 1");
-        } else if (DEVICE_TYPE.equals("Phone")) {
-            parameters.cameraDirection = CameraDirection.BACK;
-        }
-
-        //Instantiate the Vuforia engine
+        parameters.vuforiaLicenseKey = RobotMain.VUFORIA_KEY;
+        parameters.cameraDirection = CameraDirection.BACK;
         vuforia = ClassFactory.getInstance().createVuforia(parameters);
     }
 
-    /**
-     * Initialize the TensorFlow Object Detection engine.
-     */
+    //Initialize the TensorFlow Object Detection engine.
     private void initTfod() {
         int tfodMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("tfodMonitorViewId",
                 "id", hardwareMap.appContext.getPackageName());
