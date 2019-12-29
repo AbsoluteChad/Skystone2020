@@ -49,7 +49,9 @@ public class RobotMain {
     public static Subsystem driveTrain = DriveTrain.getInstance();
     public static Subsystem elevatingArm = ElevatingArm.getInstance();
     public static Subsystem gripper = Gripper.getInstance();
-    public static Subsystem[] allSubsystems = {driveTrain, elevatingArm, gripper};
+    public static Subsystem foundationMover = FoundationMover.getInstance();
+    public static Subsystem[] allSubsystems = {driveTrain, elevatingArm, gripper, foundationMover};
+
 
     //Declare eemuu
     //public static BNO055IMU gyro;
