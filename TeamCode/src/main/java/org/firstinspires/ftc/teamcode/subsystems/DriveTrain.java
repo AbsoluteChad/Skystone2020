@@ -184,21 +184,35 @@ public class DriveTrain extends Subsystem {
      */
     public void rotateDegrees(double power, double degrees, boolean PID) {
         int setPoint = (int) ((degrees / 360) * TICKS_PER_ROTATION);
+        if (Math.abs(setPoint) > ENCODER_ERROR) {
+            return;
+        }
         setEncoderMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
-        topLeft.setTargetPosition(setPoint);
-        bottomLeft.setTargetPosition(setPoint);
+        topLeft.setTargetPosition(-setPoint);
+        bottomLeft.setTargetPosition(-setPoint);
         topRight.setTargetPosition(setPoint);
         bottomRight.setTargetPosition(setPoint);
 
         setEncoderMode(DcMotor.RunMode.RUN_TO_POSITION);
-        if (setPoint < 0) {
-            driveTank(power, -power);
-        } else if (setPoint > 0) {
-            driveTank(-power, power);
+        if (PID) {
+            PIDController left = new PIDController(PIDcoeffs, -setPoint);
+            PIDController right = new PIDController(PIDcoeffs, setPoint);
+            while (Math.abs(left.getError()) > ENCODER_ERROR || Math.abs(right.getError()) > ENCODER_ERROR) {
+                if (setPoint < 0) {
+                    driveTank(left.motorOutput(topLeft.getCurrentPosition()), -right.motorOutput(topRight.getCurrentPosition()));
+                } else if (setPoint > 0) {
+                    driveTank(-left.motorOutput(topLeft.getCurrentPosition()), right.motorOutput(topRight.getCurrentPosition()));
+                }
+            }
         } else {
-            return;
+            if (setPoint < 0) {
+                driveTank(power, -power);
+            } else if (setPoint > 0) {
+                driveTank(-power, power);
+            }
         }
+
         while (topLeft.isBusy() || bottomLeft.isBusy() || topRight.isBusy() || bottomRight.isBusy()) {
             //Yeet
         }
