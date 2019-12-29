@@ -38,7 +38,7 @@ public class Gripper extends Subsystem {
         gripperFar = hardwareMap.get(CRServo.class, "gripperFar");
 
         //Init Servo
-        gripperRotation = hardwareMap.get(Servo.class, "gripperRotator");
+        gripperRotation = hardwareMap.get(Servo.class, "gripperRotation");
 
     }
 
@@ -60,7 +60,7 @@ public class Gripper extends Subsystem {
         gripperSucc(gripperClosePower, gripperFarPower);
 
         //Servo controls
-        double gripperPosition = 0.5;
+        /*double gripperPosition = 0.5;
         if (RobotMain.gamepad1.a || RobotMain.gamepad2.a) {
             gripperPosition -= INCREMENT ;
             if (gripperPosition <= MIN_POS ) {
@@ -73,7 +73,12 @@ public class Gripper extends Subsystem {
                 gripperPosition = MAX_POS;
             }
         }
-        gripperRotate(gripperPosition);
+        gripperRotate(gripperPosition);*/
+        if (RobotMain.gamepad1.a || RobotMain.gamepad2.a) {
+            gripperRotation.setPosition(0.1);
+        } else if (RobotMain.gamepad1.b || RobotMain.gamepad2.b) {
+            gripperRotation.setPosition(0.9);
+        }
 
     }
 

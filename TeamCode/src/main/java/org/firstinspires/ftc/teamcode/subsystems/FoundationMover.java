@@ -22,8 +22,8 @@ public class FoundationMover extends Subsystem {
 
     @Override
     public void subsystemInit(HardwareMap hardwareMap) {
-        foundationLeft = hardwareMap.get(Servo.class, "foundstionLeft");
-        foundationRight = hardwareMap.get(Servo.class, "foundstionRight");
+        foundationLeft = hardwareMap.get(Servo.class, "foundationLeft");
+        foundationRight = hardwareMap.get(Servo.class, "foundationRight");
 
     }
 
@@ -37,13 +37,13 @@ public class FoundationMover extends Subsystem {
     }
 
     public void lockFoundation(){
-        double foundationRight = 1;
-        double foundationLeft = 1;
+        foundationLeft.setPosition(0.5);
+        foundationRight.setPosition(0.5);
     }
 
     public void unlockFoundation() {
-        double foundationRight = 0.1;
-        double foundationLeft = 0.1;
+        foundationLeft.setPosition(0);
+        foundationRight.setPosition(0);
     }
 
 
