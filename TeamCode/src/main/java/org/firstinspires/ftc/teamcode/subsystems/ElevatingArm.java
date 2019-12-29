@@ -17,7 +17,7 @@ public class ElevatingArm extends Subsystem {
     public DcMotor rotationalArm;
 
     //Declare constants
-    private static final double VIDIPT_ELEVATOR_CONTROL = 0.5;
+    private static final double VIDIPT_ELEVATOR_CONTROL = 0.75;
     private static final double VIDIPT_ROTATIONAL_ARM_CONTROL = 0.6;
 
     //Private constructor
@@ -57,7 +57,7 @@ public class ElevatingArm extends Subsystem {
         }
 
         //Rotational arm controls
-        driveRotationalArm(RobotMain.gamepad2.left_stick_y * VIDIPT_ROTATIONAL_ARM_CONTROL);
+        driveRotationalArm(RobotMain.gamepad2.right_stick_y * VIDIPT_ROTATIONAL_ARM_CONTROL);
     }
 
     /**
