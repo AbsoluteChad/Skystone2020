@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode.subsystems;
 
 import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.HardwareMap;
+import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.teamcode.RobotMain;
 
@@ -14,8 +15,16 @@ public class Gripper extends Subsystem {
     public CRServo gripperClose;
     public CRServo gripperFar;
 
+    //Declare Servo
+    public Servo gripperRotation;
+
+
     //Declare constants
     private final double GRIPPER_SUCC_POWER = 0.5;
+    static final double INCREMENT   = 0.01;     // amount to slew servo each CYCLE_MS cycle
+    static final double MAX_POS     =  1.0;     // Maximum rotational position
+    static final double MIN_POS     =  0.0;     // Minimum rotational position
+
 
     //Private constructor
     private Gripper() {
@@ -27,6 +36,10 @@ public class Gripper extends Subsystem {
         //Init CRServos
         gripperClose = hardwareMap.get(CRServo.class, "gripperClose");
         gripperFar = hardwareMap.get(CRServo.class, "gripperFar");
+
+        //Init Servo
+        gripperRotation = hardwareMap.get(Servo.class, "gripperRotator");
+
     }
 
     @Override
@@ -45,7 +58,27 @@ public class Gripper extends Subsystem {
             gripperFarPower = RobotMain.gamepad2.right_bumper ? -RobotMain.gamepad2.right_trigger : RobotMain.gamepad2.right_trigger;
         }
         gripperSucc(gripperClosePower, gripperFarPower);
+
+        //Servo controls
+        double gripperPosition = 0.5;
+        if (RobotMain.gamepad1.a || RobotMain.gamepad2.a) {
+            gripperPosition -= INCREMENT ;
+            if (gripperPosition <= MIN_POS ) {
+                gripperPosition = MIN_POS;
+            }
+        }
+        if (RobotMain.gamepad1.b || RobotMain.gamepad2.b) {
+            gripperPosition += INCREMENT;
+            if (gripperPosition >= MAX_POS) {
+                gripperPosition = MAX_POS;
+            }
+        }
+        gripperRotate(gripperPosition);
+
     }
+
+
+        //gripper rotation servo control
 
     /**
      * Controls compliant wheel intake
@@ -57,10 +90,19 @@ public class Gripper extends Subsystem {
         gripperFar.setPower(-gripperFarPower);
     }
 
+    public void gripperRotate(double gripperPosition) {
+        gripperRotation.setPosition(gripperPosition);
+    }
+
+
     /**
      * @return the singleton instance of the subsystem
      */
     public static Subsystem getInstance() {
         return instance;
     }
+
+
 }
+
+
