@@ -3,9 +3,11 @@ package org.firstinspires.ftc.teamcode.subsystems;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
+import com.qualcomm.robotcore.hardware.PIDCoefficients;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.RobotMain;
+import org.firstinspires.ftc.teamcode.lib.PIDController;
 
 public class DriveTrain extends Subsystem {
 
@@ -29,19 +31,12 @@ public class DriveTrain extends Subsystem {
     private ElapsedTime timer = new ElapsedTime();
     private final double LOOP_TIME = 0.02;
 
-    private double error;
-    private double prevError;
-
-    private double P, I, D;
-    private double kP, kI, kD;
+    private PIDCoefficients PIDcoeffs;
 
     //Private constructor
     private DriveTrain() {
         //Init PID members
-        kP = 0;
-        kI = 0;
-        kD = 0;
-        prevError = 0;
+        PIDcoeffs = new PIDCoefficients(0, 0, 0);
     }
 
     @Override
@@ -160,55 +155,23 @@ public class DriveTrain extends Subsystem {
         bottomLeft.setTargetPosition(setPoint);
         topRight.setTargetPosition(setPoint);
         bottomRight.setTargetPosition(setPoint);
-
         setEncoderMode(DcMotor.RunMode.RUN_TO_POSITION);
-        driveTank(power, power);
-        while (topLeft.isBusy() || bottomLeft.isBusy() || topRight.isBusy() || bottomRight.isBusy()) {
-            //Yeet
+
+        if (PID) {
+            PIDController left = new PIDController(PIDcoeffs, setPoint);
+            PIDController right = new PIDController(PIDcoeffs, setPoint);
+            while (Math.abs(left.getError()) > ENCODER_ERROR || Math.abs(right.getError()) > ENCODER_ERROR) {
+                driveTank(left.motorOutput(topLeft.getCurrentPosition()), right.motorOutput(topRight.getCurrentPosition()));
+            }
+        } else {
+            driveTank(power, power);
+            while (topLeft.isBusy() || bottomLeft.isBusy() || topRight.isBusy() || bottomRight.isBusy()) {
+                //yeet
+            }
         }
+
         driveTank(0, 0);
         setEncoderMode(DcMotor.RunMode.RUN_USING_ENCODER);
-    }
-
-    /**
-     * Uses a PID controller to accurately ramp up and ramp down power to reach an end position
-     * <i>setPoint</i> inches away
-     *
-     * @param setPoint desired robot end position
-     */
-    public void drivePID(double setPoint) {
-        setPoint = toTicks(setPoint);
-        timer.reset();
-
-        while (Math.abs(setPoint - topLeft.getCurrentPosition()) > ENCODER_ERROR || timer.seconds() < 5) {
-            //Calculate error
-            error = setPoint - topLeft.getCurrentPosition();
-
-            //P, I, and D w/o gains
-            P = error;
-            I += (error * LOOP_TIME);
-            D = (error - prevError) / LOOP_TIME;
-
-            //Implement gains
-            P *= kP;
-            I *= kI;
-            D *= kD;
-
-            //Calc & apply output
-            double output = P + I + D;
-            topLeft.setPower(output);
-            bottomLeft.setPower(output);
-            topRight.setPower(output);
-            bottomRight.setPower(output);
-
-            //Calculate prevError
-            prevError = error;
-        }
-
-        topLeft.setPower(0);
-        bottomLeft.setPower(0);
-        topRight.setPower(0);
-        bottomRight.setPower(0);
     }
 
     /**
