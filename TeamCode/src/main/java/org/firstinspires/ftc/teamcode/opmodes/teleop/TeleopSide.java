@@ -72,7 +72,7 @@ public class TeleopSide extends OpMode {
      */
     @Override
     public void loop() {
-        telemetry.addData("Robot angle", robot.getAngle());
+        //telemetry.addData("Robot angle", robot.getAngle());
     }
 
     /*
