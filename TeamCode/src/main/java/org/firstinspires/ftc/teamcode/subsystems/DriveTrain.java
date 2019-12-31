@@ -6,6 +6,7 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.PIDCoefficients;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
+import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.RobotMain;
 import org.firstinspires.ftc.teamcode.lib.PIDController;
 
@@ -28,9 +29,6 @@ public class DriveTrain extends Subsystem {
     private static final double ENCODER_ERROR = 5;
 
     //Declare PID members
-    private ElapsedTime timer = new ElapsedTime();
-    private final double LOOP_TIME = 0.02;
-
     private PIDCoefficients PIDcoeffs;
 
     //Private constructor
@@ -133,8 +131,35 @@ public class DriveTrain extends Subsystem {
      *
      * @param degreeDirection the unit circle direction (degrees) requested to drive
      */
-    public void driveMecanum(double power, double degreeDirection) {
+    public void driveMecanum(double power, double degreeDirection, double inches, boolean PID, int yeet) {
         double radianDirection = Math.toRadians(degreeDirection);
+        if (degreeDirection % 180 == 0) {
+            int setPoint = toTicks(inches);
+            setEncoderMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+
+            //topLeft.setTargetPosition(Math.sin(radianDirection) > 0 ? 1 : -1 );
+            //bottomLeft.setTargetPosition();
+            //topRight.setTargetPosition();
+            //bottomRight.setTargetPosition();
+            setEncoderMode(DcMotor.RunMode.RUN_TO_POSITION);
+
+            if (PID) {
+                PIDController TLBR = new PIDController(PIDcoeffs, toTicks(inches));
+                PIDController BLTR = new PIDController(PIDcoeffs, toTicks(inches));
+                while (Math.abs(TLBR.getError()) > ENCODER_ERROR || Math.abs(BLTR.getError()) > ENCODER_ERROR) {
+                    driveTank(TLBR.motorOutput(topLeft.getCurrentPosition()), BLTR.motorOutput(topRight.getCurrentPosition()));
+                }
+            } else {
+                driveTank(power, power);
+                while (topLeft.isBusy() || bottomLeft.isBusy() || topRight.isBusy() || bottomRight.isBusy()) {
+                    //yeet
+                }
+            }
+        }
+
+        driveTank(0, 0);
+        setEncoderMode(DcMotor.RunMode.RUN_USING_ENCODER);
+
         double thrust = Math.sin(radianDirection) * power;
         double strafe = Math.cos(radianDirection) * power;
         driveMecanum(thrust, strafe, 0, false);
@@ -184,7 +209,7 @@ public class DriveTrain extends Subsystem {
      */
     public void rotateDegrees(double power, double degrees, boolean PID) {
         int setPoint = (int) ((degrees / 360) * TICKS_PER_ROTATION);
-        if (Math.abs(setPoint) > ENCODER_ERROR) {
+        if (Math.abs(setPoint) < ENCODER_ERROR) {
             return;
         }
         setEncoderMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
