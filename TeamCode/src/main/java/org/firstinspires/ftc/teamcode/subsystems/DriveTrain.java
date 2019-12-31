@@ -81,6 +81,13 @@ public class DriveTrain extends Subsystem {
         bottomRight.setPower(rightPower * VIDIPT_DRIVE_CONTROL);
     }
 
+    public void driveMecanumTank(double TLPower, double BLPower, double TRPower, double BRPower) {
+        topLeft.setPower(TLPower * VIDIPT_DRIVE_CONTROL);
+        bottomLeft.setPower(BLPower * VIDIPT_DRIVE_CONTROL);
+        topRight.setPower(TRPower * VIDIPT_DRIVE_CONTROL);
+        bottomRight.setPower(BRPower * VIDIPT_DRIVE_CONTROL);
+    }
+
     /**
      * Determines mecanum wheel powers with given components. Feed in joystick values to drive in
      * desired direction.
@@ -135,34 +142,37 @@ public class DriveTrain extends Subsystem {
         double radianDirection = Math.toRadians(degreeDirection);
         if (degreeDirection % 180 == 0) {
             int setPoint = toTicks(inches);
+            int sign = Math.cos(radianDirection) > 0 ? 1 : -1;
             setEncoderMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
-            //topLeft.setTargetPosition(Math.sin(radianDirection) > 0 ? 1 : -1 );
-            //bottomLeft.setTargetPosition();
-            //topRight.setTargetPosition();
-            //bottomRight.setTargetPosition();
+            topLeft.setTargetPosition(setPoint * sign);
+            bottomLeft.setTargetPosition(setPoint * sign);
+            topRight.setTargetPosition(setPoint * sign);
+            bottomRight.setTargetPosition(setPoint * sign);
             setEncoderMode(DcMotor.RunMode.RUN_TO_POSITION);
 
             if (PID) {
+                //TODO finish
                 PIDController TLBR = new PIDController(PIDcoeffs, toTicks(inches));
                 PIDController BLTR = new PIDController(PIDcoeffs, toTicks(inches));
                 while (Math.abs(TLBR.getError()) > ENCODER_ERROR || Math.abs(BLTR.getError()) > ENCODER_ERROR) {
-                    driveTank(TLBR.motorOutput(topLeft.getCurrentPosition()), BLTR.motorOutput(topRight.getCurrentPosition()));
+                    driveMecanumTank(power * sign, power * -sign, power * -sign, power * sign);
                 }
+                driveTank(0, 0);
             } else {
-                driveTank(power, power);
+                driveMecanumTank(power * sign, power * -sign, power * -sign, power * sign);
                 while (topLeft.isBusy() || bottomLeft.isBusy() || topRight.isBusy() || bottomRight.isBusy()) {
                     //yeet
                 }
+                driveTank(0, 0);
+                setEncoderMode(DcMotor.RunMode.RUN_USING_ENCODER);
             }
+        } else {
+            double thrust = Math.sin(radianDirection) * power;
+            double strafe = Math.cos(radianDirection) * power;
+            driveMecanum(thrust, strafe, 0, false);
         }
 
-        driveTank(0, 0);
-        setEncoderMode(DcMotor.RunMode.RUN_USING_ENCODER);
-
-        double thrust = Math.sin(radianDirection) * power;
-        double strafe = Math.cos(radianDirection) * power;
-        driveMecanum(thrust, strafe, 0, false);
     }
 
     /**
