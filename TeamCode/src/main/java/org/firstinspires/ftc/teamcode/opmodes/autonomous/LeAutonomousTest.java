@@ -55,7 +55,7 @@ public class LeAutonomousTest extends LinearOpMode {
 
         if (opModeIsActive()) {
             //driveTrain.driveDistance(0.4, -36, false);
-            driveTrain.driveMecanum(0.4, 180, 12, false, 1);
+            driveTrain.driveMecanum(0.4, 0, 36, false, 1);
         }
     }
 }
