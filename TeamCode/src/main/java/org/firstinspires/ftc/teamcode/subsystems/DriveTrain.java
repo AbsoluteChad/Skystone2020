@@ -127,7 +127,7 @@ public class DriveTrain extends Subsystem {
     }
 
     /**
-     * Drives a certain distance using encoders
+     * Drives a certain distance in a forward/backward/left/right direction using encoders
      *
      * @param power power applied to all motors
      * @param inches distance traveled by each wheel of drivetrain
@@ -141,8 +141,8 @@ public class DriveTrain extends Subsystem {
         double radianDirection = Math.toRadians(degreeDirection);
         int setPoint = toTicks(inches);
         setEncoderMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        int sign;
 
+        int sign;
         if (degreeDirection % 180 == 0) {
             sign = (int) Math.cos(radianDirection);
         } else if (degreeDirection % 90 == 0) {
