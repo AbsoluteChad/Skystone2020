@@ -54,11 +54,15 @@ public class LeAutonomousTest extends LinearOpMode {
         waitForStart();
 
         if (opModeIsActive()) {
-            //driveTrain.driveDistance(0.4, -36, false);
-            driveTrain.driveDistance(0.4, 12, false);
-            driveTrain.rotateDegrees(0.4, -610, false);
-            driveTrain.driveDistance(0.4, 90, false);
-            //driveTrain.driveMecanum(0.6, 0, 96, false, 1);
+            //driveDiatance = drives straight for a certain distance (power, inches, degreeDirection, boolean PID)
+            //driveMecanum = strafes for a certain distance (power, degreeDirection, inches, boolean PID, yeet) --> yeet is dummy int
+            //rotateDegrees = rotates robot by a certain number of degrees (power, degrees, boolean PID)
+
+            driveTrain.driveDistance(0.5, 12, 180, false);
+            driveTrain.rotateDegrees(0.5, -625, false);
+            driveTrain.driveDistance(0.5, 96, 180, false);
+
+
 
         }
     }
