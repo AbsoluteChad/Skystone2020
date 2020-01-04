@@ -138,23 +138,19 @@ public class DriveTrain extends Subsystem {
      * @param PID whether or not to use PID
      */
     public void driveDistance(double power, int inches, double degreeDirection, boolean PID) {
-        double radianDirection = Math.toRadians(degreeDirection);
         int setPoint = toTicks(inches);
         setEncoderMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
-        int sign;
-        if (degreeDirection % 180 == 0) {
-            sign = (int) Math.cos(radianDirection);
-        } else if (degreeDirection % 90 == 0) {
-            sign = (int) Math.sin(radianDirection);
-        } else {
-            return;
-        }
+        topLeft.setTargetPosition(setPoint);
+        bottomRight.setTargetPosition(setPoint);
 
-        topLeft.setTargetPosition(setPoint * sign);
-        bottomLeft.setTargetPosition(setPoint * sign * degreeDirection % 180 == 0 ? -1 : 1);
-        topRight.setTargetPosition(setPoint * sign * degreeDirection % 180 == 0 ? -1 : 1);
-        bottomRight.setTargetPosition(setPoint * sign);
+        if (degreeDirection % 180 == 0) {
+            bottomLeft.setTargetPosition(-setPoint);
+            topRight.setTargetPosition(-setPoint);
+        } else if (degreeDirection % 90 == 0) {
+            bottomLeft.setTargetPosition(setPoint);
+            topRight.setTargetPosition(setPoint);
+        }
         setEncoderMode(DcMotor.RunMode.RUN_TO_POSITION);
 
         if (PID) {
