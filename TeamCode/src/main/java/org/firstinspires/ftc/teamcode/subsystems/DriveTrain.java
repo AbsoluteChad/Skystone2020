@@ -127,6 +127,56 @@ public class DriveTrain extends Subsystem {
     }
 
     /**
+     * Drives a certain distance in a forward/backward/left/right direction using encoders
+     *
+     * @param power power applied to all motors
+     * @param inches distance traveled by each wheel of drivetrain
+     * @param degreeDirection direction requested to travel by robot
+     *                        0, 90, 180, and 270 will travel distance;
+     *                        any other angle will not do anything --
+     *                        use driveMecanum() "yeet" dummy parameter
+     * @param PID whether or not to use PID
+     */
+    public void driveDistance(double power, int inches, double degreeDirection, boolean PID) {
+        double radianDirection = Math.toRadians(degreeDirection);
+        int setPoint = toTicks(inches);
+        setEncoderMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+
+        int sign;
+        if (degreeDirection % 180 == 0) {
+            sign = (int) Math.cos(radianDirection);
+        } else if (degreeDirection % 90 == 0) {
+            sign = (int) Math.sin(radianDirection);
+        } else {
+            return;
+        }
+
+        topLeft.setTargetPosition(setPoint * sign);
+        bottomLeft.setTargetPosition(setPoint * sign * degreeDirection % 180 == 0 ? -1 : 1);
+        topRight.setTargetPosition(setPoint * sign * degreeDirection % 180 == 0 ? -1 : 1);
+        bottomRight.setTargetPosition(setPoint * sign);
+        setEncoderMode(DcMotor.RunMode.RUN_TO_POSITION);
+
+        if (PID) {
+            //TODO finish
+            //set1/set2 will be left/right wheels for non-strafe; will be TL and BR/BL and TR wheels for strafe
+            PIDController set1 = new PIDController(PIDcoeffs, toTicks(inches));
+            PIDController set2 = new PIDController(PIDcoeffs, toTicks(inches));
+            while (Math.abs(set1.getError()) > ENCODER_ERROR || Math.abs(set2.getError()) > ENCODER_ERROR) {
+                driveTank(power, power);
+            }
+            driveTank(0, 0);
+        } else {
+            driveTank(power, power);
+            while (topLeft.isBusy() || bottomLeft.isBusy() || topRight.isBusy() || bottomRight.isBusy()) {
+                //yeet
+            }
+            driveTank(0, 0);
+        }
+        setEncoderMode(DcMotor.RunMode.RUN_USING_ENCODER);
+    }
+
+    /**
      * Feeds mecanum wheel powers based off an inputted direction
      *
      * @param degreeDirection the unit circle direction (degrees) requested to drive
@@ -166,40 +216,6 @@ public class DriveTrain extends Subsystem {
             driveMecanum(thrust, strafe, 0, false);
         }
 
-    }
-
-    /**
-     * Drives a certain distance using encoders
-     *
-     * @param power power applied to all motors
-     * @param inches distance traveled by each wheel of drivetrain
-     * @param PID whether or not to use PID
-     */
-    public void driveDistance(double power, int inches, boolean PID) {
-        int setPoint = toTicks(inches);
-        setEncoderMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-
-        topLeft.setTargetPosition(setPoint);
-        bottomLeft.setTargetPosition(setPoint);
-        topRight.setTargetPosition(setPoint);
-        bottomRight.setTargetPosition(setPoint);
-        setEncoderMode(DcMotor.RunMode.RUN_TO_POSITION);
-
-        if (PID) {
-            PIDController left = new PIDController(PIDcoeffs, setPoint);
-            PIDController right = new PIDController(PIDcoeffs, setPoint);
-            while (Math.abs(left.getError()) > ENCODER_ERROR || Math.abs(right.getError()) > ENCODER_ERROR) {
-                driveTank(left.motorOutput(topLeft.getCurrentPosition()), right.motorOutput(topRight.getCurrentPosition()));
-            }
-        } else {
-            driveTank(power, power);
-            while (topLeft.isBusy() || bottomLeft.isBusy() || topRight.isBusy() || bottomRight.isBusy()) {
-                //yeet
-            }
-        }
-
-        driveTank(0, 0);
-        setEncoderMode(DcMotor.RunMode.RUN_USING_ENCODER);
     }
 
     /**
