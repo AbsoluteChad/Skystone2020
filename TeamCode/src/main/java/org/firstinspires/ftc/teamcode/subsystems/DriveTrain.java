@@ -138,32 +138,39 @@ public class DriveTrain extends Subsystem {
      * @param PID whether or not to use PID
      */
     public void driveDistance(double power, int inches, double degreeDirection, boolean PID) {
+        //Only F, B, L, and R directions
+        if (degreeDirection % 90 != 0) {
+            return;
+        }
+
+        //Determine component values
+        double thrust = Math.sin(Math.toRadians(degreeDirection));
+        double strafe = Math.cos(Math.toRadians(degreeDirection));
+
+        //Ready encoders & set target positions (TLBR = topLeft & bottomRight motors; BLTR = bottomLeft & topRight motors)
         int setPoint = toTicks(inches);
         setEncoderMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
-        topLeft.setTargetPosition(setPoint);
-        bottomRight.setTargetPosition(setPoint);
+        int TLBRSetpt = thrust + strafe > 0 ? setPoint : -setPoint;
+        int BLTRSetpt = thrust - strafe > 0 ? setPoint : -setPoint;
 
-        if (degreeDirection % 180 == 0) {
-            bottomLeft.setTargetPosition(-setPoint);
-            topRight.setTargetPosition(-setPoint);
-        } else if (degreeDirection % 90 == 0) {
-            bottomLeft.setTargetPosition(setPoint);
-            topRight.setTargetPosition(setPoint);
-        }
+        topLeft.setTargetPosition(TLBRSetpt);
+        bottomLeft.setTargetPosition(BLTRSetpt);
+        topRight.setTargetPosition(BLTRSetpt);
+        bottomRight.setTargetPosition(TLBRSetpt);
+
         setEncoderMode(DcMotor.RunMode.RUN_TO_POSITION);
 
         if (PID) {
             //TODO finish
-            //set1/set2 will be left/right wheels for non-strafe; will be TL and BR/BL and TR wheels for strafe
             PIDController set1 = new PIDController(PIDcoeffs, toTicks(inches));
             PIDController set2 = new PIDController(PIDcoeffs, toTicks(inches));
             while (Math.abs(set1.getError()) > ENCODER_ERROR || Math.abs(set2.getError()) > ENCODER_ERROR) {
-                driveTank(power, power);
+                driveMecanum(thrust, strafe, 0, false);
             }
             driveTank(0, 0);
         } else {
-            driveTank(power, power);
+            driveMecanum(thrust, strafe, 0, false);
             while (topLeft.isBusy() || bottomLeft.isBusy() || topRight.isBusy() || bottomRight.isBusy()) {
                 //yeet
             }
