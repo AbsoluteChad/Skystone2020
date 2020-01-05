@@ -24,6 +24,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.RobotMain;
 import org.firstinspires.ftc.teamcode.subsystems.DriveTrain;
+import org.firstinspires.ftc.teamcode.subsystems.FoundationMover;
 
 /**
  * This file contains an minimal example of a Linear "OpMode". An OpMode is a 'program' that runs in either
@@ -43,11 +44,13 @@ public class LeAutonomousTest extends LinearOpMode {
 
     private RobotMain robot;
     private DriveTrain driveTrain;
+    private FoundationMover foundationMover;
 
     @Override
     public void runOpMode() {
         robot = new RobotMain(hardwareMap, gamepad1, gamepad2, "blue", true);
         driveTrain = (DriveTrain) RobotMain.driveTrain;
+        foundationMover = (FoundationMover) RobotMain.foundationMover;
 
         telemetry.addData("Status", "Initialized");
         telemetry.update();
@@ -62,10 +65,10 @@ public class LeAutonomousTest extends LinearOpMode {
             //lower arm to get skystone
             //move back a bit?? maybe.....
             driveTrain.rotateDegrees(0.5, -635, false);
-            driveTrain.driveDistance(0.5, 107,90, false);
+            driveTrain.driveDistance(0.7, 107,90, false);
             driveTrain.rotateDegrees(0.5, 635, false);
             driveTrain.driveDistance(0.5, 16, 90, false);
-            //lock onto foundation
+            foundationMover.lockFoundation();
             //move foundation into zone
             //lower arm over foundation
             //unsucc skystone

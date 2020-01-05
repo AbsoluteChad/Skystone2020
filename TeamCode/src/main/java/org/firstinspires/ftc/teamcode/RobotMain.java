@@ -18,7 +18,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackableDefau
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
 import org.firstinspires.ftc.robotcore.external.tfod.Recognition;
 import org.firstinspires.ftc.robotcore.external.tfod.TFObjectDetector;
-import org.firstinspires.ftc.teamcode.lib.FieldCenterPosition;
+import org.firstinspires.ftc.teamcode.lib.Pose2d;
 import org.firstinspires.ftc.teamcode.subsystems.*;
 
 import com.qualcomm.robotcore.hardware.Gyroscope;
@@ -237,7 +237,7 @@ public class RobotMain {
         tfod.loadModelFromAsset(TFOD_MODEL_ASSET, LABEL_STONE, LABEL_SKYSTONE);
     }
 
-    public FieldCenterPosition getFIeldPositionFromPerimeterTarget() {
+    public Pose2d getFIeldPositionFromPerimeterTarget() {
         //Check all perimeter trackables to see if one is found
         targetVisible = false;
         for (VuforiaTrackable trackable : allTrackables) {
@@ -254,14 +254,14 @@ public class RobotMain {
         }
 
         //Provide feedback as to where the robot is located relative to trackable
-        FieldCenterPosition fieldCenterPosition = new FieldCenterPosition(null, null);;
+        Pose2d robotPose = new Pose2d(null, null);;
         if (targetVisible) {
             //Express translation and rotation of robot as a FieldCenterPosition object
             VectorF translation = lastLocation.getTranslation();
             Orientation orientation = Orientation.getOrientation(lastLocation, EXTRINSIC, XYZ, DEGREES);
-            fieldCenterPosition = new FieldCenterPosition(translation, orientation);
+            robotPose = new Pose2d(translation, orientation);
         }
-        return fieldCenterPosition;
+        return robotPose;
     }
 
     /**

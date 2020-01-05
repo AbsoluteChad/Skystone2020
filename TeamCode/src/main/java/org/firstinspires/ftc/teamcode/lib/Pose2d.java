@@ -4,13 +4,13 @@ import org.firstinspires.ftc.robotcore.external.matrices.VectorF;
 import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
 import org.firstinspires.ftc.teamcode.RobotMain;
 
-public class FieldCenterPosition {
+public class Pose2d {
 
     //Declare 3D positional objects
     private VectorF translation;
     private Orientation orientation;
 
-    public FieldCenterPosition(VectorF translation, Orientation orientation) {
+    public Pose2d(VectorF translation, Orientation orientation) {
         this.translation = translation;
         this.orientation = orientation;
     }
@@ -45,7 +45,7 @@ public class FieldCenterPosition {
     @Override
     public String toString() {
         String s = "Position relative to field center (inches): " + "\n";
-        s += "(X, Y, Z) = (" + getX() + ", " + getY() + ", " + getZ() + ")";
+        s += "(X, Y, Z) = (" + getX() + ", " + getY() + ", " + getZ() + ") \n";
         s += "Orientation relative to field center (degrees): " + "\n";
         s += "(roll, pitch, heading) = (" + getRoll() + ", " + getPitch() + ", " + getHeading() + ")";
         return s;

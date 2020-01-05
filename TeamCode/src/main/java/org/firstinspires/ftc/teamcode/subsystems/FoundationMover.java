@@ -24,7 +24,6 @@ public class FoundationMover extends Subsystem {
     public void subsystemInit(HardwareMap hardwareMap) {
         foundationLeft = hardwareMap.get(Servo.class, "foundationLeft");
         foundationRight = hardwareMap.get(Servo.class, "foundationRight");
-
     }
 
     @Override
