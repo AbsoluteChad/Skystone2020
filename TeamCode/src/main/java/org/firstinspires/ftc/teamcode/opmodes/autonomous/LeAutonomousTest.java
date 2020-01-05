@@ -58,10 +58,18 @@ public class LeAutonomousTest extends LinearOpMode {
             //driveMecanum = strafes for a certain distance (power, degreeDirection, inches, boolean PID, yeet) --> yeet is dummy int
             //rotateDegrees = rotates robot by a certain number of degrees (power, degrees, boolean PID)
 
-            driveTrain.driveDistance(0.5, 12, 180, false);
-            driveTrain.rotateDegrees(0.5, -625, false);
-            driveTrain.driveDistance(0.5, 96, 180, false);
-
+            driveTrain.driveDistance(0.5, 12, 90, false);
+            //lower arm to get skystone
+            //move back a bit?? maybe.....
+            driveTrain.rotateDegrees(0.5, -635, false);
+            driveTrain.driveDistance(0.5, 107,90, false);
+            driveTrain.rotateDegrees(0.5, 635, false);
+            driveTrain.driveDistance(0.5, 16, 90, false);
+            //lock onto foundation
+            //move foundation into zone
+            //lower arm over foundation
+            //unsucc skystone
+            //big win gang
 
 
         }
