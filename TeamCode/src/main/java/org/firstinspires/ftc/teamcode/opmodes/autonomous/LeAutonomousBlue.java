@@ -40,75 +40,65 @@ import org.firstinspires.ftc.teamcode.subsystems.FoundationMover;
 @Autonomous(name="LeAutonomousBlue", group="Linear Opmode")
 public class LeAutonomousBlue extends LinearOpMode {
 
-        private RobotMain robot;
-        private DriveTrain driveTrain;
-        private FoundationMover foundationMover;
+    private RobotMain robot;
+    private DriveTrain driveTrain;
+    private FoundationMover foundationMover;
 
-        @Override
-        public void runOpMode() {
-            robot = new RobotMain(hardwareMap, gamepad1, gamepad2, "blue", true);
-            driveTrain = (DriveTrain) RobotMain.driveTrain;
-            foundationMover = (FoundationMover) RobotMain.foundationMover;
+    @Override
+    public void runOpMode() {
+        robot = new RobotMain(hardwareMap, gamepad1, gamepad2, "blue", true);
+        driveTrain = (DriveTrain) RobotMain.driveTrain;
+        foundationMover = (FoundationMover) RobotMain.foundationMover;
 
         telemetry.addData("Status", "Initialized");
         telemetry.update();
         waitForStart();
 
         if (opModeIsActive()) {
-            if getSkystonePosition=1 {
+            int skystonePos = robot.getSkystonePosition(false, 0);
+            if (skystonePos == 1) {
                 driveTrain.driveMecanum(0.7, 11, 180, false);
                 driveTrain.driveDistance(0.7, 6, 180, false);
                 //pick up skystone code
                 driveTrain.driveDistance(0.5, 6, 180, false);
-                driveTrain.rotateDegrees(0.5, 635, false);
+                driveTrain.rotateDegrees(0.5, 635);
                 driveTrain.driveDistance(0.5, 72, 90, false);
-                driveTrain.rotateDegrees(0.5, -635, false);
+                driveTrain.rotateDegrees(0.5, -635);
                 driveTrain.driveDistance(0.5, 12, 90, false);
                 foundationMover.lockFoundation();
                 driveTrain.driveDistance(0.5, 12, 180, false);
                 foundationMover.unlockFoundation();
 
             }
-            if getSkystonePosition=2 {
+            if (skystonePos == 2) {
                 driveTrain.driveDistance(0.7,6,180,false);
                 driveTrain.driveMecanum(0.7,6,180,false);
                 //pick up skystone code
                 driveTrain.driveDistance(0.5, 6, 180, false);
                 //pickup skystone
-                driveTrain.rotateDegrees(0.5, 635, false);
+                driveTrain.rotateDegrees(0.5, 635);
                 driveTrain.driveDistance(0.5, 72, 90, false);
-                driveTrain.rotateDegrees(0.5, -635, false);
+                driveTrain.rotateDegrees(0.5, -635);
                 driveTrain.driveDistance(0.7,12,180,false);
                 foundationMover.lockFoundation();
                 driveTrain.driveDistance(0.5, 12, 90, false);
                 foundationMover.unlockFoundation();
             }
 
-            if getSkystonePosition=3 {
+            if (skystonePos == 3) {
                 driveTrain.driveDistance(0.7,6,180,false);
                 driveTrain.driveMecanum(0.7,1,180,false);
                 //pick up skystone code
                 driveTrain.driveDistance(0.5, 6, 180, false);
                 //pickup skystone
-                driveTrain.rotateDegrees(0.5, 635, false);
+                driveTrain.rotateDegrees(0.5, 635);
                 driveTrain.driveDistance(0.5, 72, 90, false);
-                driveTrain.rotateDegrees(0.5, -635, false);
+                driveTrain.rotateDegrees(0.5, -635);
                 foundationMover.lockFoundation();
                 driveTrain.driveDistance(0.5, 12, 90, false);
                 foundationMover.unlockFoundation();
 
             }
-
-
-
-
-
-
-
-
-
-
-
         }
     }
 }

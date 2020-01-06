@@ -57,6 +57,7 @@ public class LeAutonomousTest extends LinearOpMode {
         waitForStart();
 
         if (opModeIsActive()) {
+            int skystonePos = robot.getSkystonePosition(false, 0);
             //driveDiatance = drives straight for a certain distance (power, inches, degreeDirection, boolean PID)
             //driveMecanum = strafes for a certain distance (power, degreeDirection, inches, boolean PID, yeet) --> yeet is dummy int
             //rotateDegrees = rotates robot by a certain number of degrees (power, degrees, boolean PID)
@@ -64,9 +65,9 @@ public class LeAutonomousTest extends LinearOpMode {
             driveTrain.driveDistance(0.7, 12, 90, false);
             //lower arm to get skystone
             //move back a bit?? maybe.....
-            driveTrain.rotateDegrees(0.7, -635, false);
+            driveTrain.rotateDegrees(0.7, -635);
             driveTrain.driveDistance(0.7, 107,90, false);
-            driveTrain.rotateDegrees(0.7, 635, false);
+            driveTrain.rotateDegrees(0.7, 635);
             driveTrain.driveDistance(0.7, 16, 90, false);
             foundationMover.lockFoundation();
             driveTrain.driveDistance(07, 16, 180, false);
@@ -88,45 +89,22 @@ public class LeAutonomousTest extends LinearOpMode {
             */
             //Blue Alliance Code
             //Sensor
-            if getSkystonePosition=1{
+            if (skystonePos == 1) {
                 driveTrain.driveDistance(0.7, 11, 90, false);
                 driveTrain.driveDistance(0.7, 6, 180, false);
                 //pick up skystone code
                 driveTrain.driveDistance(0.5, 6,180, false);
                 //pickup skystone
-                driveTrain.rotateDegrees(0.5, 635, false);
+                driveTrain.rotateDegrees(0.5, 635);
                 driveTrain.driveDistance(0.5, 72,90, false);
-                driveTrain.rotateDegrees(0.5, -635, false);
-
-
-
-
-
-
-
-
+                driveTrain.rotateDegrees(0.5, -635);
             }
+
             driveTrain.driveDistance(0.5, 6,180, false);
-            driveTrain.rotateDegrees(0.5, 635, false);
+            driveTrain.rotateDegrees(0.5, 635);
             driveTrain.driveDistance(0.7, 78,90, false);
-            driveTrain.rotateDegrees(0.5, -635, false);
+            driveTrain.rotateDegrees(0.5, -635);
             foundationMover.lockFoundation();
-         */
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
         }
     }
 }

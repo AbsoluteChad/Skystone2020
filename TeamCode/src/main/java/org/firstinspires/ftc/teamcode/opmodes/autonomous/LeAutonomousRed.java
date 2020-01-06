@@ -56,33 +56,24 @@ public class LeAutonomousRed extends LinearOpMode {
         waitForStart();
 
         if (opModeIsActive()) {
-            if getSkystonePosition=1{
+            int skystonePos = robot.getSkystonePosition(false, 0);
+            if (skystonePos == 1) {
                 driveTrain.driveMecanum(0.7, 11, 180, false);
                 driveTrain.driveDistance(0.7, 6, 180, false);
                 //pick up skystone code
-                driveTrain.driveDistance(0.5, 6,180, false);
+                driveTrain.driveDistance(0.5, 6, 180, false);
                 //pickup skystone
-                driveTrain.rotateDegrees(0.5, -635, false);
-                driveTrain.driveDistance(0.5, 72,90, false);
-                driveTrain.rotateDegrees(0.5, 635, false);
+                driveTrain.rotateDegrees(0.5, -635);
+                driveTrain.driveDistance(0.5, 72, 90, false);
+                driveTrain.rotateDegrees(0.5, 635);
                 foundationMover.lockFoundation();
-                driveTrain.driveDistance(0.5, 12,90, false);
+                driveTrain.driveDistance(0.5, 12, 90, false);
                 foundationMover.unlockFoundation();
 
-                if getSkystonePositon=2{
-                    driveTrain.driveMecanum(0.7,11,180,false);
+                if (skystonePos == 2) {
+                    driveTrain.driveMecanum(0.7, 11, 180, false);
                 }
-
-
-
-
-
-
-
-
-
-
-
             }
         }
     }
+}

@@ -22,22 +22,20 @@ public class DriveTrain extends Subsystem {
 
     //Declare constants
     private static final double VIDIPT_DRIVE_CONTROL = 1;
-    private static final double WHEEL_CIRCUMFRENCE = 4 * Math.PI;
+    private static final double WHEEL_CIRCUMFERENCE = 4 * Math.PI;
     private static final int TICKS_PER_ROTATION = 1440;
     private static final double GEAR_RATIO = 1;
-    private static final double ENCODER_ERROR = 5;
+    private static final double ENCODER_TOLERANCE = 5;
 
     //Declare PID members
     private PIDCoefficients PIDcoeffs;
+    private PIDController PIDController;
 
     //Misc
     private ElapsedTime timer;
-
     //Private constructor
-    private DriveTrain() {
-        //Init PID members
-        PIDcoeffs = new PIDCoefficients(0, 0, 0);
 
+    private DriveTrain() {
         //Init misc
         timer = new ElapsedTime();
     }
@@ -63,6 +61,11 @@ public class DriveTrain extends Subsystem {
         //Enable & reset encoders
         setEncoderMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         setEncoderMode(DcMotor.RunMode.RUN_USING_ENCODER);
+
+        //Init PID members
+        PIDcoeffs = new PIDCoefficients(0, 0, 0);
+        DcMotor[] motors = {topLeft, bottomLeft, topRight, bottomRight};
+        PIDController = new PIDController(motors, PIDcoeffs, 6);
     }
 
     @Override
@@ -158,6 +161,16 @@ public class DriveTrain extends Subsystem {
         int TLBRSetpt = thrust + strafe > 0 ? setPoint : -setPoint;
         int BLTRSetpt = thrust - strafe > 0 ? setPoint : -setPoint;
 
+        boolean[] motorDirections = new boolean[4];
+        if (TLBRSetpt < 0) {
+            motorDirections[0] = true;
+            motorDirections[3] = true;
+        }
+        if (BLTRSetpt < 0) {
+            motorDirections[1] = true;
+            motorDirections[2] = true;
+        }
+
         topLeft.setTargetPosition(TLBRSetpt);
         bottomLeft.setTargetPosition(BLTRSetpt);
         topRight.setTargetPosition(BLTRSetpt);
@@ -166,13 +179,7 @@ public class DriveTrain extends Subsystem {
         setEncoderMode(DcMotor.RunMode.RUN_TO_POSITION);
 
         if (PID) {
-            //TODO finish
-            PIDController set1 = new PIDController(PIDcoeffs, toTicks(inches));
-            PIDController set2 = new PIDController(PIDcoeffs, toTicks(inches));
-            while (Math.abs(set1.getError()) > ENCODER_ERROR || Math.abs(set2.getError()) > ENCODER_ERROR) {
-                driveMecanum(thrust, strafe, 0, false);
-            }
-            driveTank(0, 0);
+            PIDController.drive(setPoint, ENCODER_TOLERANCE, motorDirections);
         } else {
             driveMecanum(thrust, strafe, 0, false);
             while (topLeft.isBusy() || bottomLeft.isBusy() || topRight.isBusy() || bottomRight.isBusy()) {
@@ -207,14 +214,14 @@ public class DriveTrain extends Subsystem {
     /**
      * Used to rotate a certain number of degrees about unit circle using encoders
      *
+     * @param power the power at which to travel
      * @param degrees degree amount to turn
      *                negative value = clockwise
      *                positive value = counterclockwise
-     * @param PID whether or not to use PID
      */
-    public void rotateDegrees(double power, double degrees, boolean PID) {
+    public void rotateDegrees(double power, double degrees) {
         int setPoint = (int) ((degrees / 360) * TICKS_PER_ROTATION);
-        if (Math.abs(setPoint) < ENCODER_ERROR) {
+        if (Math.abs(setPoint) < ENCODER_TOLERANCE) {
             return;
         }
         setEncoderMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
@@ -225,22 +232,10 @@ public class DriveTrain extends Subsystem {
         bottomRight.setTargetPosition(setPoint);
 
         setEncoderMode(DcMotor.RunMode.RUN_TO_POSITION);
-        if (PID) {
-            PIDController left = new PIDController(PIDcoeffs, -setPoint);
-            PIDController right = new PIDController(PIDcoeffs, setPoint);
-            while (Math.abs(left.getError()) > ENCODER_ERROR || Math.abs(right.getError()) > ENCODER_ERROR) {
-                if (setPoint < 0) {
-                    driveTank(left.motorOutput(topLeft.getCurrentPosition()), -right.motorOutput(topRight.getCurrentPosition()));
-                } else if (setPoint > 0) {
-                    driveTank(-left.motorOutput(topLeft.getCurrentPosition()), right.motorOutput(topRight.getCurrentPosition()));
-                }
-            }
-        } else {
-            if (setPoint < 0) {
-                driveTank(power, -power);
-            } else if (setPoint > 0) {
-                driveTank(-power, power);
-            }
+        if (setPoint < 0) {
+            driveTank(power, -power);
+        } else if (setPoint > 0) {
+            driveTank(-power, power);
         }
 
         while (topLeft.isBusy() || bottomLeft.isBusy() || topRight.isBusy() || bottomRight.isBusy()) {
@@ -267,7 +262,7 @@ public class DriveTrain extends Subsystem {
      * @return <i>inches</i> converted to encoder ticks
      */
     private int toTicks(double inches) {
-        double rotations = inches / WHEEL_CIRCUMFRENCE;
+        double rotations = inches / WHEEL_CIRCUMFERENCE;
         return (int) (rotations * TICKS_PER_ROTATION / GEAR_RATIO);
     }
 
