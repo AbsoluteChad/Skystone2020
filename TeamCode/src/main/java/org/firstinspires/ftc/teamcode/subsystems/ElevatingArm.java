@@ -20,8 +20,11 @@ public class ElevatingArm extends Subsystem {
     //Declare constants
     private static final double VIDIPT_ELEVATOR_CONTROL = 0.75;
     private static final double VIDIPT_ROTATIONAL_ARM_CONTROL = 0.6;
+    private static final double ELEVATOR_TICKS_PER_INCH = 1716;
+
 
     //Private constructor
+
     private ElevatingArm() {
 
     }
@@ -77,9 +80,34 @@ public class ElevatingArm extends Subsystem {
         telemetry.update();
     }
 
-    /**
-     * @param power requested power to drive rotational arm
-     */
+    public void elevateArm(double power, double inches) {
+        setElevatorEncoderMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        int setPoint = toTicks(inches);
+
+
+
+        elevatorArmLeft.setTargetPosition(setPoint);
+        elevatorArmRight.setTargetPosition(setPoint);
+
+        setElevatorEncoderMode(DcMotor.RunMode.RUN_TO_POSITION);
+
+    }
+
+
+
+    public int toTicks(double inches) {
+        return (int) (ELEVATOR_TICKS_PER_INCH * inches);
+
+    }
+
+    public void setElevatorEncoderMode(DcMotor.RunMode mode) {
+        elevatorArmLeft.setMode(mode);
+        elevatorArmRight.setMode(mode);
+    }
+
+        /**
+         * @param power requested power to drive rotational arm
+         */
     public void driveRotationalArm(double power) {
         rotationalArm.setPower(power * VIDIPT_ROTATIONAL_ARM_CONTROL);
     }

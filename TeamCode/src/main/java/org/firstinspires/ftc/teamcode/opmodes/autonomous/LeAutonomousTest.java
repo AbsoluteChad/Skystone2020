@@ -23,6 +23,7 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 import org.firstinspires.ftc.teamcode.RobotMain;
 import org.firstinspires.ftc.teamcode.subsystems.DriveTrain;
+import org.firstinspires.ftc.teamcode.subsystems.ElevatingArm;
 import org.firstinspires.ftc.teamcode.subsystems.FoundationMover;
 
 /**
@@ -43,12 +44,14 @@ public class LeAutonomousTest extends LinearOpMode {
 
     private RobotMain robot;
     private DriveTrain driveTrain;
+    private ElevatingArm elevatingArm;
     private FoundationMover foundationMover;
 
     @Override
     public void runOpMode() {
         robot = new RobotMain(hardwareMap, gamepad1, gamepad2, "blue", true);
         driveTrain = (DriveTrain) RobotMain.driveTrain;
+        elevatingArm = (ElevatingArm) RobotMain.elevatingArm;
         foundationMover = (FoundationMover) RobotMain.foundationMover;
 
         telemetry.addData("Status", "Initialized");
