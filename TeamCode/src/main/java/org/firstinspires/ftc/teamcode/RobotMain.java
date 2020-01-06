@@ -308,7 +308,15 @@ public class RobotMain {
             }
 
             if (recognition.getLabel().equals(LABEL_SKYSTONE)) {
-                //TODO finish method
+                //TODO find pixel distance range
+                double distFromLeft = recognition.getBottom();
+                if (distFromLeft > 0 && distFromLeft < 1) {
+                    return 1;
+                } else if (distFromLeft > 2 && distFromLeft < 3) {
+                    return 2;
+                } else if (distFromLeft > 4 && distFromLeft < 5) {
+                    return 3;
+                }
                 //recognition.getLeft(), recognition.getTop();
                 //recognition.getRight(), recognition.getBottom();
             }
@@ -316,7 +324,6 @@ public class RobotMain {
             //Shutdown tfod
             tfod.shutdown();
         }
-
         return -1;
     }
 
