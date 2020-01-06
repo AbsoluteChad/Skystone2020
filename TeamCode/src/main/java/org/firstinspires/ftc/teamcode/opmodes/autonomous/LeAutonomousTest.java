@@ -20,10 +20,10 @@ package org.firstinspires.ftc.teamcode.opmodes.autonomous;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.RobotMain;
 import org.firstinspires.ftc.teamcode.subsystems.DriveTrain;
-import org.firstinspires.ftc.teamcode.subsystems.ElevatingArm;
 import org.firstinspires.ftc.teamcode.subsystems.FoundationMover;
 
 /**
@@ -44,14 +44,12 @@ public class LeAutonomousTest extends LinearOpMode {
 
     private RobotMain robot;
     private DriveTrain driveTrain;
-    private ElevatingArm elevatingArm;
     private FoundationMover foundationMover;
 
     @Override
     public void runOpMode() {
         robot = new RobotMain(hardwareMap, gamepad1, gamepad2, "blue", true);
         driveTrain = (DriveTrain) RobotMain.driveTrain;
-        elevatingArm = (ElevatingArm) RobotMain.elevatingArm;
         foundationMover = (FoundationMover) RobotMain.foundationMover;
 
         telemetry.addData("Status", "Initialized");
@@ -59,21 +57,76 @@ public class LeAutonomousTest extends LinearOpMode {
         waitForStart();
 
         if (opModeIsActive()) {
-            //driveDiatance = drives or strafes for a certain distance (power, inches, degreeDirection, boolean PID)
+            //driveDiatance = drives straight for a certain distance (power, inches, degreeDirection, boolean PID)
+            //driveMecanum = strafes for a certain distance (power, degreeDirection, inches, boolean PID, yeet) --> yeet is dummy int
             //rotateDegrees = rotates robot by a certain number of degrees (power, degrees, boolean PID)
 
-            driveTrain.driveDistance(0.5, 12, 90, false);
+            driveTrain.driveDistance(0.7, 12, 90, false);
             //lower arm to get skystone
             //move back a bit?? maybe.....
-            driveTrain.rotateDegrees(0.5, -635, false);
+            driveTrain.rotateDegrees(0.7, -635, false);
             driveTrain.driveDistance(0.7, 107,90, false);
-            driveTrain.rotateDegrees(0.5, 635, false);
-            driveTrain.driveDistance(0.5, 16, 90, false);
+            driveTrain.rotateDegrees(0.7, 635, false);
+            driveTrain.driveDistance(0.7, 16, 90, false);
             foundationMover.lockFoundation();
+            driveTrain.driveDistance(07, 16, 180, false);
             //move foundation into zone
             //lower arm over foundation
             //unsucc skystone
             //big win gang
+
+
+            //Red Alliance Code
+            //Sensor code
+         /*   driveTrain.driveDistance(0.7, 11,90, false);
+            //pick up block code
+            driveTrain.driveDistance(0.5, 6,180, false);
+            driveTrain.rotateDegrees(0.5, -635, false);
+            driveTrain.driveDistance(0.7, 78,90, false);
+            driveTrain.rotateDegrees(0.5, 635, false);
+            foundationMover.lockFoundation();
+            */
+            //Blue Alliance Code
+            //Sensor
+            if getSkystonePosition=1{
+                driveTrain.driveDistance(0.7, 11, 90, false);
+                driveTrain.driveDistance(0.7, 6, 180, false);
+                //pick up skystone code
+                driveTrain.driveDistance(0.5, 6,180, false);
+                //pickup skystone
+                driveTrain.rotateDegrees(0.5, 635, false);
+                driveTrain.driveDistance(0.5, 72,90, false);
+                driveTrain.rotateDegrees(0.5, -635, false);
+
+
+
+
+
+
+
+
+            }
+            driveTrain.driveDistance(0.5, 6,180, false);
+            driveTrain.rotateDegrees(0.5, 635, false);
+            driveTrain.driveDistance(0.7, 78,90, false);
+            driveTrain.rotateDegrees(0.5, -635, false);
+            foundationMover.lockFoundation();
+         */
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
         }
     }
 }

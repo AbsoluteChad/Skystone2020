@@ -22,6 +22,8 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 import org.firstinspires.ftc.teamcode.RobotMain;
+import org.firstinspires.ftc.teamcode.subsystems.DriveTrain;
+import org.firstinspires.ftc.teamcode.subsystems.FoundationMover;
 
 /**
  * This file contains an minimal example of a Linear "OpMode". An OpMode is a 'program' that runs in either
@@ -40,17 +42,47 @@ import org.firstinspires.ftc.teamcode.RobotMain;
 public class LeAutonomousRed extends LinearOpMode {
 
     private RobotMain robot;
+    private DriveTrain driveTrain;
+    private FoundationMover foundationMover;
 
     @Override
     public void runOpMode() {
-        robot = new RobotMain(hardwareMap, gamepad1, gamepad2, "red", true);
+        robot = new RobotMain(hardwareMap, gamepad1, gamepad2, "blue", true);
+        driveTrain = (DriveTrain) RobotMain.driveTrain;
+        foundationMover = (FoundationMover) RobotMain.foundationMover;
 
         telemetry.addData("Status", "Initialized");
         telemetry.update();
         waitForStart();
 
         if (opModeIsActive()) {
+            if getSkystonePosition=1{
+                driveTrain.driveMecanum(0.7, 11, 180, false);
+                driveTrain.driveDistance(0.7, 6, 180, false);
+                //pick up skystone code
+                driveTrain.driveDistance(0.5, 6,180, false);
+                //pickup skystone
+                driveTrain.rotateDegrees(0.5, -635, false);
+                driveTrain.driveDistance(0.5, 72,90, false);
+                driveTrain.rotateDegrees(0.5, 635, false);
+                foundationMover.lockFoundation();
+                driveTrain.driveDistance(0.5, 12,90, false);
+                foundationMover.unlockFoundation();
 
+                if getSkystonePositon=2{
+                    driveTrain.driveMecanum(0.7,11,180,false);
+                }
+
+
+
+
+
+
+
+
+
+
+
+            }
         }
     }
-}
