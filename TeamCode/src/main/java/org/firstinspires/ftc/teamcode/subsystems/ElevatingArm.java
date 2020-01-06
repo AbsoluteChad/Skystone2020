@@ -4,6 +4,7 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
+import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.RobotMain;
 
 public class ElevatingArm extends Subsystem {
@@ -66,6 +67,14 @@ public class ElevatingArm extends Subsystem {
     public void driveElevatorArm(double power) {
         elevatorArmLeft.setPower(power * VIDIPT_ELEVATOR_CONTROL);
         elevatorArmRight.setPower(power * VIDIPT_ELEVATOR_CONTROL);
+    }
+
+    //test
+    public void eleTest(double power, Telemetry telemetry) {
+        driveElevatorArm(power);
+        telemetry.addData("left", elevatorArmLeft.getCurrentPosition());
+        telemetry.addData("right", elevatorArmRight.getCurrentPosition());
+        telemetry.update();
     }
 
     /**

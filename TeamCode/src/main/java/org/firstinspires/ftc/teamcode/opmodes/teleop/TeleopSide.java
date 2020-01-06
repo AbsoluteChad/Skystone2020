@@ -28,6 +28,7 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.RobotMain;
+import org.firstinspires.ftc.teamcode.subsystems.ElevatingArm;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -43,14 +44,15 @@ import java.util.Date;
  * or add a @Disabled annotation to prevent this OpMode from being added to the Driver Station
  */
 @TeleOp(name="TeleopSide", group="Iterative Opmode")
-@Disabled
 public class TeleopSide extends OpMode {
 
     private RobotMain robot;
+    private ElevatingArm elevatingArm;
 
     @Override
     public void init() {
         robot = new RobotMain(hardwareMap, gamepad1, gamepad2, "blue", false);
+        elevatingArm = (ElevatingArm) RobotMain.elevatingArm;
     }
 
     /*
@@ -72,7 +74,13 @@ public class TeleopSide extends OpMode {
      */
     @Override
     public void loop() {
-        //telemetry.addData("Robot angle", robot.getAngle());
+        if (gamepad1.dpad_up) {
+            elevatingArm.eleTest(0.2, telemetry);
+        } else if (gamepad1.dpad_down) {
+            elevatingArm.eleTest(-0.2, telemetry);
+        } else {
+            elevatingArm.eleTest(0, telemetry);
+        }
     }
 
     /*

@@ -266,10 +266,11 @@ public class RobotMain {
 
     /**
      * The starting skystone configuration at the beginning of autonomous can be in one of three states:
-     *   1. SS -- -- SS -- --
-     *   2. -- SS -- -- SS --
-     *   3. -- -- SS -- -- SS
-     * SS represents a skystone, while -- represents a regular stone.
+     *   1. SS -- -- SS -- -- (left)
+     *   2. -- SS -- -- SS -- (middle)
+     *   3. -- -- SS -- -- SS (right)
+     * SS represents a skystone, while -- represents a regular stone. Keep in mind that 1 is on the
+     * outside on blue alliance and that 3 is on the blue side on
      *
      * @param enableTimer whether or not to use a timer
      * @param timeout max amount of time (ms) to sense for skystone if <i>enableTimer</i> is true before
@@ -296,11 +297,13 @@ public class RobotMain {
                 }
             }
 
-            //Skystone processing -- use rightmost stone (array index size() - 1) if red; leftmost if blue
+            //Skystone processing -- use leftmost stone (index 0) if blue; rightmost (index 1) if red
             Recognition recognition = updatedRecognitions.get(0);
             if (updatedRecognitions.size() > 1) {
                 if (alliance.equals("red")) {
                     recognition = updatedRecognitions.get(1);
+                } else if (alliance.equals("blue")) {
+                    recognition = updatedRecognitions.get(0);
                 }
             }
 

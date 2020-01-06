@@ -6,7 +6,6 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.PIDCoefficients;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.RobotMain;
 import org.firstinspires.ftc.teamcode.lib.PIDController;
 
@@ -31,10 +30,16 @@ public class DriveTrain extends Subsystem {
     //Declare PID members
     private PIDCoefficients PIDcoeffs;
 
+    //Misc
+    private ElapsedTime timer;
+
     //Private constructor
     private DriveTrain() {
         //Init PID members
         PIDcoeffs = new PIDCoefficients(0, 0, 0);
+
+        //Init misc
+        timer = new ElapsedTime();
     }
 
     @Override
@@ -133,8 +138,7 @@ public class DriveTrain extends Subsystem {
      * @param inches distance traveled by each wheel of drivetrain
      * @param degreeDirection direction requested to travel by robot
      *                        0, 90, 180, and 270 will travel distance;
-     *                        any other angle will not do anything --
-     *                        use driveMecanum() "yeet" dummy parameter
+     *                        any other angle will not do anything.
      * @param PID whether or not to use PID
      */
     public void driveDistance(double power, int inches, double degreeDirection, boolean PID) {
@@ -144,8 +148,8 @@ public class DriveTrain extends Subsystem {
         }
 
         //Determine component values
-        double thrust = Math.sin(Math.toRadians(degreeDirection));
-        double strafe = Math.cos(Math.toRadians(degreeDirection));
+        double thrust = Math.sin(Math.toRadians(degreeDirection)) * power;
+        double strafe = Math.cos(Math.toRadians(degreeDirection)) * power;
 
         //Ready encoders & set target positions (TLBR = topLeft & bottomRight motors; BLTR = bottomLeft & topRight motors)
         int setPoint = toTicks(inches);
@@ -180,45 +184,24 @@ public class DriveTrain extends Subsystem {
     }
 
     /**
-     * Feeds mecanum wheel powers based off an inputted direction
+     * Used to drive in a certain direction (not F, B, L, or R -- use driveDistance() w/ dist instead of time)
+     * for a certain amount of time
      *
-     * @param degreeDirection the unit circle direction (degrees) requested to drive
+     * @param power fraction of max power to drive with
+     * @param degreeDirection unit circle direction requested to travel
+     * @param milliseconds amount of time to travel for in milliseconds
      */
-    public void driveMecanum(double power, double degreeDirection, double inches, boolean PID, int yeet) {
-        double radianDirection = Math.toRadians(degreeDirection);
-        if (degreeDirection % 180 == 0) {
-            int setPoint = toTicks(inches);
-            int sign = (int) Math.cos(radianDirection);
-            setEncoderMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+    public void driveMecanum(double power, double degreeDirection, double milliseconds) {
+        //Calculate component values
+        double thrust = Math.sin(Math.toRadians(degreeDirection)) * power;
+        double strafe = Math.cos(Math.toRadians(degreeDirection)) * power;
 
-            topLeft.setTargetPosition(setPoint * sign);
-            bottomLeft.setTargetPosition(-setPoint * sign);
-            topRight.setTargetPosition(-setPoint * sign);
-            bottomRight.setTargetPosition(setPoint * sign);
-            setEncoderMode(DcMotor.RunMode.RUN_TO_POSITION);
-
-            if (PID) {
-                //TODO finish
-                PIDController TLBR = new PIDController(PIDcoeffs, toTicks(inches));
-                PIDController BLTR = new PIDController(PIDcoeffs, toTicks(inches));
-                while (Math.abs(TLBR.getError()) > ENCODER_ERROR || Math.abs(BLTR.getError()) > ENCODER_ERROR) {
-                    driveTank(power, power);
-                }
-                driveTank(0, 0);
-            } else {
-                driveTank(power, power);
-                while (topLeft.isBusy() || bottomLeft.isBusy() || topRight.isBusy() || bottomRight.isBusy()) {
-                    //yeet
-                }
-                driveTank(0, 0);
-                setEncoderMode(DcMotor.RunMode.RUN_USING_ENCODER);
-            }
-        } else {
-            double thrust = Math.sin(radianDirection) * power;
-            double strafe = Math.cos(radianDirection) * power;
+        //Start timer
+        timer.reset();
+        while (timer.milliseconds() < milliseconds) {
             driveMecanum(thrust, strafe, 0, false);
         }
-
+        driveTank(0, 0);
     }
 
     /**

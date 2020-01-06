@@ -20,7 +20,6 @@ package org.firstinspires.ftc.teamcode.opmodes.autonomous;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.RobotMain;
 import org.firstinspires.ftc.teamcode.subsystems.DriveTrain;
@@ -57,8 +56,7 @@ public class LeAutonomousTest extends LinearOpMode {
         waitForStart();
 
         if (opModeIsActive()) {
-            //driveDiatance = drives straight for a certain distance (power, inches, degreeDirection, boolean PID)
-            //driveMecanum = strafes for a certain distance (power, degreeDirection, inches, boolean PID, yeet) --> yeet is dummy int
+            //driveDiatance = drives or strafes for a certain distance (power, inches, degreeDirection, boolean PID)
             //rotateDegrees = rotates robot by a certain number of degrees (power, degrees, boolean PID)
 
             driveTrain.driveDistance(0.5, 12, 90, false);
@@ -73,8 +71,6 @@ public class LeAutonomousTest extends LinearOpMode {
             //lower arm over foundation
             //unsucc skystone
             //big win gang
-
-
         }
     }
 }
