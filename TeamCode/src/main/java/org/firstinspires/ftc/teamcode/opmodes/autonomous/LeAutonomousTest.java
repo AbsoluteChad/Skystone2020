@@ -63,8 +63,6 @@ public class LeAutonomousTest extends LinearOpMode {
 
         if (opModeIsActive()) {
 
-
-            elevatingArm.rotateArm(0.5, 1000); //this code works!
             //gripper.autoSucc(0.5, 1000); this code has problems :/
 
 
@@ -75,7 +73,7 @@ public class LeAutonomousTest extends LinearOpMode {
 
 
             driveTrain.driveDistance(0.7, 12, 90, false);
-            //lower arm to get skystone
+            elevatingArm.rotateArm(-0.5, 2000); //this code works!
             //move back a bit?? maybe.....
             driveTrain.rotateDegrees(0.7, -635);
             driveTrain.driveDistance(0.7, 107,90, false);
