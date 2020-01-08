@@ -104,9 +104,9 @@ public class Gripper extends Subsystem {
         gripperRotation.setPosition(gripperPosition);
     }
 
-    public void autoSucc(double gripperClosePower, double gripperFarPower, long millis) {
-        gripperClose.setPower(gripperClosePower);
-        gripperFar.setPower(gripperFarPower);
+    public void autoSucc(double gripperPower, long millis) {
+        gripperClose.setPower(gripperPower);
+        gripperFar.setPower(-gripperPower);
         delay(millis);
         gripperClose.setPower(0);
         gripperFar.setPower(0);
@@ -120,7 +120,6 @@ public class Gripper extends Subsystem {
     }
 
 
-    //hi
     /**
      * @return the singleton instance of the subsystem
      */

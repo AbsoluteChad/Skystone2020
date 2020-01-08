@@ -24,6 +24,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.RobotMain;
 import org.firstinspires.ftc.teamcode.subsystems.DriveTrain;
+import org.firstinspires.ftc.teamcode.subsystems.ElevatingArm;
 import org.firstinspires.ftc.teamcode.subsystems.FoundationMover;
 
 /**
@@ -45,22 +46,33 @@ public class LeAutonomousTest extends LinearOpMode {
     private RobotMain robot;
     private DriveTrain driveTrain;
     private FoundationMover foundationMover;
+    private ElevatingArm elevatingArm;
+    //private Gripper gripper;
 
     @Override
     public void runOpMode() {
         robot = new RobotMain(hardwareMap, gamepad1, gamepad2, "blue", true);
         driveTrain = (DriveTrain) RobotMain.driveTrain;
         foundationMover = (FoundationMover) RobotMain.foundationMover;
+        elevatingArm = (ElevatingArm) RobotMain.elevatingArm;
+        //gripper = (Gripper) RobotMain.gripper;
 
         telemetry.addData("Status", "Initialized");
         telemetry.update();
         waitForStart();
 
         if (opModeIsActive()) {
+
+
+            elevatingArm.rotateArm(0.5, 1000); //this code works!
+            //gripper.autoSucc(0.5, 1000); this code has problems :/
+
+
             int skystonePos = robot.getSkystonePosition(false, 0);
             //driveDiatance = drives straight for a certain distance (power, inches, degreeDirection, boolean PID)
             //driveMecanum = strafes for a certain distance (power, degreeDirection, inches, boolean PID, yeet) --> yeet is dummy int
             //rotateDegrees = rotates robot by a certain number of degrees (power, degrees, boolean PID)
+
 
             driveTrain.driveDistance(0.7, 12, 90, false);
             //lower arm to get skystone
@@ -79,14 +91,14 @@ public class LeAutonomousTest extends LinearOpMode {
 
             //Red Alliance Code
             //Sensor code
-         /*   driveTrain.driveDistance(0.7, 11,90, false);
+            driveTrain.driveDistance(0.7, 11,90, false);
             //pick up block code
             driveTrain.driveDistance(0.5, 6,180, false);
-            driveTrain.rotateDegrees(0.5, -635, false);
+            driveTrain.rotateDegrees(0.5, -635);
             driveTrain.driveDistance(0.7, 78,90, false);
-            driveTrain.rotateDegrees(0.5, 635, false);
+            driveTrain.rotateDegrees(0.5, 635);
             foundationMover.lockFoundation();
-            */
+
             //Blue Alliance Code
             //Sensor
             if (skystonePos == 1) {
