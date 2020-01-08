@@ -73,7 +73,7 @@ public class LeAutonomousTest extends LinearOpMode {
 
 
             driveTrain.driveDistance(0.7, 12, 90, false);
-            elevatingArm.rotateArm(-0.5, 2000); //this code works!
+            elevatingArm.rotateArm(-0.5, 2000); //this should make it go all the way from folded in the robot to touching the ground
             //move back a bit?? maybe.....
             driveTrain.rotateDegrees(0.7, -635);
             driveTrain.driveDistance(0.7, 107,90, false);
