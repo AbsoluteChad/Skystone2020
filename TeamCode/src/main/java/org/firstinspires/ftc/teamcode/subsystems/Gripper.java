@@ -5,6 +5,8 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.teamcode.RobotMain;
+import com.qualcomm.robotcore.util.ElapsedTime;
+
 
 public class Gripper extends Subsystem {
 
@@ -17,6 +19,9 @@ public class Gripper extends Subsystem {
 
     //Declare Servo
     public Servo gripperRotation;
+
+    ElapsedTime timer = new ElapsedTime();
+
 
 
     //Declare constants
@@ -97,6 +102,21 @@ public class Gripper extends Subsystem {
 
     public void gripperRotate(double gripperPosition) {
         gripperRotation.setPosition(gripperPosition);
+    }
+
+    public void autoSucc(double gripperClosePower, double gripperFarPower, long millis) {
+        gripperClose.setPower(gripperClosePower);
+        gripperFar.setPower(gripperFarPower);
+        delay(millis);
+        gripperClose.setPower(0);
+        gripperFar.setPower(0);
+    }
+
+    public void delay(long millis) {
+        timer.reset();
+        while (timer.milliseconds() < millis) {
+            //yeet 2.0
+        }
     }
 
 

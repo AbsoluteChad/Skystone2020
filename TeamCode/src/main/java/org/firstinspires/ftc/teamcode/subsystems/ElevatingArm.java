@@ -6,6 +6,8 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.RobotMain;
+import com.qualcomm.robotcore.util.ElapsedTime;
+
 
 public class ElevatingArm extends Subsystem {
 
@@ -22,6 +24,7 @@ public class ElevatingArm extends Subsystem {
     private static final double VIDIPT_ROTATIONAL_ARM_CONTROL = 0.6;
     private static final double ELEVATOR_TICKS_PER_INCH = 1716;
 
+    private ElapsedTime timer = new ElapsedTime();
 
     //Private constructor
 
@@ -93,6 +96,20 @@ public class ElevatingArm extends Subsystem {
 
     }
 
+    public void rotateArm(double power, long millis) {
+        rotationalArm.setPower(power);
+        delay(millis);
+        rotationalArm.setPower(0);
+
+    }
+
+
+    public void delay(long millis) {
+        timer.reset();
+        while (timer.milliseconds() < millis) {
+            //yeet 2.0
+        }
+    }
 
 
     public int toTicks(double inches) {
