@@ -19,19 +19,12 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SO
 package org.firstinspires.ftc.teamcode.opmodes.teleop;
 
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
-import com.qualcomm.robotcore.robot.Robot;
-import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.RobotMain;
 import org.firstinspires.ftc.teamcode.subsystems.ElevatingArm;
-
-import java.text.SimpleDateFormat;
-import java.util.Date;
 
 /**
  * This file contains an example of an iterative (Non-Linear) "OpMode".
@@ -74,13 +67,7 @@ public class TeleopSide extends OpMode {
      */
     @Override
     public void loop() {
-        if (gamepad1.dpad_up) {
-            elevatingArm.eleTest(0.2, telemetry);
-        } else if (gamepad1.dpad_down) {
-            elevatingArm.eleTest(-0.2, telemetry);
-        } else {
-            elevatingArm.eleTest(0, telemetry);
-        }
+        robot.getSkystonePosition(false, 0, telemetry);
     }
 
     /*

@@ -6,6 +6,7 @@ import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.firstinspires.ftc.robotcore.external.ClassFactory;
+import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.robotcore.external.matrices.OpenGLMatrix;
 import org.firstinspires.ftc.robotcore.external.matrices.VectorF;
 import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
@@ -51,8 +52,6 @@ public class RobotMain {
     public static Subsystem gripper = Gripper.getInstance();
     public static Subsystem foundationMover = FoundationMover.getInstance();
     public static Subsystem[] allSubsystems = {driveTrain, elevatingArm, gripper, foundationMover};
-
-
 
     //Declare eemuu
     //public static BNO055IMU gyro;
@@ -118,7 +117,7 @@ public class RobotMain {
 
         //Init vision
         if (auto) {
-            initVuforia();
+            //initVuforia();
             initTfod();
         }
 
@@ -237,7 +236,7 @@ public class RobotMain {
         tfod.loadModelFromAsset(TFOD_MODEL_ASSET, LABEL_STONE, LABEL_SKYSTONE);
     }
 
-    public Pose2d getFIeldPositionFromPerimeterTarget() {
+    public Pose2d getFieldPositionFromPerimeterTarget() {
         //Check all perimeter trackables to see if one is found
         targetVisible = false;
         for (VuforiaTrackable trackable : allTrackables) {
@@ -254,14 +253,14 @@ public class RobotMain {
         }
 
         //Provide feedback as to where the robot is located relative to trackable
-        Pose2d robotPose = new Pose2d(null, null);;
+        Pose2d pose2d = new Pose2d(null, null);;
         if (targetVisible) {
             //Express translation and rotation of robot as a FieldCenterPosition object
             VectorF translation = lastLocation.getTranslation();
             Orientation orientation = Orientation.getOrientation(lastLocation, EXTRINSIC, XYZ, DEGREES);
-            robotPose = new Pose2d(translation, orientation);
+            pose2d = new Pose2d(translation, orientation);
         }
-        return robotPose;
+        return pose2d;
     }
 
     /**
@@ -277,7 +276,51 @@ public class RobotMain {
      *                giving up and returning -1
      * @return Starting skystone config. Will return -1 if cannot be sensed.
      */
-    public int getSkystonePosition(boolean enableTimer, int timeout) {
+    public int getSkystonePosition(boolean enableTimer, int timeout, Telemetry t) {
+        if (tfod != null) {
+            //Activate tfod
+            tfod.activate();
+
+            //Get all recognitions until a skystone is recognized
+            List<Recognition> updatedRecognitions = null;
+            while (updatedRecognitions == null || updatedRecognitions.size() == 0) {
+                //Refresh recognitions
+                updatedRecognitions = tfod.getUpdatedRecognitions();
+                if (updatedRecognitions != null) {
+                    //Filter out unwanted recognitions (anything that's not a skystone)
+                    for (int i = updatedRecognitions.size() - 1; i >= 0; i--) {
+                        if (!updatedRecognitions.get(i).getLabel().equals(LABEL_SKYSTONE)) {
+                            updatedRecognitions.remove(i);
+                        }
+                    }
+                }
+            }
+
+            //Skystone processing -- use leftmost stone (index 0) if blue; rightmost (index 1) if red
+            Recognition recognition = updatedRecognitions.get(0);
+            if (updatedRecognitions.size() > 1) {
+                if (alliance.equals("red")) {
+                    recognition = updatedRecognitions.get(1);
+                } else if (alliance.equals("blue")) {
+                    recognition = updatedRecognitions.get(0);
+                }
+            }
+
+            if (recognition.getLabel().equals(LABEL_SKYSTONE)) {
+                t.addData("top", recognition.getTop());
+                t.addData("bottom", recognition.getBottom());
+                t.addData("left", recognition.getLeft());
+                t.addData("right", recognition.getRight());
+                t.update();
+            }
+
+            //Shutdown tfod
+            tfod.shutdown();
+        }
+        return -1;
+    }
+
+    public String getSkystonePosition(boolean enableTimer, int timeout) {
         if (tfod != null) {
             //Activate tfod
             tfod.activate();
@@ -311,11 +354,11 @@ public class RobotMain {
                 //TODO find pixel distance range
                 double distFromLeft = recognition.getBottom();
                 if (distFromLeft > 0 && distFromLeft < 1) {
-                    return 1;
+                    return "left";
                 } else if (distFromLeft > 2 && distFromLeft < 3) {
-                    return 2;
+                    return "middle";
                 } else if (distFromLeft > 4 && distFromLeft < 5) {
-                    return 3;
+                    return "right";
                 }
                 //recognition.getLeft(), recognition.getTop();
                 //recognition.getRight(), recognition.getBottom();
@@ -324,7 +367,7 @@ public class RobotMain {
             //Shutdown tfod
             tfod.shutdown();
         }
-        return -1;
+        return "nope";
     }
 
     //Gyro control

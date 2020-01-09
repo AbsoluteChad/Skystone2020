@@ -87,22 +87,17 @@ public class ElevatingArm extends Subsystem {
         setElevatorEncoderMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         int setPoint = toTicks(inches);
 
-
-
         elevatorArmLeft.setTargetPosition(setPoint);
         elevatorArmRight.setTargetPosition(setPoint);
 
         setElevatorEncoderMode(DcMotor.RunMode.RUN_TO_POSITION);
-
     }
 
-    public void rotateArm(double power, long millis) {
+    public void rotateArm(double power, long millis, boolean PID) {
         rotationalArm.setPower(power);
         delay(millis);
         rotationalArm.setPower(0);
-
     }
-
 
     public void delay(long millis) {
         timer.reset();
@@ -110,7 +105,6 @@ public class ElevatingArm extends Subsystem {
             //yeet 2.0
         }
     }
-
 
     public int toTicks(double inches) {
         return (int) (ELEVATOR_TICKS_PER_INCH * inches);
@@ -122,9 +116,9 @@ public class ElevatingArm extends Subsystem {
         elevatorArmRight.setMode(mode);
     }
 
-        /**
-         * @param power requested power to drive rotational arm
-         */
+    /**
+     * @param power requested power to drive rotational arm
+     */
     public void driveRotationalArm(double power) {
         rotationalArm.setPower(power * VIDIPT_ROTATIONAL_ARM_CONTROL);
     }

@@ -55,9 +55,9 @@ public class LeAutonomousBlue extends LinearOpMode {
         waitForStart();
 
         if (opModeIsActive()) {
-            int skystonePos = robot.getSkystonePosition(false, 0);
-            if (skystonePos == 1) {
-                driveTrain.driveMecanum(0.7, 11, 180, false);
+            String skystonePos = robot.getSkystonePosition(false, 0);
+            driveTrain.driveMecanum(0.7, 11, 180, false);
+            if (skystonePos.equals("left")) {
                 driveTrain.driveDistance(0.7, 6, 180, false);
                 //pick up skystone code
                 driveTrain.driveDistance(0.5, 6, 180, false);
@@ -68,14 +68,10 @@ public class LeAutonomousBlue extends LinearOpMode {
                 foundationMover.lockFoundation();
                 driveTrain.driveDistance(0.5, 12, 180, false);
                 foundationMover.unlockFoundation();
-
-            }
-            if (skystonePos == 2) {
-                driveTrain.driveDistance(0.7,6,180,false);
+            } else if (skystonePos.equals("middle")) {
                 driveTrain.driveMecanum(0.7,6,180,false);
                 //pick up skystone code
                 driveTrain.driveDistance(0.5, 6, 180, false);
-                //pickup skystone
                 driveTrain.rotateDegrees(0.5, 635);
                 driveTrain.driveDistance(0.5, 72, 90, false);
                 driveTrain.rotateDegrees(0.5, -635);
@@ -83,11 +79,7 @@ public class LeAutonomousBlue extends LinearOpMode {
                 foundationMover.lockFoundation();
                 driveTrain.driveDistance(0.5, 12, 90, false);
                 foundationMover.unlockFoundation();
-            }
-
-            if (skystonePos == 3) {
-                driveTrain.driveDistance(0.7,6,180,false);
-                driveTrain.driveMecanum(0.7,1,180,false);
+            } else if (skystonePos.equals("right")) {
                 //pick up skystone code
                 driveTrain.driveDistance(0.5, 6, 180, false);
                 //pickup skystone
@@ -97,7 +89,6 @@ public class LeAutonomousBlue extends LinearOpMode {
                 foundationMover.lockFoundation();
                 driveTrain.driveDistance(0.5, 12, 90, false);
                 foundationMover.unlockFoundation();
-
             }
         }
     }

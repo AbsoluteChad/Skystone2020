@@ -23,9 +23,7 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.RobotMain;
-import org.firstinspires.ftc.teamcode.subsystems.DriveTrain;
-import org.firstinspires.ftc.teamcode.subsystems.ElevatingArm;
-import org.firstinspires.ftc.teamcode.subsystems.FoundationMover;
+import org.firstinspires.ftc.teamcode.subsystems.*;
 
 /**
  * This file contains an minimal example of a Linear "OpMode". An OpMode is a 'program' that runs in either
@@ -47,7 +45,7 @@ public class LeAutonomousTest extends LinearOpMode {
     private DriveTrain driveTrain;
     private FoundationMover foundationMover;
     private ElevatingArm elevatingArm;
-    //private Gripper gripper;
+    private Gripper gripper;
 
     @Override
     public void runOpMode() {
@@ -55,7 +53,7 @@ public class LeAutonomousTest extends LinearOpMode {
         driveTrain = (DriveTrain) RobotMain.driveTrain;
         foundationMover = (FoundationMover) RobotMain.foundationMover;
         elevatingArm = (ElevatingArm) RobotMain.elevatingArm;
-        //gripper = (Gripper) RobotMain.gripper;
+        gripper = (Gripper) RobotMain.gripper;
 
         telemetry.addData("Status", "Initialized");
         telemetry.update();
@@ -63,24 +61,23 @@ public class LeAutonomousTest extends LinearOpMode {
 
         if (opModeIsActive()) {
 
-            //gripper.autoSucc(0.5, 1000); this code has problems :/
+            gripper.autoSucc(0.5, 1000);
 
-
-            int skystonePos = robot.getSkystonePosition(false, 0);
+            String skystonePos = robot.getSkystonePosition(false, 0);
             //driveDiatance = drives straight for a certain distance (power, inches, degreeDirection, boolean PID)
             //driveMecanum = strafes for a certain distance (power, degreeDirection, inches, boolean PID, yeet) --> yeet is dummy int
             //rotateDegrees = rotates robot by a certain number of degrees (power, degrees, boolean PID)
 
 
             driveTrain.driveDistance(0.7, 12, 90, false);
-            elevatingArm.rotateArm(-0.5, 2000); //this should make it go all the way from folded in the robot to touching the ground
+            elevatingArm.rotateArm(-0.5, 2000, false); //this should make it go all the way from folded in the robot to touching the ground
             //move back a bit?? maybe.....
             driveTrain.rotateDegrees(0.7, -635);
             driveTrain.driveDistance(0.7, 107,90, false);
             driveTrain.rotateDegrees(0.7, 635);
             driveTrain.driveDistance(0.7, 16, 90, false);
             foundationMover.lockFoundation();
-            driveTrain.driveDistance(07, 16, 180, false);
+            driveTrain.driveDistance(0.7, 16, 180, false);
             //move foundation into zone
             //lower arm over foundation
             //unsucc skystone
@@ -99,7 +96,7 @@ public class LeAutonomousTest extends LinearOpMode {
 
             //Blue Alliance Code
             //Sensor
-            if (skystonePos == 1) {
+            if (skystonePos.equals("left")) {
                 driveTrain.driveDistance(0.7, 11, 90, false);
                 driveTrain.driveDistance(0.7, 6, 180, false);
                 //pick up skystone code
