@@ -117,7 +117,7 @@ public class RobotMain {
 
         //Init vision
         if (auto) {
-            //initVuforia();
+            initVuforia();
             initTfod();
         }
 

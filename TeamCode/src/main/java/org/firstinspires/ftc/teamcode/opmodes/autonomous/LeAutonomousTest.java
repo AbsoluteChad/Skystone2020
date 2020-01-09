@@ -55,36 +55,31 @@ public class LeAutonomousTest extends LinearOpMode {
         elevatingArm = (ElevatingArm) RobotMain.elevatingArm;
         gripper = (Gripper) RobotMain.gripper;
 
+        foundationMover.unlockFoundation();
+
         telemetry.addData("Status", "Initialized");
         telemetry.update();
+
         waitForStart();
 
         if (opModeIsActive()) {
 
-            gripper.autoSucc(0.5, 1000);
-
-            String skystonePos = robot.getSkystonePosition(false, 0);
-            //driveDiatance = drives straight for a certain distance (power, inches, degreeDirection, boolean PID)
-            //driveMecanum = strafes for a certain distance (power, degreeDirection, inches, boolean PID, yeet) --> yeet is dummy int
-            //rotateDegrees = rotates robot by a certain number of degrees (power, degrees, boolean PID)
-
+            //String skystonePos = robot.getSkystonePosition(false, 0);
 
             driveTrain.driveDistance(0.7, 12, 90, false);
-            elevatingArm.rotateArm(-0.5, 2000, false); //this should make it go all the way from folded in the robot to touching the ground
+            //lower arm to get skystone
             //move back a bit?? maybe.....
+            driveTrain.driveDistance(0.7, 16, 180, false);
             driveTrain.rotateDegrees(0.7, -635);
             driveTrain.driveDistance(0.7, 107,90, false);
             driveTrain.rotateDegrees(0.7, 635);
             driveTrain.driveDistance(0.7, 16, 90, false);
             foundationMover.lockFoundation();
-            driveTrain.driveDistance(0.7, 16, 180, false);
-            //move foundation into zone
-            //lower arm over foundation
-            //unsucc skystone
-            //big win gang
+            driveTrain.driveDistance(0.7, 23, 270, false);
+            foundationMover.unlockFoundation();
+            while (opModeIsActive()){}
 
-
-            //Red Alliance Code
+            /* //Red Alliance Code
             //Sensor code
             driveTrain.driveDistance(0.7, 11,90, false);
             //pick up block code
@@ -111,7 +106,7 @@ public class LeAutonomousTest extends LinearOpMode {
             driveTrain.rotateDegrees(0.5, 635);
             driveTrain.driveDistance(0.7, 78,90, false);
             driveTrain.rotateDegrees(0.5, -635);
-            foundationMover.lockFoundation();
+            foundationMover.lockFoundation(); */
         }
     }
 }
