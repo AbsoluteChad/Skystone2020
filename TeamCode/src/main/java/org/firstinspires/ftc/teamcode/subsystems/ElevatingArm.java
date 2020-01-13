@@ -44,9 +44,10 @@ public class ElevatingArm extends Subsystem {
         elevatorArmRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         rotationalArm.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
-        //Enable elevator encoders
+        //Enable encoders
         elevatorArmLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         elevatorArmRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        rotationalArm.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
         //Reverse left elevator motor
         elevatorArmLeft.setDirection(DcMotorSimple.Direction.REVERSE);
@@ -75,14 +76,6 @@ public class ElevatingArm extends Subsystem {
         elevatorArmRight.setPower(power * VIDIPT_ELEVATOR_CONTROL);
     }
 
-    //test
-    public void eleTest(double power, Telemetry telemetry) {
-        driveElevatorArm(power);
-        telemetry.addData("left", elevatorArmLeft.getCurrentPosition());
-        telemetry.addData("right", elevatorArmRight.getCurrentPosition());
-        telemetry.update();
-    }
-
     public void elevateArm(double power, double inches) {
         setElevatorEncoderMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         int setPoint = toTicks(inches);
@@ -91,6 +84,12 @@ public class ElevatingArm extends Subsystem {
         elevatorArmRight.setTargetPosition(setPoint);
 
         setElevatorEncoderMode(DcMotor.RunMode.RUN_TO_POSITION);
+        driveElevatorArm(power);
+        while (elevatorArmLeft.isBusy() || elevatorArmRight.isBusy()) {
+            //yeet 3.0
+        }
+        driveElevatorArm(0);
+        setElevatorEncoderMode(DcMotor.RunMode.RUN_USING_ENCODER);
     }
 
     public void rotateArm(double power, long millis, boolean PID) {
@@ -106,11 +105,6 @@ public class ElevatingArm extends Subsystem {
         }
     }
 
-    public int toTicks(double inches) {
-        return (int) (ELEVATOR_TICKS_PER_INCH * inches);
-
-    }
-
     public void setElevatorEncoderMode(DcMotor.RunMode mode) {
         elevatorArmLeft.setMode(mode);
         elevatorArmRight.setMode(mode);
@@ -121,6 +115,10 @@ public class ElevatingArm extends Subsystem {
      */
     public void driveRotationalArm(double power) {
         rotationalArm.setPower(power * VIDIPT_ROTATIONAL_ARM_CONTROL);
+    }
+
+    public int toTicks(double inches) {
+        return (int) (ELEVATOR_TICKS_PER_INCH * inches);
     }
 
     /**

@@ -44,7 +44,7 @@ public class TeleopSide extends OpMode {
 
     @Override
     public void init() {
-        robot = new RobotMain(hardwareMap, gamepad1, gamepad2, "blue", false);
+        robot = new RobotMain(hardwareMap, gamepad1, gamepad2, "blue", true);
         elevatingArm = (ElevatingArm) RobotMain.elevatingArm;
     }
 
@@ -67,7 +67,6 @@ public class TeleopSide extends OpMode {
      */
     @Override
     public void loop() {
-        robot.getSkystonePosition(false, 0, telemetry);
     }
 
     /*

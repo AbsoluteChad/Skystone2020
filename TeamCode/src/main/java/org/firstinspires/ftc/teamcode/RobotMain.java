@@ -21,6 +21,7 @@ import org.firstinspires.ftc.robotcore.external.tfod.Recognition;
 import org.firstinspires.ftc.robotcore.external.tfod.TFObjectDetector;
 import org.firstinspires.ftc.teamcode.lib.Pose2d;
 import org.firstinspires.ftc.teamcode.subsystems.*;
+import org.firstinspires.ftc.teamcode.vision.TensorFlow;
 
 import com.qualcomm.robotcore.hardware.Gyroscope;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -60,6 +61,7 @@ public class RobotMain {
     private String alliance;
 
     //Declare vision & object dection engines
+    private TensorFlow tensorFlow;
     private VuforiaLocalizer vuforia;
     private TFObjectDetector tfod;
 
@@ -117,8 +119,7 @@ public class RobotMain {
 
         //Init vision
         if (auto) {
-            initVuforia();
-            initTfod();
+            tensorFlow = new TensorFlow();
         }
 
         //Init misc objects
@@ -261,113 +262,6 @@ public class RobotMain {
             pose2d = new Pose2d(translation, orientation);
         }
         return pose2d;
-    }
-
-    /**
-     * The starting skystone configuration at the beginning of autonomous can be in one of three states:
-     *   1. SS -- -- SS -- -- (left)
-     *   2. -- SS -- -- SS -- (middle)
-     *   3. -- -- SS -- -- SS (right)
-     * SS represents a skystone, while -- represents a regular stone. Keep in mind that 1 is on the
-     * outside on blue alliance and that 3 is on the blue side on
-     *
-     * @param enableTimer whether or not to use a timer
-     * @param timeout max amount of time (ms) to sense for skystone if <i>enableTimer</i> is true before
-     *                giving up and returning -1
-     * @return Starting skystone config. Will return -1 if cannot be sensed.
-     */
-    public int getSkystonePosition(boolean enableTimer, int timeout, Telemetry t) {
-        if (tfod != null) {
-            //Activate tfod
-            tfod.activate();
-
-            //Get all recognitions until a skystone is recognized
-            List<Recognition> updatedRecognitions = null;
-            while (updatedRecognitions == null || updatedRecognitions.size() == 0) {
-                //Refresh recognitions
-                updatedRecognitions = tfod.getUpdatedRecognitions();
-                if (updatedRecognitions != null) {
-                    //Filter out unwanted recognitions (anything that's not a skystone)
-                    for (int i = updatedRecognitions.size() - 1; i >= 0; i--) {
-                        if (!updatedRecognitions.get(i).getLabel().equals(LABEL_SKYSTONE)) {
-                            updatedRecognitions.remove(i);
-                        }
-                    }
-                }
-            }
-
-            //Skystone processing -- use leftmost stone (index 0) if blue; rightmost (index 1) if red
-            Recognition recognition = updatedRecognitions.get(0);
-            if (updatedRecognitions.size() > 1) {
-                if (alliance.equals("red")) {
-                    recognition = updatedRecognitions.get(1);
-                } else if (alliance.equals("blue")) {
-                    recognition = updatedRecognitions.get(0);
-                }
-            }
-
-            if (recognition.getLabel().equals(LABEL_SKYSTONE)) {
-                t.addData("top", recognition.getTop());
-                t.addData("bottom", recognition.getBottom());
-                t.addData("left", recognition.getLeft());
-                t.addData("right", recognition.getRight());
-                t.update();
-            }
-
-            //Shutdown tfod
-            tfod.shutdown();
-        }
-        return -1;
-    }
-
-    public String getSkystonePosition(boolean enableTimer, int timeout) {
-        if (tfod != null) {
-            //Activate tfod
-            tfod.activate();
-
-            //Get all recognitions until a skystone is recognized
-            List<Recognition> updatedRecognitions = null;
-            while (updatedRecognitions == null || updatedRecognitions.size() == 0) {
-                //Refresh recognitions
-                updatedRecognitions = tfod.getUpdatedRecognitions();
-                if (updatedRecognitions != null) {
-                    //Filter out unwanted recognitions (anything that's not a skystone)
-                    for (int i = updatedRecognitions.size() - 1; i >= 0; i--) {
-                        if (!updatedRecognitions.get(i).getLabel().equals(LABEL_SKYSTONE)) {
-                            updatedRecognitions.remove(i);
-                        }
-                    }
-                }
-            }
-
-            //Skystone processing -- use leftmost stone (index 0) if blue; rightmost (index 1) if red
-            Recognition recognition = updatedRecognitions.get(0);
-            if (updatedRecognitions.size() > 1) {
-                if (alliance.equals("red")) {
-                    recognition = updatedRecognitions.get(1);
-                } else if (alliance.equals("blue")) {
-                    recognition = updatedRecognitions.get(0);
-                }
-            }
-
-            if (recognition.getLabel().equals(LABEL_SKYSTONE)) {
-                //TODO find pixel distance range
-                double distFromLeft = recognition.getBottom();
-                if (distFromLeft > 0 && distFromLeft < 1) {
-                    return "left";
-                } else if (distFromLeft > 2 && distFromLeft < 3) {
-                    return "middle";
-                } else if (distFromLeft > 4 && distFromLeft < 5) {
-                    return "right";
-                }
-                //recognition.getLeft(), recognition.getTop();
-                //recognition.getRight(), recognition.getBottom();
-            }
-
-            //Shutdown tfod
-            tfod.shutdown();
-        }
-        return "nope";
     }
 
     //Gyro control

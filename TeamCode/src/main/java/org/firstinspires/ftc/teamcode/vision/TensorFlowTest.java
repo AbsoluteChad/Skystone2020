@@ -27,17 +27,16 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package org.firstinspires.ftc.teamcode.vision_testing;
+package org.firstinspires.ftc.teamcode.vision;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
+
 import org.firstinspires.ftc.robotcore.external.ClassFactory;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer.CameraDirection;
-import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
-import org.firstinspires.ftc.robotcore.external.tfod.TFObjectDetector;
 import org.firstinspires.ftc.robotcore.external.tfod.Recognition;
+import org.firstinspires.ftc.robotcore.external.tfod.TFObjectDetector;
 import org.firstinspires.ftc.teamcode.RobotMain;
 
 import java.util.List;
@@ -74,21 +73,20 @@ public class TensorFlowTest extends LinearOpMode {
                 //Get all recognitions & filter out unwanted
                 List<Recognition> updatedRecognitions = tfod.getUpdatedRecognitions();
                 if (updatedRecognitions != null) {
-                    /*for (int i = updatedRecognitions.size() - 1; i >= 0; i--) {
+                    for (int i = updatedRecognitions.size() - 1; i >= 0; i--) {
                         if (!updatedRecognitions.get(i).getLabel().equals(LABEL_SKYSTONE)) {
                             updatedRecognitions.remove(i);
                         }
-                    }*/
+                    }
 
                     //Skystone processing
                     telemetry.addData("# of Objects Detected", updatedRecognitions.size());
                     for (int i = 0; i < updatedRecognitions.size(); i++) {
                         Recognition recognition = updatedRecognitions.get(i);
                         telemetry.addData(String.format("label (%d)", i), recognition.getLabel());
-                        /*telemetry.addData(String.format("left & top (%d)", i), "%.03f , %.03f",
-                                recognition.getLeft(), recognition.getTop());
-                        telemetry.addData(String.format("right & bottom (%d)", i), "%.03f , %.03f",
-                                recognition.getRight(), recognition.getBottom());*/
+                        telemetry.addData("left", recognition.getLeft());
+                        telemetry.addData("width", recognition.getWidth());
+                        telemetry.addData("center of obj", (recognition.getWidth() / 4) + recognition.getLeft());
                     }
                     telemetry.update();
                 }

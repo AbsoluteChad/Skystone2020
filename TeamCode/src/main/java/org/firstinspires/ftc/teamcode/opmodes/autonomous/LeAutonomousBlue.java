@@ -55,7 +55,7 @@ public class LeAutonomousBlue extends LinearOpMode {
         waitForStart();
 
         if (opModeIsActive()) {
-            String skystonePos = robot.getSkystonePosition(false, 0);
+            String skystonePos = "";//robot.getSkystonePosition(false, 0);
             driveTrain.driveMecanum(0.7, 11, 180, false);
             if (skystonePos.equals("left")) {
                 driveTrain.driveDistance(0.7, 6, 180, false);
