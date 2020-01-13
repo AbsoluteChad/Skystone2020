@@ -64,7 +64,9 @@ public class LeAutonomousTest extends LinearOpMode {
 
         if (opModeIsActive()) {
 
-            //String skystonePos = robot.getSkystonePosition(false, 0);
+            elevatingArm.rotateArm(-0.2, -2000, false); //can go less than 2000
+
+            /*//String skystonePos = robot.getSkystonePosition(false, 0);
 
             driveTrain.driveDistance(0.7, 12, 90, false);
             //lower arm to get skystone
