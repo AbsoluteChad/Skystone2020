@@ -6,6 +6,9 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.RobotMain;
+import org.firstinspires.ftc.teamcode.lib.PIDController;
+
+import com.qualcomm.robotcore.hardware.PIDCoefficients;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 
@@ -23,8 +26,12 @@ public class ElevatingArm extends Subsystem {
     private static final double VIDIPT_ELEVATOR_CONTROL = 0.75;
     private static final double VIDIPT_ROTATIONAL_ARM_CONTROL = 0.6;
     private static final double ELEVATOR_TICKS_PER_INCH = 1716;
+    private static final double ENCODER_TOLERANCE = 5;
 
     private ElapsedTime timer = new ElapsedTime();
+
+    private PIDCoefficients PIDcoeffs;
+    private org.firstinspires.ftc.teamcode.lib.PIDController PIDController;
 
     //Private constructor
 
@@ -51,6 +58,13 @@ public class ElevatingArm extends Subsystem {
 
         //Reverse left elevator motor
         elevatorArmLeft.setDirection(DcMotorSimple.Direction.REVERSE);
+
+        //Init PID members
+        PIDcoeffs = new PIDCoefficients(0, 0, 0);
+        DcMotor[] motors = {rotationalArm};
+        PIDController = new PIDController(motors, PIDcoeffs, 50);
+
+
     }
 
     @Override
@@ -84,18 +98,43 @@ public class ElevatingArm extends Subsystem {
         elevatorArmRight.setTargetPosition(setPoint);
 
         setElevatorEncoderMode(DcMotor.RunMode.RUN_TO_POSITION);
-        driveElevatorArm(power);
-        while (elevatorArmLeft.isBusy() || elevatorArmRight.isBusy()) {
-            //yeet 3.0
-        }
-        driveElevatorArm(0);
-        setElevatorEncoderMode(DcMotor.RunMode.RUN_USING_ENCODER);
+
+        rotationalArm.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+
     }
 
-    public void rotateArm(double power, long millis, boolean PID) {
+    public void rotateArmByTime(double power, long millis, boolean PID) {
         rotationalArm.setPower(power);
         delay(millis);
         rotationalArm.setPower(0);
+    }
+
+    public void rotateArm(double power, double ticks, boolean PID) {
+        rotationalArm.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        int setPoint = (int) ticks;
+        rotationalArm.setTargetPosition(setPoint);
+
+        rotationalArm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
+        boolean[] reverse = new boolean[1];
+        reverse[0] = false;
+
+        if (PID) {
+            PIDController.drive(setPoint, ENCODER_TOLERANCE, reverse);
+        } else {
+            rotationalArm.setPower(power);
+            while (rotationalArm.isBusy()) {
+                //yeet
+            }
+            driveRotationalArm(0);
+        }
+        rotationalArm.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+    }
+
+    public void rotateArmTest(double power, Telemetry telemetry) {
+        driveRotationalArm(power);
+        telemetry.addData("left", rotationalArm.getCurrentPosition());
+        telemetry.update();
     }
 
     public void delay(long millis) {
