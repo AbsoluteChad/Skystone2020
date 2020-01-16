@@ -46,13 +46,14 @@ public class TensorFlow {
     private static final String TFOD_MODEL_ASSET = "Skystone.tflite";
     private static final String LABEL_STONE = "Stone";
     private static final String LABEL_SKYSTONE = "Skystone";
+    private static final double MINIMUM_CONFIDENCE = 0.75;
 
     //Declare engines
     private VuforiaLocalizer vuforia;
     private TFObjectDetector tfod;
 
     //Stone pixel boundaries
-    private static final double BOUNDARY1 = 200;
+    private static final double BOUNDARY1 = 250;
     private static final double BOUNDARY2 = 700;
 
     public TensorFlow() {
@@ -68,29 +69,30 @@ public class TensorFlow {
 
     /**
      * The starting skystone configuration at the beginning of autonomous can be in one of three states:
-     *   1. SS -- -- SS -- -- (left)
-     *   2. -- SS -- -- SS -- (middle)
-     *   3. -- -- SS -- -- SS (right)
+     *   1. SS -- --  SS -- -- (left)
+     *   2. -- SS --  -- SS -- (middle)
+     *   3. -- -- SS  -- -- SS (right)
      * SS represents a skystone, while -- represents a regular stone. Keep in mind that left is on the
      * outside on blue alliance and that right is on the blue side on
      *
      * @param enableTimer whether or not to use a timer
      * @param timeout max amount of time (ms) to sense for skystone if <i>enableTimer</i> is true before
      *                giving up and returning an empty string
-     * @return Starting skystone config. Will return an empty string if cannot be sensed.
+     * @return Starting skystone config. Will return "nope" if cannot be sensed.
      */
     public String getSkystonePosition(boolean enableTimer, int timeout) {
         ElapsedTime timer = new ElapsedTime();
+        String skystonePosition = "nope";
         timer.reset();
 
-        String skystonePosition = "nope";
-        while (skystonePosition.equals("nope")) {
+        while ((enableTimer && timer.milliseconds() <= timeout) || skystonePosition.equals("nope")) {
             if (tfod != null) {
                 //Get all recognitions & filter out unwanted
                 List<Recognition> updatedRecognitions = tfod.getUpdatedRecognitions();
                 if (updatedRecognitions != null) {
                     for (int i = updatedRecognitions.size() - 1; i >= 0; i--) {
-                        if (!updatedRecognitions.get(i).getLabel().equals(LABEL_SKYSTONE)) {
+                        if (!updatedRecognitions.get(i).getLabel().equals(LABEL_SKYSTONE) ||
+                                updatedRecognitions.get(i).getConfidence() < MINIMUM_CONFIDENCE) {
                             updatedRecognitions.remove(i);
                         }
                     }
@@ -102,18 +104,13 @@ public class TensorFlow {
                         double width = recognition.getWidth();
                         double objCenter = (width / 2) + left;
                         if (objCenter < BOUNDARY1) {
-                            skystonePosition = "left";
+                            return "left";
                         } else if (objCenter >= BOUNDARY1 && objCenter < BOUNDARY2) {
-                            skystonePosition = "middle";
+                            return "middle";
                         } else if (objCenter >= BOUNDARY2) {
-                            skystonePosition = "right";
+                            return "right";
                         }
                     }
-                }
-            }
-            if (enableTimer) {
-                if (timer.milliseconds() > timeout) {
-                    return "nope";
                 }
             }
         }

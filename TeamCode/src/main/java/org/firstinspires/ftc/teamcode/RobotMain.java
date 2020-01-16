@@ -6,18 +6,13 @@ import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.firstinspires.ftc.robotcore.external.ClassFactory;
-import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.robotcore.external.matrices.OpenGLMatrix;
 import org.firstinspires.ftc.robotcore.external.matrices.VectorF;
 import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
-import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
-import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
-import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackable;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackableDefaultListener;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
-import org.firstinspires.ftc.robotcore.external.tfod.Recognition;
 import org.firstinspires.ftc.robotcore.external.tfod.TFObjectDetector;
 import org.firstinspires.ftc.teamcode.lib.Pose2d;
 import org.firstinspires.ftc.teamcode.subsystems.*;
@@ -90,12 +85,6 @@ public class RobotMain {
     private float phoneXRotate = 0;
     private float phoneYRotate = 0;
     private float phoneZRotate = 0;
-
-    //Declare Tensor Flow members
-    private static final String TFOD_MODEL_ASSET = "Skystone.tflite";
-    private static final String LABEL_STONE = "Stone";
-    private static final String LABEL_SKYSTONE = "Skystone";
-    private static final double MINIMUM_CONFIDENCE = 0.75;
 
     //Declare misc objects
     private ElapsedTime timer;
@@ -228,16 +217,7 @@ public class RobotMain {
         targetsSkyStone.activate();
     }
 
-    public void initTfod() {
-        int tfodMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("tfodMonitorViewId",
-                "id", hardwareMap.appContext.getPackageName());
-        TFObjectDetector.Parameters tfodParameters = new TFObjectDetector.Parameters(tfodMonitorViewId);
-        tfodParameters.minimumConfidence = MINIMUM_CONFIDENCE;
-        tfod = ClassFactory.getInstance().createTFObjectDetector(tfodParameters, vuforia);
-        tfod.loadModelFromAsset(TFOD_MODEL_ASSET, LABEL_STONE, LABEL_SKYSTONE);
-    }
-
-    public Pose2d getFieldPositionFromPerimeterTarget() {
+    public Pose2d getRobotPose() {
         //Check all perimeter trackables to see if one is found
         targetVisible = false;
         for (VuforiaTrackable trackable : allTrackables) {
@@ -254,7 +234,7 @@ public class RobotMain {
         }
 
         //Provide feedback as to where the robot is located relative to trackable
-        Pose2d pose2d = new Pose2d(null, null);;
+        Pose2d pose2d = new Pose2d(null, null);
         if (targetVisible) {
             //Express translation and rotation of robot as a FieldCenterPosition object
             VectorF translation = lastLocation.getTranslation();
