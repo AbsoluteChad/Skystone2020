@@ -56,7 +56,7 @@ public class RobotMain {
     private String alliance;
 
     //Declare vision & object dection engines
-    private TensorFlow tensorFlow;
+    public TensorFlow tensorFlow;
     private VuforiaLocalizer vuforia;
     private TFObjectDetector tfod;
 
