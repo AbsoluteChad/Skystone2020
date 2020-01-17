@@ -64,23 +64,28 @@ public class AutoRedLoadingFar extends LinearOpMode {
 
         if (opModeIsActive()) {
 
-            String skystonePosition = robot.tensorFlow.getSkystonePosition(true, 10000);
+            //String skystonePosition = robot.tensorFlow.getSkystonePosition(true, 5000);
+            String skystonePosition = "center";
+
+            driveTrain.driveDistance(1, 21, 90, false);
+
             if (skystonePosition.equals("left")) {
                 driveTrain.driveDistance(0.6, 18, 180, false);
                 driveTrain.driveDistance(0.6, 12, 90, false);
-                elevatingArm.rotateArm(-0.2, -1800, false);
-                gripper.autoSucc(1, 1000);
+                elevatingArm.rotateArm(-0.2, -2000, false);
                 elevatingArm.rotateArm(0.2, -1600, false);
                 driveTrain.driveDistance(0.6, 14, 270, false);
                 driveTrain.driveDistance(0.7, 125,0, false); //107 or 90???
             } else if (skystonePosition.equals("center")) {
-                elevatingArm.rotateArm(-0.2, -1800, false);
-                gripper.autoSucc(1, 1000);
-                elevatingArm.rotateArm(0.2, -1600, false);
-                driveTrain.driveDistance(0.6, 14, 270, false);
-                driveTrain.driveDistance(0.7, 107,0, false); //107 or 90???
+                elevatingArm.rotateArm(-0.05, -1800, false);
+                //elevatingArm.rotateArm(-0.05, -500, false);
+                //gri.pper.autoSucc(-1, 1500);
+                elevatingArm.rotateArm(0.05, 100, false);
+                //driveTrain.driveDistance(1, 107,0, false); //107 or 90???
+                driveTrain.driveDistance(1, 2,0, false); //107 or 90???
+                return;
             } else if (skystonePosition.equals("right")) {
-                driveTrain.driveDistance(0.6, 18, 0, false);
+                driveTrain.driveDistance(1, 18, 0, false);
                 driveTrain.driveDistance(0.6, 12, 90, false);
                 elevatingArm.rotateArm(-0.2, -1800, false);
                 gripper.autoSucc(1, 1000);
@@ -103,9 +108,10 @@ public class AutoRedLoadingFar extends LinearOpMode {
                 driveTrain.driveDistance(0.7, 107,0, false); //107 or 90???
             }
 
-            driveTrain.driveDistance(0.7, 16, 90, false);
-            elevatingArm.rotateArm(-0.2, -1850, false);
-            elevatingArm.rotateArm(0.2, -1500, false);
+            driveTrain.driveDistance(1, 12, 90, false);
+            elevatingArm.rotateArm(-0.2, -1200, false);
+            gripper.autoSucc(1, 2000);
+            elevatingArm.rotateArm(-0.1, 600, false);
             foundationMover.lockFoundation();
             driveTrain.driveDistance(0.7, 30, 270, false);
             foundationMover.unlockFoundation();

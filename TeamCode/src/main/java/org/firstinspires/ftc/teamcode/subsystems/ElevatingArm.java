@@ -126,7 +126,7 @@ public class ElevatingArm extends Subsystem {
             while (rotationalArm.isBusy()) {
                 //yeet
             }
-            driveRotationalArm(0);
+            rotationalArm.setPower(0);
         }
         rotationalArm.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
     }
