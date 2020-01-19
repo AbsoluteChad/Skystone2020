@@ -38,9 +38,9 @@ import org.firstinspires.ftc.teamcode.subsystems.*;
  * Remove a @Disabled the on the next line or two (if present) to add this opmode to the Driver Station OpMode list,
  * or add a @Disabled annotation to prevent this OpMode from being added to the Driver Station
  */
-@Autonomous(name="AutoRedLoadingFar", group="Linear Opmode")
+@Autonomous(name="AutoRedLoadingClose", group="Linear Opmode")
 
-public class AutoRedLoadingFar extends LinearOpMode {
+public class AutoRedLoadingClose extends LinearOpMode {
 
     private RobotMain robot;
     private DriveTrain driveTrain;
