@@ -22,6 +22,7 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
+import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.RobotMain;
 import org.firstinspires.ftc.teamcode.subsystems.*;
 
@@ -37,7 +38,7 @@ import org.firstinspires.ftc.teamcode.subsystems.*;
  * Remove a @Disabled the on the next line or two (if present) to add this opmode to the Driver Station OpMode list,
  * or add a @Disabled annotation to prevent this OpMode from being added to the Driver Station
  */
-@Autonomous(name="LeAutonomousTest", group="Linear Opmode")
+@Autonomous(name="LeAutonomousRedFar", group="Linear Opmode")
 
 public class AutoRedLoadingFar extends LinearOpMode {
 
@@ -46,6 +47,10 @@ public class AutoRedLoadingFar extends LinearOpMode {
     private FoundationMover foundationMover;
     private ElevatingArm elevatingArm;
     private Gripper gripper;
+    private Telemetry telemetry;
+
+    private static int BLOCK_WIDTH = 10;
+    private static int STRAFE_DIS_TO_FONDATATION = 110;
 
     @Override
     public void runOpMode() {
@@ -60,6 +65,8 @@ public class AutoRedLoadingFar extends LinearOpMode {
         telemetry.addData("Status", "Initialized");
         telemetry.update();
 
+        int disToFoundation = 0; //this variable used for calculating distance to foundation
+
         waitForStart();
 
         if (opModeIsActive()) {
@@ -67,104 +74,36 @@ public class AutoRedLoadingFar extends LinearOpMode {
             //String skystonePosition = robot.tensorFlow.getSkystonePosition(true, 5000);
             String skystonePosition = "center";
 
-            driveTrain.driveDistance(1, 21, 90, false);
 
-            if (skystonePosition.equals("left")) {
-                driveTrain.driveDistance(0.6, 18, 180, false);
-                driveTrain.driveDistance(0.6, 12, 90, false);
-                elevatingArm.rotateArm(-0.2, -2000, false);
-                elevatingArm.rotateArm(0.2, -1600, false);
-                driveTrain.driveDistance(0.6, 14, 270, false);
-                driveTrain.driveDistance(0.7, 125,0, false); //107 or 90???
-            } else if (skystonePosition.equals("center")) {
-                elevatingArm.rotateArm(-0.05, -1800, false);
-                //elevatingArm.rotateArm(-0.05, -500, false);
-                //gri.pper.autoSucc(-1, 1500);
-                elevatingArm.rotateArm(0.05, 100, false);
-                //driveTrain.driveDistance(1, 107,0, false); //107 or 90???
-                driveTrain.driveDistance(1, 2,0, false); //107 or 90???
-                return;
+            driveTrain.driveDistance(1, 24, 90, false);
+
+            if ((skystonePosition.equals("center")) || (skystonePosition.equals("nope"))){
+                disToFoundation = STRAFE_DIS_TO_FONDATATION;
+            } else if (skystonePosition.equals("left")){
+                disToFoundation = STRAFE_DIS_TO_FONDATATION + BLOCK_WIDTH ;
+                driveTrain.driveDistance(1, BLOCK_WIDTH, 180, false);
             } else if (skystonePosition.equals("right")) {
-                driveTrain.driveDistance(1, 18, 0, false);
-                driveTrain.driveDistance(0.6, 12, 90, false);
-                elevatingArm.rotateArm(-0.2, -1800, false);
-                gripper.autoSucc(1, 1000);
-                elevatingArm.rotateArm(0.2, -1600, false);
-                driveTrain.driveDistance(0.6, 14, 270, false);
-                driveTrain.driveDistance(0.7, 90,0, false); //107 or 90???
-            } else if (skystonePosition.equals("nope")) {
-                driveTrain.driveDistance(0.6, 12, 90, false);
-                elevatingArm.rotateArm(-0.2, -1800, false);
-                gripper.autoSucc(1, 1000);
-                elevatingArm.rotateArm(0.2, -1600, false);
-                driveTrain.driveDistance(0.6, 14, 270, false);
-                driveTrain.driveDistance(0.7, 107,0, false); //107 or 90???
-            } else {
-                driveTrain.driveDistance(0.6, 12, 90, false);
-                elevatingArm.rotateArm(-0.2, -1800, false);
-                gripper.autoSucc(1, 1000);
-                elevatingArm.rotateArm(0.2, -1600, false);
-                driveTrain.driveDistance(0.6, 14, 270, false);
-                driveTrain.driveDistance(0.7, 107,0, false); //107 or 90???
+                disToFoundation = STRAFE_DIS_TO_FONDATATION - BLOCK_WIDTH ;
+                driveTrain.driveDistance(1, BLOCK_WIDTH, 0, false);
             }
 
+            elevatingArm.rotateArm(0.7, -3400, false);
+            gripper.autoSucc(-1, 1500);
+            elevatingArm.rotateArm(0.7, 2340, false);
+
+            driveTrain.driveDistance(1, disToFoundation,0, false);
             driveTrain.driveDistance(1, 12, 90, false);
-            elevatingArm.rotateArm(-0.2, -1200, false);
-            gripper.autoSucc(1, 2000);
-            elevatingArm.rotateArm(-0.1, 600, false);
+            elevatingArm.rotateArm(0.7, -2340, false);
+
+            gripper.autoSucc(1, 1000);
             foundationMover.lockFoundation();
-            driveTrain.driveDistance(0.7, 30, 270, false);
+            driveTrain.driveDistance(1, 35, 270, false);
+            //driveTrain.rotateDegrees(0.7,-330);
             foundationMover.unlockFoundation();
-            driveTrain.driveDistance(0.7, 6, 270, false);
-            driveTrain.driveDistance(0.6, 15, 180, false);
-            driveTrain.driveDistance(0.6, 32, 90, false);
-            driveTrain.driveDistance(0.6, 29, 180, false);
-
-            //elevatingArm.rotateArm(-0.2, -2000, false); //can go less than 2000
-
-            /*//String skystonePos = robot.getSkystonePosition(false, 0);
-
-            driveTrain.driveDistance(0.7, 12, 90, false);
-            //lower arm to get skystone
-            //move back a bit?? maybe.....
-            driveTrain.driveDistance(0.7, 16, 180, false);
-            driveTrain.rotateDegrees(0.7, -635);
-            driveTrain.driveDistance(0.7, 107,90, false);
-            driveTrain.rotateDegrees(0.7, 635);
-            driveTrain.driveDistance(0.7, 16, 90, false);
-            foundationMover.lockFoundation();
-            driveTrain.driveDistance(0.7, 23, 270, false);
-            foundationMover.unlockFoundation();
-            while (opModeIsActive()){}
-
-            /* //Red Alliance Code
-            //Sensor code
-            driveTrain.driveDistance(0.7, 11,90, false);
-            //pick up block code
-            driveTrain.driveDistance(0.5, 6,180, false);
-            driveTrain.rotateDegrees(0.5, -635);
-            driveTrain.driveDistance(0.7, 78,90, false);
-            driveTrain.rotateDegrees(0.5, 635);
-            foundationMover.lockFoundation();
-
-            //Blue Alliance Code
-            //Sensor
-            if (skystonePos.equals("left")) {
-                driveTrain.driveDistance(0.7, 11, 90, false);
-                driveTrain.driveDistance(0.7, 6, 180, false);
-                //pick up skystone code
-                driveTrain.driveDistance(0.5, 6,180, false);
-                //pickup skystone
-                driveTrain.rotateDegrees(0.5, 635);
-                driveTrain.driveDistance(0.5, 72,90, false);
-                driveTrain.rotateDegrees(0.5, -635);
-            }
-
-            driveTrain.driveDistance(0.5, 6,180, false);
-            driveTrain.rotateDegrees(0.5, 635);
-            driveTrain.driveDistance(0.7, 78,90, false);
-            driveTrain.rotateDegrees(0.5, -635);
-            foundationMover.lockFoundation(); */
+            driveTrain.driveDistance(1, 23, 180, false);
+            //driveTrain.driveDistance(1, 5, 90, false);
+            //driveTrain.driveMecanum(0.7, 135, 3000);
+            driveTrain.driveDistance(1, 30, 180, false);
         }
     }
 }

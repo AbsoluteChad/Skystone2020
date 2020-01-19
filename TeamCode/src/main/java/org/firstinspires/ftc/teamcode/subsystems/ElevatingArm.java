@@ -110,11 +110,40 @@ public class ElevatingArm extends Subsystem {
     }
 
     public void rotateArm(double power, double ticks, boolean PID) {
+
         rotationalArm.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         int setPoint = (int) ticks;
-        rotationalArm.setTargetPosition(setPoint);
 
-        rotationalArm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        rotationalArm.setPower(power);
+
+        rotationalArm.setTargetPosition(setPoint);
+        rotationalArm.setMode(DcMotor.RunMode.RUN_TO_POSITION); //this might also be what messes stuff up
+
+
+        boolean[] reverse = new boolean[1];
+        reverse[0] = false;
+
+        if (PID) {
+            PIDController.drive(setPoint, ENCODER_TOLERANCE, reverse);
+        } else {
+//            rotationalArm.setPower(power);
+            while (rotationalArm.isBusy()) {
+
+            }
+            rotationalArm.setPower(0);
+        }
+    }
+
+    public void rotateArm(double power, double ticks, boolean PID, Telemetry telemetry) {
+
+        rotationalArm.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        int setPoint = (int) ticks;
+
+        rotationalArm.setPower(power);
+
+        rotationalArm.setTargetPosition(setPoint);
+        rotationalArm.setMode(DcMotor.RunMode.RUN_TO_POSITION); //this might also be what messes stuff up
+
 
         boolean[] reverse = new boolean[1];
         reverse[0] = false;
@@ -124,11 +153,11 @@ public class ElevatingArm extends Subsystem {
         } else {
             rotationalArm.setPower(power);
             while (rotationalArm.isBusy()) {
-                //yeet
+                telemetry.addData("current position:", rotationalArm.getCurrentPosition());
+                telemetry.update();
             }
             rotationalArm.setPower(0);
         }
-        rotationalArm.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
     }
 
     public void rotateArmTest(double power, Telemetry telemetry) {

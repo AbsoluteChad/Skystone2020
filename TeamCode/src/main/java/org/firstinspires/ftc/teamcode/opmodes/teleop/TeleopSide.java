@@ -60,13 +60,40 @@ public class TeleopSide extends OpMode {
      */
     @Override
     public void start() {
+        if (gamepad1.dpad_down) {
+            elevatingArm.rotateArmTest(-0.1, telemetry);
+        } else if (gamepad1.dpad_up) {
+            elevatingArm.rotateArmTest(0.1, telemetry);
+        } else {
+            elevatingArm.driveElevatorArm(0);
+        }
+
+        if (gamepad1.y) {
+            elevatingArm.rotateArm(0.1, 600, false, telemetry);
+        }
+
     }
+
+
 
     /*
      * Code to run REPEATEDLY after the driver hits PLAY but before they hit STOP
      */
     @Override
     public void loop() {
+        if (gamepad1.dpad_down) {
+            elevatingArm.rotateArmTest(-0.1, telemetry);
+        } else if (gamepad1.dpad_up) {
+            elevatingArm.rotateArmTest(0.1, telemetry);
+        } else {
+            elevatingArm.driveElevatorArm(0);
+        }
+
+        if (gamepad1.y) {
+            elevatingArm.rotateArm(0.1, 720, false, telemetry);
+        } else if (gamepad1.a) {
+            elevatingArm.rotateArm(0.1, -360, false, telemetry);
+        }
     }
 
     /*

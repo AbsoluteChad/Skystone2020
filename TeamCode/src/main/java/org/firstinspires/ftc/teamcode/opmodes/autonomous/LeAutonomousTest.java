@@ -64,10 +64,7 @@ public class LeAutonomousTest extends LinearOpMode {
 
         if (opModeIsActive()) {
 
-
-            driveTrain.driveDistance(0.6, 21, 90, false);
-            elevatingArm.rotateArm(-0.1, -2400, false);
-            gripper.autoSucc(1, 1500);
+            elevatingArm.rotateArm(0.1, -1000, false, telemetry);
 
 
             //elevatingArm.rotateArm(-0.2, -2000, false); //can go less than 2000
