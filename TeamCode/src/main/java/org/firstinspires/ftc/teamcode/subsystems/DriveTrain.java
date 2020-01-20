@@ -25,7 +25,7 @@ public class DriveTrain extends Subsystem {
     private static final double WHEEL_CIRCUMFERENCE = 4 * Math.PI;
     private static final int TICKS_PER_ROTATION = 1440;
     private static final double GEAR_RATIO = 1;
-    private static final double ENCODER_TOLERANCE = 5;
+    private static final double ENCODER_TOLERANCE = 20;
 
     //Declare PID members
     private PIDCoefficients PIDcoeffs;

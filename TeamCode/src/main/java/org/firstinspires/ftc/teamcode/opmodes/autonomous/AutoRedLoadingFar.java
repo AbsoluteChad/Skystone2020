@@ -100,10 +100,10 @@ public class AutoRedLoadingFar extends LinearOpMode {
             driveTrain.driveDistance(1, 35, 270, false);
             //driveTrain.rotateDegrees(0.7,-330);
             foundationMover.unlockFoundation();
-            driveTrain.driveDistance(1, 23, 180, false);
+            driveTrain.driveDistance(1, 55, 180, false);
             //driveTrain.driveDistance(1, 5, 90, false);
             //driveTrain.driveMecanum(0.7, 135, 3000);
-            driveTrain.driveDistance(1, 30, 180, false);
+            //driveTrain.driveDistance(1, 30, 180, false);
         }
     }
 }

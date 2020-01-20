@@ -47,6 +47,8 @@ public class LeAutonomousTest extends LinearOpMode {
     private ElevatingArm elevatingArm;
     private Gripper gripper;
 
+    private ElapsedTime timer = new ElapsedTime();
+
     @Override
     public void runOpMode() {
         robot = new RobotMain(hardwareMap, gamepad1, gamepad2, "blue", true);
@@ -64,9 +66,34 @@ public class LeAutonomousTest extends LinearOpMode {
 
         if (opModeIsActive()) {
 
-            elevatingArm.rotateArm(0.1, -1000, false, telemetry);
+            driveTrain.driveDistance(1, 24, 90, false);
+            //elevatingArm.rotationalArm.setPower(0);
 
+            String skystonePosition = "center"; /* robot.tensorFlow.getSkystonePosition(true, 5000);
+            telemetry.addData("Position", skystonePosition);
+            telemetry.update();
+            driveTrain.driveDistance(1, 11, 90, false); */
 
+            elevatingArm.rotateArm(0.7, -3150, false);
+            gripper.autoSucc(-1, 1500);
+            elevatingArm.rotateArm(0.7, 2900, false);
+
+            driveTrain.driveDistance(1, 104,0, false);
+            driveTrain.driveDistance(1, 12, 90, false);
+            elevatingArm.rotateArm(0.7, -2540, false);
+
+            gripper.autoSucc(1, 700);
+            elevatingArm.rotateArm(0.7, 3100, false);
+            foundationMover.lockFoundation();
+
+            driveTrain.driveTank(0, 1);
+            while (timer.milliseconds() < 3000) {
+                //finessed
+            }
+            driveTrain.driveTank(0, 0);
+            driveTrain.driveDistance(1, 28, 270, false);
+
+            //elevatingArm.rotateArm(0.1, -1000, false, telemetry);
             //elevatingArm.rotateArm(-0.2, -2000, false); //can go less than 2000
 
             /*//String skystonePos = robot.getSkystonePosition(false, 0);

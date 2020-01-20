@@ -85,7 +85,7 @@ public class TensorFlow {
         String skystonePosition = "nope";
         timer.reset();
 
-        while ((enableTimer && timer.milliseconds() <= timeout) || skystonePosition.equals("nope")) {
+        while (skystonePosition.equals("nope")) {
             if (tfod != null) {
                 //Get all recognitions & filter out unwanted
                 List<Recognition> updatedRecognitions = tfod.getUpdatedRecognitions();
@@ -104,14 +104,18 @@ public class TensorFlow {
                         double width = recognition.getWidth();
                         double objCenter = (width / 2) + left;
                         if (objCenter < BOUNDARY1) {
-                            return "left";
+                            return "left " + recognition.getConfidence();
                         } else if (objCenter >= BOUNDARY1 && objCenter < BOUNDARY2) {
-                            return "middle";
+                            return "middle " + recognition.getConfidence();
                         } else if (objCenter >= BOUNDARY2) {
-                            return "right";
+                            return "right " + recognition.getConfidence();
                         }
                     }
                 }
+            }
+
+            if (enableTimer && timer.milliseconds() > timeout) {
+                return "nope";
             }
         }
 
