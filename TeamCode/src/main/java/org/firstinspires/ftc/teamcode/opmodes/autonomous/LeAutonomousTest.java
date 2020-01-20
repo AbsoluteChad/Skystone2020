@@ -19,6 +19,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SO
 package org.firstinspires.ftc.teamcode.opmodes.autonomous;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
@@ -38,7 +39,7 @@ import org.firstinspires.ftc.teamcode.subsystems.*;
  * or add a @Disabled annotation to prevent this OpMode from being added to the Driver Station
  */
 @Autonomous(name="LeAutonomousTest", group="Linear Opmode")
-
+@Disabled
 public class LeAutonomousTest extends LinearOpMode {
 
     private RobotMain robot;

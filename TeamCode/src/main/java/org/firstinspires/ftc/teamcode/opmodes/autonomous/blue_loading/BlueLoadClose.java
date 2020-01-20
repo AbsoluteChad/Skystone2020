@@ -1,17 +1,17 @@
-package org.firstinspires.ftc.teamcode.opmodes.autonomous;
+package org.firstinspires.ftc.teamcode.opmodes.autonomous.blue_loading;
 
 
-        import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-        import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
-        import org.firstinspires.ftc.teamcode.RobotMain;
-        import org.firstinspires.ftc.teamcode.subsystems.DriveTrain;
-        import org.firstinspires.ftc.teamcode.subsystems.ElevatingArm;
-        import org.firstinspires.ftc.teamcode.subsystems.FoundationMover;
-        import org.firstinspires.ftc.teamcode.subsystems.Gripper;
+import org.firstinspires.ftc.teamcode.RobotMain;
+import org.firstinspires.ftc.teamcode.subsystems.DriveTrain;
+import org.firstinspires.ftc.teamcode.subsystems.ElevatingArm;
+import org.firstinspires.ftc.teamcode.subsystems.FoundationMover;
+import org.firstinspires.ftc.teamcode.subsystems.Gripper;
 
-@Autonomous(name="AutoRedBuildingFarSatvik", group="Linear Opmode")
-public class AutoRedBuildingFarSatvik extends LinearOpMode {
+@Autonomous(name="BlueLoadClose", group="Linear Opmode")
+public class BlueLoadClose extends LinearOpMode {
     private RobotMain robot;
     private DriveTrain driveTrain;
     private FoundationMover foundationMover;
@@ -49,12 +49,7 @@ public class AutoRedBuildingFarSatvik extends LinearOpMode {
             driveTrain.driveDistance(0.7, 8, 0, false); // moving sideways in order to contact the foundation to the wall
             driveTrain.driveDistance(0.7, 6, 90, false); //moving straight to go to the outer area
             driveTrain.driveDistance(0.7, 28, 180, false); //going sideways to park
-            while (opModeIsActive()) {
-            }
-            {
-            }
         }
     }
-
-            }
+}
 

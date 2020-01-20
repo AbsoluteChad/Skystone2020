@@ -41,7 +41,6 @@ import org.firstinspires.ftc.teamcode.subsystems.Gripper;
  * or add a @Disabled annotation to prevent this OpMode from being added to the Driver Station
  */
 @Autonomous(name="RedLoadFar", group="Linear Opmode")
-
 public class RedLoadFar extends LinearOpMode {
 
     private RobotMain robot;

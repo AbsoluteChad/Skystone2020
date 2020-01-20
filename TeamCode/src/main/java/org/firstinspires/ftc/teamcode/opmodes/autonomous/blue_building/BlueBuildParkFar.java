@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.opmodes.autonomous.red_building;
+package org.firstinspires.ftc.teamcode.opmodes.autonomous.blue_building;
 
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
@@ -10,8 +10,8 @@ import org.firstinspires.ftc.teamcode.subsystems.ElevatingArm;
 import org.firstinspires.ftc.teamcode.subsystems.FoundationMover;
 import org.firstinspires.ftc.teamcode.subsystems.Gripper;
 
-@Autonomous(name="RedBuildParkClose", group="Linear Opmode")
-public class RedBuildParkClose extends LinearOpMode {
+@Autonomous(name="BlueBuildParkFar", group="Linear Opmode")
+public class BlueBuildParkFar extends LinearOpMode {
     private RobotMain robot;
     private DriveTrain driveTrain;
     private FoundationMover foundationMover;
@@ -30,8 +30,8 @@ public class RedBuildParkClose extends LinearOpMode {
         waitForStart();
 
         if (opModeIsActive()) {
-            driveTrain.driveDistance(0.5, 6, 90, false);
-            driveTrain.driveDistance(0.5, 14, 180, false);
+            driveTrain.driveDistance(0.5, 30, 90, false);
+            driveTrain.driveDistance(0.5, 14, 0, false);
         }
     }
 }
