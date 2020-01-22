@@ -31,6 +31,7 @@ package org.firstinspires.ftc.teamcode.vision;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.ClassFactory;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
@@ -52,9 +53,95 @@ public class TensorFlowTest extends LinearOpMode {
     //Declare engines
     private VuforiaLocalizer vuforia;
     private TFObjectDetector tfod;
-
+    //Stone pixel boundaries
+    private static final double BOUNDARY1 = 350;
+    private static final double BOUNDARY2 = 700;
+    private static final double LEFT_FOR_LEFT_STONE = 150;
+    private static final double MINIMUM_CONFIDENCE = 0.60;
     @Override
     public void runOpMode() {
+        //Initialize engines
+        initVuforia();
+        initTfod();
+
+        //Activate tfod
+        if (tfod != null) {
+            tfod.activate();
+ //           tfod.setClippingMargins(100,200,200,100);
+        }
+
+        telemetry.addData(">", "Press Play to start op mode");
+        telemetry.update();
+        waitForStart();
+        String skystonePosition = "nope";
+
+        while (opModeIsActive()) {
+            if (tfod != null) {
+
+                //Get all recognitions & filter out unwanted
+                List<Recognition> updatedRecognitions = tfod.getUpdatedRecognitions();
+                if (updatedRecognitions != null) {
+                    for (int i = updatedRecognitions.size() - 1; i >= 0; i--) {
+                        if (!updatedRecognitions.get(i).getLabel().equals(LABEL_SKYSTONE)) {
+                            updatedRecognitions.remove(i);
+                        }
+                    }
+
+                    //Skystone processing
+                    telemetry.addData("# of Objects Detected", updatedRecognitions.size());
+                    for (int i = 0; i < updatedRecognitions.size(); i++) {
+                        Recognition recognition = updatedRecognitions.get(i);
+                        telemetry.addData(String.format("label (%d)", i), recognition.getLabel());
+                        telemetry.addData("left", recognition.getLeft());
+                        telemetry.addData("top", recognition.getTop());
+                        telemetry.addData("right", recognition.getRight());
+                        telemetry.addData("width", recognition.getWidth());
+                        telemetry.addData("center of obj", (recognition.getWidth() / 3) + recognition.getLeft());
+                        double left = recognition.getLeft();
+                        double width = recognition.getWidth();
+                        double objCenter = (width / 3) + left;
+
+                        if(recognition.getTop()  < 50) {
+                            continue;
+                        }
+                        if ((objCenter < BOUNDARY1) || (recognition.getLeft() < LEFT_FOR_LEFT_STONE )) {
+                            skystonePosition = "left " + recognition.getConfidence();
+                        } else if (objCenter >= BOUNDARY1 && objCenter < BOUNDARY2) {
+                            skystonePosition = "middle " + recognition.getConfidence();
+                        } else if (objCenter >= BOUNDARY2) {
+                            skystonePosition= "right " + recognition.getConfidence();
+                        }
+                        telemetry.addData("skystonePosition", skystonePosition);
+                        telemetry.addData("recog conf", recognition.getConfidence());
+
+                        if(recognition.getLabel().equals("Skystone")){
+                            double boxX = recognition.getWidth() / 2;
+                            double boxMid = recognition.getLeft() + boxX ;
+                            if(boxMid >= 512 && boxMid < 768) {
+                                skystonePosition= "new center : " + recognition.getConfidence();
+                            } else if (boxMid > (recognition.getImageWidth()/2)){
+                                    skystonePosition= "new right : " + recognition.getConfidence();
+                            } else {
+                                skystonePosition= "new left : " + recognition.getConfidence();
+                            }
+                            telemetry.addData("boxX" , boxX);
+                            telemetry.addData("boxMid :" , boxMid);
+                            telemetry.addData("new position :" , skystonePosition);
+                        }
+                    }
+
+                    telemetry.update();
+                }
+            }
+        }
+
+        if (tfod != null) {
+            tfod.shutdown();
+        }
+    }
+
+        //  @Override
+    public void runOpModeold() {
         //Initialize engines
         initVuforia();
         initTfod();
@@ -111,7 +198,7 @@ public class TensorFlowTest extends LinearOpMode {
         int tfodMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("tfodMonitorViewId",
                 "id", hardwareMap.appContext.getPackageName());
         TFObjectDetector.Parameters tfodParameters = new TFObjectDetector.Parameters(tfodMonitorViewId);
-        tfodParameters.minimumConfidence = 0.75;
+        tfodParameters.minimumConfidence = 0.65;
         tfod = ClassFactory.getInstance().createTFObjectDetector(tfodParameters, vuforia);
         tfod.loadModelFromAsset(TFOD_MODEL_ASSET, LABEL_STONE, LABEL_SKYSTONE);
     }

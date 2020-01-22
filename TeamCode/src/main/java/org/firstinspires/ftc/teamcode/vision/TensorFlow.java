@@ -29,6 +29,7 @@
 
 package org.firstinspires.ftc.teamcode.vision;
 
+import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.ClassFactory;
@@ -46,7 +47,7 @@ public class TensorFlow {
     private static final String TFOD_MODEL_ASSET = "Skystone.tflite";
     private static final String LABEL_STONE = "Stone";
     private static final String LABEL_SKYSTONE = "Skystone";
-    private static final double MINIMUM_CONFIDENCE = 0.75;
+    private static final double MINIMUM_CONFIDENCE = 0.60;
 
     //Declare engines
     private VuforiaLocalizer vuforia;
@@ -139,7 +140,7 @@ public class TensorFlow {
         int tfodMonitorViewId = RobotMain.hardwareMap.appContext.getResources().getIdentifier("tfodMonitorViewId",
                 "id", RobotMain.hardwareMap.appContext.getPackageName());
         TFObjectDetector.Parameters tfodParameters = new TFObjectDetector.Parameters(tfodMonitorViewId);
-        tfodParameters.minimumConfidence = 0.75;
+        tfodParameters.minimumConfidence = 0.60;
         tfod = ClassFactory.getInstance().createTFObjectDetector(tfodParameters, vuforia);
         tfod.loadModelFromAsset(TFOD_MODEL_ASSET, LABEL_STONE, LABEL_SKYSTONE);
     }

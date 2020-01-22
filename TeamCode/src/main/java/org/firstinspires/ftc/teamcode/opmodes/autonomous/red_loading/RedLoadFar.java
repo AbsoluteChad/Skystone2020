@@ -20,6 +20,7 @@ package org.firstinspires.ftc.teamcode.opmodes.autonomous.red_loading;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.RobotMain;
@@ -48,10 +49,10 @@ public class RedLoadFar extends LinearOpMode {
     private FoundationMover foundationMover;
     private ElevatingArm elevatingArm;
     private Gripper gripper;
-    private Telemetry telemetry;
+   // private Telemetry telemetry;
 
     private static int BLOCK_WIDTH = 10;
-    private static int STRAFE_DIS_TO_FOUNDATION = 110;
+    private static int STRAFE_DIS_TO_FOUNDATION = 104;
 
     @Override
     public void runOpMode() {
@@ -71,12 +72,15 @@ public class RedLoadFar extends LinearOpMode {
         waitForStart();
 
         if (opModeIsActive()) {
-
-            //String skystonePosition = robot.tensorFlow.getSkystonePosition(true, 5000);
-            String skystonePosition = "center";
-
-
+            //Go forward and sense
+            //elevatingArm.rotationalArm.setPower(-0.2);
             driveTrain.driveDistance(1, 24, 90, false);
+            //elevatingArm.rotationalArm.setPower(0);
+
+            String skystonePosition = "center"; /* robot.tensorFlow.getSkystonePosition(true, 5000);
+            telemetry.addData("Position", skystonePosition);
+            telemetry.update();
+            driveTrain.driveDistance(1, 11, 90, false); */
 
             if ((skystonePosition.equals("center")) || (skystonePosition.equals("nope"))){
                 disToFoundation = STRAFE_DIS_TO_FOUNDATION;
@@ -88,20 +92,37 @@ public class RedLoadFar extends LinearOpMode {
                 driveTrain.driveDistance(1, BLOCK_WIDTH, 0, false);
             }
 
-            elevatingArm.rotateArm(0.7, -3400, false);
-            gripper.autoSucc(-1, 1500);
-            elevatingArm.rotateArm(0.7, 2340, false);
+            elevatingArm.rotateArm(0.7, -3100, false);
+            gripper.autoSucc(-1, 1000);
+            telemetry.addData("checkpoint", 1);
+            telemetry.update();
+            elevatingArm.rotateArm(0.7, 2700, false);
 
             driveTrain.driveDistance(1, disToFoundation,0, false);
             driveTrain.driveDistance(1, 12, 90, false);
-            elevatingArm.rotateArm(0.7, -2340, false);
+            elevatingArm.rotateArm(0.7, -2400, false);
 
+            //working stuff
             gripper.autoSucc(1, 1000);
+            elevatingArm.rotateArm(0.7, 2400, false);
+            elevatingArm.rotationalArm.setPower(0.1);
+            telemetry.addData("checkpoint", 1);
+            telemetry.update();
             foundationMover.lockFoundation();
-            driveTrain.driveDistance(1, 35, 270, false);
-            //driveTrain.rotateDegrees(0.7,-330);
+
+            driveTrain.driveDistance(0.7, 18, 270, false);
+            ElapsedTime timer = new ElapsedTime();
+            timer.reset();
+            while (timer.milliseconds() < 3000) {
+                driveTrain.driveTank(0, -1);
+            }
+            driveTrain.driveDistance(0.7, 12, 90, false);
             foundationMover.unlockFoundation();
-            driveTrain.driveDistance(1, 55, 180, false);
+            //driveTrain.driveDistance(1, 31, 270, false);
+
+            driveTrain.driveDistance(1, 24, 180, false);
+            driveTrain.driveDistance(1, 24, 270, false);
+
             //driveTrain.driveDistance(1, 5, 90, false);
             //driveTrain.driveMecanum(0.7, 135, 3000);
             //driveTrain.driveDistance(1, 30, 180, false);

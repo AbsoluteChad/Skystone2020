@@ -39,16 +39,16 @@ public class BlueBuildClose extends LinearOpMode {
 
             //driveTrain.driveDistance(0.7, 12, 90, false);
 
-            driveTrain.driveMecanum(0.7, 45, 1800); //traveling diagonal in order to position with the foundation
+            driveTrain.driveMecanum(0.7, 135, 1800); //traveling diagonal in order to position with the foundation
             driveTrain.driveDistance(0.7, 17, 90, false); //moving straight in order to get close enough to the foundation
             foundationMover.lockFoundation(); //locking onto Foundation
             driveTrain.driveDistance(0.7, 35, 270, false); //moving back in order to position the foundation to the site
             foundationMover.unlockFoundation(); //unlocking off of foundation
-            driveTrain.driveDistance(0.7, 32, 180, false); //strafing to the left in order for clearance
-            driveTrain.driveDistance(0.7, 20, 90, false); //moving straight to position to the foundation sideways
-            driveTrain.driveDistance(0.7, 8, 0, false); // moving sideways in order to contact the foundation to the wall
-            driveTrain.driveDistance(0.7, 6, 90, false); //moving straight to go to the outer area
-            driveTrain.driveDistance(0.7, 28, 180, false); //going sideways to park
+            driveTrain.driveDistance(0.7, 32, 0, false); //strafing to the left in order for clearance
+            driveTrain.driveDistance(0.7, 18, 90, false); //moving straight to position to the foundation sideways
+            driveTrain.driveDistance(0.7, 9, 180, false); // moving sideways in order to contact the foundation to the wall
+            driveTrain.driveDistance(0.7, 18, 270, false); //moving straight to go to the outer area
+            driveTrain.driveDistance(0.7, 28, 0, false); //going sideways to park
         }
     }
 }

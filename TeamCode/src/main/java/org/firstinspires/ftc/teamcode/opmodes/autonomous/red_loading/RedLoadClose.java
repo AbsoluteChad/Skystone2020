@@ -28,6 +28,7 @@ import org.firstinspires.ftc.teamcode.subsystems.ElevatingArm;
 import org.firstinspires.ftc.teamcode.subsystems.FoundationMover;
 import org.firstinspires.ftc.teamcode.subsystems.Gripper;
 
+
 /**
  * This file contains an minimal example of a Linear "OpMode". An OpMode is a 'program' that runs in either
  * the autonomous or the teleop period of an FTC match. The names of OpModes appear on the menu
@@ -91,10 +92,10 @@ public class RedLoadClose extends LinearOpMode {
             }
 
             elevatingArm.rotateArm(0.7, -3100, false);
-            gripper.autoSucc(-1, 1500);
+            gripper.autoSucc(-1, 1000);
             telemetry.addData("checkpoint", 1);
             telemetry.update();
-            elevatingArm.rotateArm(0.7, 2540, false);
+            elevatingArm.rotateArm(0.7, 2700, false);
 
             driveTrain.driveDistance(1, disToFoundation,0, false);
             driveTrain.driveDistance(1, 12, 90, false);
@@ -102,7 +103,7 @@ public class RedLoadClose extends LinearOpMode {
 
             //working stuff
             gripper.autoSucc(1, 1000);
-            elevatingArm.rotateArm(0.7, 2000, false);
+            elevatingArm.rotateArm(0.7, 2400, false);
             elevatingArm.rotationalArm.setPower(0.1);
             telemetry.addData("checkpoint", 1);
             telemetry.update();
