@@ -23,7 +23,7 @@ public class AutonomousTasks {
      * @param armPower requested power for arm
      * @param armTicks requested distance (encoder ticks) for arm to travel
      */
-    public static void parallelDriveAndArm(double drivePower, int driveInches, double degreeDirection, double armPower, double armTicks) {
+    public static void bigBrain(double drivePower, int driveInches, double degreeDirection, double armPower, double armTicks) {
         /**
          * DriveTrain init
          */
