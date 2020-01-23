@@ -261,7 +261,7 @@ public class DriveTrain extends Subsystem {
      * @param inches distance in inches
      * @return <i>inches</i> converted to encoder ticks
      */
-    private int toTicks(double inches) {
+    public int toTicks(double inches) {
         double rotations = inches / WHEEL_CIRCUMFERENCE;
         return (int) (rotations * TICKS_PER_ROTATION / GEAR_RATIO);
     }
