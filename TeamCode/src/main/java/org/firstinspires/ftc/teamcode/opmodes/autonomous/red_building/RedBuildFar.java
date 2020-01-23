@@ -48,7 +48,7 @@ public class RedBuildFar extends LinearOpMode {
             driveTrain.driveDistance(0.7, 19, 90, false); //moving straight to position to the foundation sideways
             driveTrain.driveDistance(0.7, 8, 0, false); // moving sideways in order to contact the foundation to the wall
             driveTrain.driveDistance(0.7, 6, 90, false); //moving straight to go to the outer area
-            driveTrain.driveDistance(0.7, 28, 180, false); //going sideways to park
+            driveTrain.driveDistance(0.7, 32, 180, false); //going sideways to park
         }
     }
 }

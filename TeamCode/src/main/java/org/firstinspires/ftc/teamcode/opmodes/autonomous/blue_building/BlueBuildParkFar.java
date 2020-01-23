@@ -30,8 +30,8 @@ public class BlueBuildParkFar extends LinearOpMode {
         waitForStart();
 
         if (opModeIsActive()) {
-            driveTrain.driveDistance(0.5, 30, 90, false);
-            driveTrain.driveDistance(0.5, 14, 0, false);
+            driveTrain.driveDistance(0.5, 28, 90, false);
+            driveTrain.driveDistance(0.5, 44, 0, false);
         }
     }
 }

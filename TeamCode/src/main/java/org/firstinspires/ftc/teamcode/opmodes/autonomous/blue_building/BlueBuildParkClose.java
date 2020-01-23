@@ -30,8 +30,8 @@ public class BlueBuildParkClose extends LinearOpMode {
         waitForStart();
 
         if (opModeIsActive()) {
-            driveTrain.driveDistance(0.5, 6, 90, false);
-            driveTrain.driveDistance(0.5, 14, 0, false);
+            driveTrain.driveDistance(0.5, 3, 90, false);
+            driveTrain.driveDistance(0.5, 44, 0, false);
         }
     }
 }

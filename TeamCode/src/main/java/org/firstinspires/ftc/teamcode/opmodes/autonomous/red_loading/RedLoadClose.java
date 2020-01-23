@@ -98,7 +98,7 @@ public class RedLoadClose extends LinearOpMode {
             elevatingArm.rotateArm(0.7, 2700, false);
 
             driveTrain.driveDistance(1, disToFoundation,0, false);
-            driveTrain.driveDistance(1, 12, 90, false);
+            driveTrain.driveDistance(1, 14, 90, false);
             elevatingArm.rotateArm(0.7, -2400, false);
 
             //working stuff
@@ -109,7 +109,7 @@ public class RedLoadClose extends LinearOpMode {
             telemetry.update();
             foundationMover.lockFoundation();
 
-            driveTrain.driveDistance(0.7, 18, 270, false);
+            driveTrain.driveDistance(0.7, 19, 270, false);
             ElapsedTime timer = new ElapsedTime();
             timer.reset();
             while (timer.milliseconds() < 3000) {
