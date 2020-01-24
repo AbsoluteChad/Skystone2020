@@ -6,6 +6,7 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.RobotMain;
+import org.firstinspires.ftc.teamcode.opmodes.autonomous.AutonomousTasks;
 import org.firstinspires.ftc.teamcode.subsystems.DriveTrain;
 import org.firstinspires.ftc.teamcode.subsystems.ElevatingArm;
 import org.firstinspires.ftc.teamcode.subsystems.FoundationMover;
@@ -48,8 +49,9 @@ public class BlueLoadClose extends LinearOpMode {
 
             String skystonePosition = "center"; /* robot.tensorFlow.getSkystonePosition(true, 5000);
             telemetry.addData("Position", skystonePosition);
-            telemetry.update();
-            driveTrain.driveDistance(1, 11, 90, false); */
+            telemetry.update(); */
+
+            driveTrain.driveDistance(1, 11, 90, false);
 
             if ((skystonePosition.equals("center")) || (skystonePosition.equals("nope"))){
                 disToFoundation = STRAFE_DIS_TO_FOUNDATION;
@@ -68,18 +70,19 @@ public class BlueLoadClose extends LinearOpMode {
             elevatingArm.rotateArm(0.7, 2700, false);
 
             driveTrain.driveDistance(1, disToFoundation,180, false);
-            driveTrain.driveDistance(1, 14, 90, false);
-            elevatingArm.rotateArm(0.7, -2400, false);
+            //driveTrain.driveDistance(1, 14, 90, false);
+            //elevatingArm.rotateArm(0.7, -2400, false);
 
-            //working stuff
+            AutonomousTasks.parallelDriveAndArm(1,14,90,.7,-2400,telemetry);
             gripper.autoSucc(1, 1000);
-            elevatingArm.rotateArm(0.7, 2400, false);
+            //elevatingArm.rotateArm(0.7, 2400, false);
             //elevatingArm.rotationalArm.setPower(0.1);
             telemetry.addData("checkpoint", 1);
             telemetry.update();
             foundationMover.lockFoundation();
 
-            driveTrain.driveDistance(0.7, 18, 270, false);
+            AutonomousTasks.parallelDriveAndArm(1,19,270,.7,2400,telemetry);
+            //driveTrain.driveDistance(0.7, 18, 270, false);
             ElapsedTime timer = new ElapsedTime();
             timer.reset();
             while (timer.milliseconds() < 3000) {

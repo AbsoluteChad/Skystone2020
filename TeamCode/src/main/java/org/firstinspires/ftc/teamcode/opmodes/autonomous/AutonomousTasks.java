@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode.opmodes.autonomous;
 
 import com.qualcomm.robotcore.hardware.DcMotor;
 
+import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.subsystems.DriveTrain;
 import org.firstinspires.ftc.teamcode.subsystems.ElevatingArm;
 
@@ -23,7 +24,8 @@ public class AutonomousTasks {
      * @param armPower requested power for arm
      * @param armTicks requested distance (encoder ticks) for arm to travel
      */
-    public static void parallelDriveAndArm(double drivePower, int driveInches, double degreeDirection, double armPower, double armTicks) {
+    public static void parallelDriveAndArm(double drivePower, int driveInches,
+                                           double degreeDirection, double armPower, double armTicks, Telemetry telemetry) {
         /**
          * DriveTrain init
          */
@@ -61,18 +63,34 @@ public class AutonomousTasks {
          * Drive both subsystems
          */
         //Set powers
-        driveTrain.driveMecanum(thrust, strafe, 0, false);
         elevatingArm.rotationalArm.setPower(armPower);
-
+        driveTrain.driveMecanum(thrust, strafe, 0, false);
+        boolean rotateBusy = true;
         //Wait for all motors to complete
-        while ((driveTrain.topLeft.isBusy() && driveTrain.bottomLeft.isBusy() && driveTrain.topRight.isBusy()
-                && driveTrain.bottomRight.isBusy()) || elevatingArm.rotationalArm.isBusy()) {
+        while ((driveTrain.topLeft.isBusy() || driveTrain.bottomLeft.isBusy() || driveTrain.topRight.isBusy()
+                || driveTrain.bottomRight.isBusy()) || rotateBusy) {
+   //             elevatingArm.rotationalArm.isBusy()) {
             //Check if any individual subsystem has finished while the other continues
-            if (!driveTrain.topLeft.isBusy()) {
+            telemetry.addData("topLeft busy: " ,driveTrain.topLeft.isBusy() );
+            telemetry.addData("bottomLeft busy: " ,driveTrain.bottomLeft.isBusy() );
+            telemetry.addData("topRight busy: " ,driveTrain.topRight.isBusy() );
+            telemetry.addData("bottomRight busy: " ,driveTrain.bottomRight.isBusy() );
+
+            if (!elevatingArm.rotationalArm.isBusy()) {
+                rotateBusy = false;
+            }
+            telemetry.addData("rotationalArm busy: " ,rotateBusy);
+            telemetry.update();
+            if (!rotateBusy) {
+                elevatingArm.rotationalArm.setPower(0);
+            }
+         /*   if (!driveTrain.topLeft.isBusy()) {
                 driveTrain.driveTank(0, 0);
             } else if (!elevatingArm.rotationalArm.isBusy()) {
                 elevatingArm.rotationalArm.setPower(0);
             }
+
+          */
         }
         driveTrain.driveTank(0, 0);
         elevatingArm.rotationalArm.setPower(0);

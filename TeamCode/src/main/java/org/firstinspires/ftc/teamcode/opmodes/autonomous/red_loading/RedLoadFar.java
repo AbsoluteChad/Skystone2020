@@ -24,6 +24,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.RobotMain;
+import org.firstinspires.ftc.teamcode.opmodes.autonomous.AutonomousTasks;
 import org.firstinspires.ftc.teamcode.subsystems.DriveTrain;
 import org.firstinspires.ftc.teamcode.subsystems.ElevatingArm;
 import org.firstinspires.ftc.teamcode.subsystems.FoundationMover;
@@ -67,7 +68,7 @@ public class RedLoadFar extends LinearOpMode {
         telemetry.addData("Status", "Initialized");
         telemetry.update();
 
-        int disToFoundation = 0; //this variable used for calculating distance to foundation
+        int disToFoundation = 0; //this variable is used for calculating distance to foundation
 
         waitForStart();
 
@@ -92,40 +93,39 @@ public class RedLoadFar extends LinearOpMode {
                 driveTrain.driveDistance(1, BLOCK_WIDTH, 0, false);
             }
 
-            elevatingArm.rotateArm(0.7, -3100, false);
+            elevatingArm.rotateArm(0.7, -3000, false);
             gripper.autoSucc(-1, 1000);
             telemetry.addData("checkpoint", 1);
             telemetry.update();
-            elevatingArm.rotateArm(0.7, 2700, false);
+            //AutonomousTasks.parallelDriveAndArm(.8,disToFoundation,0,.7,2800,telemetry);
+            elevatingArm.rotateArm(0.7, 2800, false);
 
             driveTrain.driveDistance(1, disToFoundation,0, false);
-            driveTrain.driveDistance(1, 14, 90, false);
-            elevatingArm.rotateArm(0.7, -2400, false);
+            AutonomousTasks.parallelDriveAndArm(1,14,90,.7,-2400,telemetry);
+            //driveTrain.driveDistance(1, 14, 90, false);
+            //elevatingArm.rotateArm(0.7, -2400, false);
 
             //working stuff
             gripper.autoSucc(1, 1000);
-            elevatingArm.rotateArm(0.7, 2400, false);
-//            elevatingArm.rotationalArm.setPower(0.1);
+            //           elevatingArm.rotateArm(0.7, 2400, false);
+            //           elevatingArm.rotationalArm.setPower(0.1);
             telemetry.addData("checkpoint", 1);
             telemetry.update();
             foundationMover.lockFoundation();
 
-            driveTrain.driveDistance(0.7, 19, 270, false);
+//            driveTrain.driveDistance(0.7, 19, 270, false);
+            AutonomousTasks.parallelDriveAndArm(1,19,270,.7,2400,telemetry);
+
             ElapsedTime timer = new ElapsedTime();
             timer.reset();
-            while (timer.milliseconds() < 3000) {
+            while (timer.milliseconds() < 3500) {
                 driveTrain.driveTank(0, -1);
             }
-            driveTrain.driveDistance(0.7, 12, 90, false);
+            driveTrain.driveDistance(1, 12, 90, false);
             foundationMover.unlockFoundation();
-            //driveTrain.driveDistance(1, 31, 270, false);
+            driveTrain.driveMecanum(1, 225, 1800);
+            driveTrain.driveDistance(1, 25, 270, false);
 
-            driveTrain.driveDistance(1, 24, 180, false);
-            driveTrain.driveDistance(1, 24, 270, false);
-
-            //driveTrain.driveDistance(1, 5, 90, false);
-            //driveTrain.driveMecanum(0.7, 135, 3000);
-            //driveTrain.driveDistance(1, 30, 180, false);
         }
     }
 }

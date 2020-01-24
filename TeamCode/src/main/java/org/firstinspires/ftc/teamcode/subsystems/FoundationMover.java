@@ -41,7 +41,7 @@ public class FoundationMover extends Subsystem {
     }
 
     public void unlockFoundation() {
-        foundationLeft.setPosition(0);
+        foundationLeft.setPosition(1);
         foundationRight.setPosition(0);
     }
 

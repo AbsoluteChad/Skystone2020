@@ -6,6 +6,7 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.RobotMain;
+import org.firstinspires.ftc.teamcode.opmodes.autonomous.AutonomousTasks;
 import org.firstinspires.ftc.teamcode.subsystems.DriveTrain;
 import org.firstinspires.ftc.teamcode.subsystems.ElevatingArm;
 import org.firstinspires.ftc.teamcode.subsystems.FoundationMover;
@@ -69,8 +70,9 @@ public class BlueLoadFar extends LinearOpMode {
             elevatingArm.rotateArm(0.7, 2700, false);
 
             driveTrain.driveDistance(1, disToFoundation,180, false);
-            driveTrain.driveDistance(1, 14, 90, false);
-            elevatingArm.rotateArm(0.7, -2400, false);
+            AutonomousTasks.parallelDriveAndArm(1,14,90,.7,-2400,telemetry);
+            //driveTrain.driveDistance(1, 14, 90, false);
+            //elevatingArm.rotateArm(0.7, -2400, false);
 
             //working stuff
             gripper.autoSucc(1, 1000);
@@ -80,7 +82,8 @@ public class BlueLoadFar extends LinearOpMode {
             telemetry.update();
             foundationMover.lockFoundation();
 
-            driveTrain.driveDistance(0.7, 18, 270, false);
+            AutonomousTasks.parallelDriveAndArm(1,19,270,.7,2400,telemetry);
+            //driveTrain.driveDistance(0.7, 18, 270, false);
             ElapsedTime timer = new ElapsedTime();
             timer.reset();
             while (timer.milliseconds() < 3000) {
@@ -88,7 +91,8 @@ public class BlueLoadFar extends LinearOpMode {
             }
             driveTrain.driveDistance(0.7, 12, 90, false);
             foundationMover.unlockFoundation();
-            driveTrain.driveDistance(1, 31, 270, false);
+            driveTrain.driveMecanum(1, 315, 1800);
+            driveTrain.driveDistance(1, 23, 270, false);
         }
     }
 }
