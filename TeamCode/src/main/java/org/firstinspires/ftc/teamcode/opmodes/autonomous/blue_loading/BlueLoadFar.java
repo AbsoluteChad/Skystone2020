@@ -63,14 +63,14 @@ public class BlueLoadFar extends LinearOpMode {
                 driveTrain.driveDistance(1, BLOCK_WIDTH, 180, false);
             }
 
-            elevatingArm.rotateArm(0.7, -3100, false);
+            elevatingArm.rotateArm(0.7, -3000, false);
             gripper.autoSucc(-1, 1000);
             telemetry.addData("checkpoint", 1);
             telemetry.update();
             elevatingArm.rotateArm(0.7, 2700, false);
 
             driveTrain.driveDistance(1, disToFoundation,180, false);
-            AutonomousTasks.parallelDriveAndArm(1,14,90,.7,-2400,telemetry);
+            AutonomousTasks.parallelDriveAndArm(0.7,15,90,.7,-2400,telemetry);
             //driveTrain.driveDistance(1, 14, 90, false);
             //elevatingArm.rotateArm(0.7, -2400, false);
 

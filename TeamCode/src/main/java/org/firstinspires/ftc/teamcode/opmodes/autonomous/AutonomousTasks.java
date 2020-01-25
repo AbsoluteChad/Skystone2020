@@ -84,6 +84,16 @@ public class AutonomousTasks {
             if (!rotateBusy) {
                 elevatingArm.rotationalArm.setPower(0);
             }
+
+            //made last minute
+            /*
+            if(!driveTrain.topLeft.isBusy() && !driveTrain.bottomLeft.isBusy() && !driveTrain.topRight.isBusy()
+                    && !driveTrain.bottomRight.isBusy())
+            {
+                elevatingArm.rotationalArm.setPower(0);
+                rotateBusy = false;
+            }
+            */
          /*   if (!driveTrain.topLeft.isBusy()) {
                 driveTrain.driveTank(0, 0);
             } else if (!elevatingArm.rotationalArm.isBusy()) {

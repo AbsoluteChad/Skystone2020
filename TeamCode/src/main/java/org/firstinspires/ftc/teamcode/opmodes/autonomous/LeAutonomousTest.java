@@ -39,7 +39,7 @@ import org.firstinspires.ftc.teamcode.subsystems.*;
  * or add a @Disabled annotation to prevent this OpMode from being added to the Driver Station
  */
 @Autonomous(name="LeAutonomousTest", group="Linear Opmode")
-//@Disabled
+@Disabled
 public class LeAutonomousTest extends LinearOpMode {
 
     private RobotMain robot;

@@ -51,7 +51,6 @@ public class BlueLoadClose extends LinearOpMode {
             telemetry.addData("Position", skystonePosition);
             telemetry.update(); */
 
-            driveTrain.driveDistance(1, 11, 90, false);
 
             if ((skystonePosition.equals("center")) || (skystonePosition.equals("nope"))){
                 disToFoundation = STRAFE_DIS_TO_FOUNDATION;
@@ -63,7 +62,7 @@ public class BlueLoadClose extends LinearOpMode {
                 driveTrain.driveDistance(1, BLOCK_WIDTH, 180, false);
             }
 
-            elevatingArm.rotateArm(0.7, -3100, false);
+            elevatingArm.rotateArm(0.7, -3000, false);
             gripper.autoSucc(-1, 1000);
             telemetry.addData("checkpoint", 1);
             telemetry.update();
@@ -73,7 +72,7 @@ public class BlueLoadClose extends LinearOpMode {
             //driveTrain.driveDistance(1, 14, 90, false);
             //elevatingArm.rotateArm(0.7, -2400, false);
 
-            AutonomousTasks.parallelDriveAndArm(1,14,90,.7,-2400,telemetry);
+            AutonomousTasks.parallelDriveAndArm(0.7,14,90,.7,-2400,telemetry);
             gripper.autoSucc(1, 1000);
             //elevatingArm.rotateArm(0.7, 2400, false);
             //elevatingArm.rotationalArm.setPower(0.1);
@@ -90,7 +89,7 @@ public class BlueLoadClose extends LinearOpMode {
             }
             driveTrain.driveDistance(0.7, 12, 90, false);
             foundationMover.unlockFoundation();
-            driveTrain.driveDistance(1, 31, 270, false);
+            driveTrain.driveDistance(1, 46, 270, false);
         }
     }
 }

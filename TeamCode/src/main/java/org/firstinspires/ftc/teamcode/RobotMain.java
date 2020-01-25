@@ -108,7 +108,7 @@ public class RobotMain {
 
         //Init vision
         if (auto) {
-            tensorFlow = new TensorFlow();
+            //tensorFlow = new TensorFlow();
         }
 
         //Init misc objects

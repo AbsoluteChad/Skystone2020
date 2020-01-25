@@ -92,35 +92,37 @@ public class RedLoadClose extends LinearOpMode {
                 driveTrain.driveDistance(1, BLOCK_WIDTH, 0, false);
             }
 
-            elevatingArm.rotateArm(0.7, -3100, false);
+            elevatingArm.rotateArm(0.7, -3000, false);
             gripper.autoSucc(-1, 1000);
             telemetry.addData("checkpoint", 1);
             telemetry.update();
             elevatingArm.rotateArm(0.7, 2700, false);
 
-            driveTrain.driveDistance(1, disToFoundation,180, false);
-            AutonomousTasks.parallelDriveAndArm(1,28,90,.7,-2400, telemetry);
+            driveTrain.driveDistance(1, disToFoundation,0, false);
+            AutonomousTasks.parallelDriveAndArm(1,14,90,.7,-2400, telemetry);
+
             //driveTrain.driveDistance(1, 14, 90, false);
             //elevatingArm.rotateArm(0.7, -2400, false);
 
             //working stuff
             gripper.autoSucc(1, 1000);
-            elevatingArm.rotateArm(0.7, 2400, false);
-            //elevatingArm.rotationalArm.setPower(0.1);
+            //           elevatingArm.rotateArm(0.7, 2400, false);
+            //           elevatingArm.rotationalArm.setPower(0.1);
             telemetry.addData("checkpoint", 1);
             telemetry.update();
             foundationMover.lockFoundation();
 
-            AutonomousTasks.parallelDriveAndArm(1,19,270,.7,2400, telemetry);
-            //driveTrain.driveDistance(0.7, 19, 270, false);
+//            driveTrain.driveDistance(0.7, 19, 270, false);
+            AutonomousTasks.parallelDriveAndArm(1,19,270,.7,2400,telemetry);
+
             ElapsedTime timer = new ElapsedTime();
             timer.reset();
-            while (timer.milliseconds() < 3500) {
+            while (timer.milliseconds() < 3000) {
                 driveTrain.driveTank(0, -1);
             }
             driveTrain.driveDistance(0.7, 12, 90, false);
             foundationMover.unlockFoundation();
-            driveTrain.driveDistance(1, 31, 270, false);
+            driveTrain.driveDistance(1, 40, 270, false);
             /*
             driveTrain.driveDistance(1, 38, 270, false);
             foundationMover.unlockFoundation();

@@ -82,17 +82,21 @@ public class TeleopSide extends OpMode {
     @Override
     public void loop() {
         if (gamepad1.dpad_down) {
-            elevatingArm.rotateArmTest(-0.1, telemetry);
+            elevatingArm.rotateArmTest(-0.5, telemetry);
         } else if (gamepad1.dpad_up) {
-            elevatingArm.rotateArmTest(0.1, telemetry);
+            elevatingArm.rotateArmTest(0.5, telemetry);
         } else {
             elevatingArm.driveElevatorArm(0);
         }
 
         if (gamepad1.y) {
-            elevatingArm.rotateArm(0.1, 720, false, telemetry);
+            elevatingArm.rotateArm(0.5, -1440, false, telemetry);
+            elevatingArm.driveElevatorArm(0);
         } else if (gamepad1.a) {
-            elevatingArm.rotateArm(0.1, -360, false, telemetry);
+            elevatingArm.rotateArm(0.5, -3000, false, telemetry);
+            elevatingArm.driveElevatorArm(0);
+        }else {
+            elevatingArm.driveElevatorArm(0);
         }
     }
 
