@@ -54,7 +54,6 @@ public class ElevatingArm extends Subsystem {
 
         inSensor = hardwareMap.get(DigitalChannel.class, "inSensor");
         inSensor.setMode(DigitalChannel.Mode.INPUT);
-//hi
 
         //Set arm motors to break
         elevatorArmLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
