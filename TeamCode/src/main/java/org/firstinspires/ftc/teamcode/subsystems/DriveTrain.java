@@ -7,7 +7,7 @@ import com.qualcomm.robotcore.hardware.PIDCoefficients;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.RobotMain;
-import org.firstinspires.ftc.teamcode.lib.PIDController;
+import org.firstinspires.ftc.teamcode.lib.drive.PIDController;
 
 public class DriveTrain extends Subsystem {
 

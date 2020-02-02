@@ -7,10 +7,9 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.RobotMain;
-import org.firstinspires.ftc.teamcode.lib.PIDController;
+import org.firstinspires.ftc.teamcode.lib.drive.PIDController;
 
 import com.qualcomm.robotcore.hardware.PIDCoefficients;
-import com.qualcomm.robotcore.hardware.DigitalChannel;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 
@@ -37,7 +36,7 @@ public class ElevatingArm extends Subsystem {
     private ElapsedTime timer = new ElapsedTime();
 
     private PIDCoefficients PIDcoeffs;
-    private org.firstinspires.ftc.teamcode.lib.PIDController PIDController;
+    private org.firstinspires.ftc.teamcode.lib.drive.PIDController PIDController;
 
     //Private constructor
 

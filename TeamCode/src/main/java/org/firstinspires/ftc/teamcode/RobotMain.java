@@ -14,15 +14,13 @@ import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackable;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackableDefaultListener;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
 import org.firstinspires.ftc.robotcore.external.tfod.TFObjectDetector;
-import org.firstinspires.ftc.teamcode.lib.Pose2d;
+import org.firstinspires.ftc.teamcode.lib.drive.Pose2d;
 import org.firstinspires.ftc.teamcode.subsystems.*;
-import org.firstinspires.ftc.teamcode.vision.TensorFlow;
+import org.firstinspires.ftc.teamcode.lib.vision.tensorflow.TensorFlow;
 
-import com.qualcomm.robotcore.hardware.Gyroscope;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.Servo;
-import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import java.util.ArrayList;
