@@ -39,7 +39,7 @@ import org.firstinspires.ftc.teamcode.subsystems.*;
  * or add a @Disabled annotation to prevent this OpMode from being added to the Driver Station
  */
 @Autonomous(name="LeAutonomousTest", group="Linear Opmode")
-@Disabled
+
 public class LeAutonomousTest extends LinearOpMode {
 
     private RobotMain robot;
@@ -71,58 +71,8 @@ public class LeAutonomousTest extends LinearOpMode {
         waitForStart();
 
         if (opModeIsActive()) {
-            //Go forward and sense
-            //elevatingArm.rotationalArm.setPower(-0.2);
-            driveTrain.driveDistance(1, 24, 90, false);
-            //elevatingArm.rotationalArm.setPower(0);
 
-            String skystonePosition = "center"; /* robot.tensorFlow.getSkystonePosition(true, 5000);
-            telemetry.addData("Position", skystonePosition);
-            telemetry.update();
-            driveTrain.driveDistance(1, 11, 90, false); */
-
-            if ((skystonePosition.equals("center")) || (skystonePosition.equals("nope"))){
-                disToFoundation = STRAFE_DIS_TO_FOUNDATION;
-            } else if (skystonePosition.equals("left")){
-                disToFoundation = STRAFE_DIS_TO_FOUNDATION + BLOCK_WIDTH ;
-                driveTrain.driveDistance(1, BLOCK_WIDTH, 180, false);
-            } else if (skystonePosition.equals("right")) {
-                disToFoundation = STRAFE_DIS_TO_FOUNDATION - BLOCK_WIDTH ;
-                driveTrain.driveDistance(1, BLOCK_WIDTH, 0, false);
-            }
-
-            elevatingArm.rotateArm(0.7, -3000, false);
-            gripper.autoSucc(-1, 1500);
-            telemetry.addData("checkpoint", 1);
-            telemetry.update();
-            //AutonomousTasks.parallelDriveAndArm(.8,disToFoundation,0,.7,2800,telemetry);
-            elevatingArm.rotateArm(0.7, 2800, false);
-
-            driveTrain.driveDistance(1, disToFoundation,0, false);
-            AutonomousTasks.parallelDriveAndArm(1,14,90,.7,-2400,telemetry);
-            //driveTrain.driveDistance(1, 14, 90, false);
-            //elevatingArm.rotateArm(0.7, -2400, false);
-
-            //working stuff
-            gripper.autoSucc(1, 1000);
- //           elevatingArm.rotateArm(0.7, 2400, false);
- //           elevatingArm.rotationalArm.setPower(0.1);
-            telemetry.addData("checkpoint", 1);
-            telemetry.update();
-            foundationMover.lockFoundation();
-
-//            driveTrain.driveDistance(0.7, 19, 270, false);
-            AutonomousTasks.parallelDriveAndArm(1,19,270,.7,2400,telemetry);
-
-            ElapsedTime timer = new ElapsedTime();
-            timer.reset();
-            while (timer.milliseconds() < 3000) {
-                driveTrain.driveTank(0, -1);
-            }
-            driveTrain.driveDistance(1, 12, 90, false);
-            foundationMover.unlockFoundation();
-            driveTrain.driveMecanum(1, 225, 1800);
-            driveTrain.driveDistance(1, 23, 270, false);
+            elevatingArm.rotateArm(0.2, 250, false);
 
         }
     }

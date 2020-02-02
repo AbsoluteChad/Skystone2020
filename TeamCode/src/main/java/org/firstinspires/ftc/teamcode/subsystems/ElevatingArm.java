@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode.subsystems;
 
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
+import com.qualcomm.robotcore.hardware.DigitalChannel;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
@@ -9,6 +10,7 @@ import org.firstinspires.ftc.teamcode.RobotMain;
 import org.firstinspires.ftc.teamcode.lib.PIDController;
 
 import com.qualcomm.robotcore.hardware.PIDCoefficients;
+import com.qualcomm.robotcore.hardware.DigitalChannel;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 
@@ -22,9 +24,13 @@ public class ElevatingArm extends Subsystem {
     public DcMotor elevatorArmRight;
     public DcMotor rotationalArm;
 
+    //Declare sensors
+    //public TouchSensor outSensor;
+    public DigitalChannel inSensor;
+
     //Declare constants
     private static final double VIDIPT_ELEVATOR_CONTROL = 0.75;
-    private static final double VIDIPT_ROTATIONAL_ARM_CONTROL = 0.6;
+    private static final double VIDIPT_ROTATIONAL_ARM_CONTROL = 0.4;
     private static final double ELEVATOR_TICKS_PER_INCH = 1716;
     private static final double ENCODER_TOLERANCE = 20;
 
@@ -36,7 +42,7 @@ public class ElevatingArm extends Subsystem {
     //Private constructor
 
     private ElevatingArm() {
-
+        //yeet
     }
 
     @Override
@@ -45,6 +51,10 @@ public class ElevatingArm extends Subsystem {
         elevatorArmLeft = hardwareMap.get(DcMotor.class, "elevatorArmLeft");
         elevatorArmRight = hardwareMap.get(DcMotor.class, "elevatorArmRight");
         rotationalArm = hardwareMap.get(DcMotor.class, "rotationalArm");
+
+        inSensor = hardwareMap.get(DigitalChannel.class, "inSensor");
+        inSensor.setMode(DigitalChannel.Mode.INPUT);
+//hi
 
         //Set arm motors to break
         elevatorArmLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
@@ -144,6 +154,7 @@ public class ElevatingArm extends Subsystem {
         rotationalArm.setTargetPosition(setPoint);
         rotationalArm.setMode(DcMotor.RunMode.RUN_TO_POSITION); //this might also be what messes stuff up
 
+        killArm(power);
 
         boolean[] reverse = new boolean[1];
         reverse[0] = false;
@@ -155,6 +166,7 @@ public class ElevatingArm extends Subsystem {
             while (rotationalArm.isBusy()) {
                 telemetry.addData("current position:", rotationalArm.getCurrentPosition());
                 telemetry.update();
+                killArm(power);
             }
             rotationalArm.setPower(0);
         }
@@ -178,11 +190,30 @@ public class ElevatingArm extends Subsystem {
         elevatorArmRight.setMode(mode);
     }
 
+    public boolean killArm(double power) {
+        if (inSensor.getState() == false && power > 0) {
+            rotationalArm.setPower(0);
+            return true;
+        } else {
+            return false;
+
+        } /*else if (outSensor.isPressed()) {
+            rotationalArm.setPower(0);
+            rotationalArm.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        } */
+
+    }
+
     /**
      * @param power requested power to drive rotational arm
      */
     public void driveRotationalArm(double power) {
-        rotationalArm.setPower(power * VIDIPT_ROTATIONAL_ARM_CONTROL);
+        killArm(power);
+        if (killArm(power)) {
+            //finessed
+        } else {
+            rotationalArm.setPower(power * VIDIPT_ROTATIONAL_ARM_CONTROL);
+       }
     }
 
     public int toTicks(double inches) {

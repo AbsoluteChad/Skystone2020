@@ -24,6 +24,8 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.RobotMain;
+import org.firstinspires.ftc.teamcode.opmodes.autonomous.AutonomousTasks;
+import org.firstinspires.ftc.teamcode.subsystems.DriveTrain;
 import org.firstinspires.ftc.teamcode.subsystems.ElevatingArm;
 
 /**
@@ -41,10 +43,13 @@ public class TeleopSide extends OpMode {
 
     private RobotMain robot;
     private ElevatingArm elevatingArm;
+    private DriveTrain driveTrain;
+
 
     @Override
     public void init() {
         robot = new RobotMain(hardwareMap, gamepad1, gamepad2, "blue", true);
+        driveTrain = (DriveTrain) RobotMain.driveTrain;
         elevatingArm = (ElevatingArm) RobotMain.elevatingArm;
     }
 
@@ -60,18 +65,26 @@ public class TeleopSide extends OpMode {
      */
     @Override
     public void start() {
-        if (gamepad1.dpad_down) {
+        /*if (gamepad1.dpad_down) {
             elevatingArm.rotateArmTest(-0.1, telemetry);
         } else if (gamepad1.dpad_up) {
             elevatingArm.rotateArmTest(0.1, telemetry);
         } else {
             elevatingArm.driveElevatorArm(0);
+            driveTrain.driveTank(0,0);
         }
 
         if (gamepad1.y) {
             elevatingArm.rotateArm(0.1, 600, false, telemetry);
         }
-
+        if (gamepad1.dpad_down) {
+            AutonomousTasks.parallelDriveAndArm(0.7,14,90,.7,-2400,telemetry);
+        } else if (gamepad1.dpad_up) {
+            AutonomousTasks.parallelDriveAndArm(0.7,14,90,.7,-2400,telemetry);
+        } else {
+            elevatingArm.driveElevatorArm(0);
+            driveTrain.driveTank(0,0);
+          } */
     }
 
 
@@ -81,12 +94,23 @@ public class TeleopSide extends OpMode {
      */
     @Override
     public void loop() {
-        if (gamepad1.dpad_down) {
-            elevatingArm.rotateArmTest(-0.5, telemetry);
+        telemetry.addData("is pressed?", elevatingArm.inSensor.getState());
+        if (elevatingArm.inSensor.getState() == true) {
+            telemetry.addData("is pressed?", "not pressed");
+        } else {
+            telemetry.addData("is pressed?", "pressed");
+        }
+        telemetry.update();
+
+
+        /*if (gamepad1.dpad_down) {
+            AutonomousTasks.parallelDriveAndArm(0.7,14,90,.7,-2400,telemetry);
         } else if (gamepad1.dpad_up) {
-            elevatingArm.rotateArmTest(0.5, telemetry);
+            AutonomousTasks.parallelDriveAndArm(0.7,14,90,.7,-2400,telemetry);
         } else {
             elevatingArm.driveElevatorArm(0);
+            driveTrain.driveTank(0,0);
+
         }
 
         if (gamepad1.y) {
@@ -97,7 +121,7 @@ public class TeleopSide extends OpMode {
             elevatingArm.driveElevatorArm(0);
         }else {
             elevatingArm.driveElevatorArm(0);
-        }
+        } */
     }
 
     /*

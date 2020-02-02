@@ -31,7 +31,7 @@ public class RedBuildParkClose extends LinearOpMode {
 
         if (opModeIsActive()) {
             driveTrain.driveDistance(0.5, 3, 90, false);
-            driveTrain.driveDistance(0.5, 44, 180, false);
+            driveTrain.driveDistance(0.5, 22, 180, false);
         }
     }
 }

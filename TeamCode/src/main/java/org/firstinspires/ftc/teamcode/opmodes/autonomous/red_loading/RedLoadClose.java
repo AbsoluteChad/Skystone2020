@@ -92,7 +92,7 @@ public class RedLoadClose extends LinearOpMode {
                 driveTrain.driveDistance(1, BLOCK_WIDTH, 0, false);
             }
 
-            elevatingArm.rotateArm(0.7, -3000, false);
+            elevatingArm.rotateArm(0.7, -3050, false);
             gripper.autoSucc(-1, 1000);
             telemetry.addData("checkpoint", 1);
             telemetry.update();
