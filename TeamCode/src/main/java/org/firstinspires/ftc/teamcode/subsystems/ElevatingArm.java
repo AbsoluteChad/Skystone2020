@@ -134,12 +134,13 @@ public class ElevatingArm extends Subsystem {
         if (PID) {
             PIDController.drive(setPoint, ENCODER_TOLERANCE, reverse);
         } else {
-//            rotationalArm.setPower(power);
-            if (killArm(power)) {
-                rotationalArm.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-                return;
+            rotationalArm.setPower(power);
+            while (rotationalArm.isBusy()) {
+                if (killArm(power)) {
+                    rotationalArm.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+                    return;
+                }
             }
-            rotationalArm.setPower(0);
         }
     }
 
@@ -192,6 +193,7 @@ public class ElevatingArm extends Subsystem {
         elevatorArmRight.setMode(mode);
     }
 
+// when arm is going towards a sensor and the sensor is touched, arm stops moving in that direction
     public boolean killArm(double power) {
         if (inSensor.getState() == false && power > 0) {
             rotationalArm.setPower(0);
@@ -199,9 +201,9 @@ public class ElevatingArm extends Subsystem {
         } else {
             return false;
 
-        } /*else if (outSensor.isPressed()) {
+        } /*else if (outSensor.isPressed() && power < 0) {
             rotationalArm.setPower(0);
-            rotationalArm.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+            return true;
         } */
 
     }

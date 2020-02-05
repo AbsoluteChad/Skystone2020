@@ -75,7 +75,7 @@ public class RedLoadFar extends LinearOpMode {
         if (opModeIsActive()) {
             //Go forward and sense
             //elevatingArm.rotationalArm.setPower(-0.2);
-            driveTrain.driveDistance(1, 22, 90, false);
+            driveTrain.driveDistance(1, 20, 90, false);
             //elevatingArm.rotationalArm.setPower(0);
 
             String skystonePosition = "center"; /* robot.tensorFlow.getSkystonePosition(true, 5000);

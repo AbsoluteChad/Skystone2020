@@ -71,8 +71,7 @@ public class LeAutonomousTest extends LinearOpMode {
         waitForStart();
 
         if (opModeIsActive()) {
-
-            elevatingArm.rotateArm(0.2, 250, false);
+            elevatingArm.rotateArm(-0.2, -2000, false, telemetry);
 
         }
     }

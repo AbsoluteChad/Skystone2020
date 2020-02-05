@@ -92,28 +92,29 @@ public class RedLoadClose extends LinearOpMode {
                 driveTrain.driveDistance(1, BLOCK_WIDTH, 0, false);
             }
 
-            elevatingArm.rotateArm(0.7, -3050, false);
+            elevatingArm.rotateArm(-0.4, -2400, false);
+
             gripper.autoSucc(-1, 1000);
             telemetry.addData("checkpoint", 1);
             telemetry.update();
-            elevatingArm.rotateArm(0.7, 2700, false);
+
+            elevatingArm.rotateArm(0.4, 2200, false);
+
+            return;
+/*
 
             driveTrain.driveDistance(1, disToFoundation,0, false);
-            AutonomousTasks.parallelDriveAndArm(1,14,90,.7,-2400, telemetry);
+            AutonomousTasks.parallelDriveAndArm(1,14,90,-.7,-2200, telemetry);
 
-            //driveTrain.driveDistance(1, 14, 90, false);
-            //elevatingArm.rotateArm(0.7, -2400, false);
 
             //working stuff
             gripper.autoSucc(1, 1000);
-            //           elevatingArm.rotateArm(0.7, 2400, false);
-            //           elevatingArm.rotationalArm.setPower(0.1);
             telemetry.addData("checkpoint", 1);
             telemetry.update();
             foundationMover.lockFoundation();
 
-//            driveTrain.driveDistance(0.7, 19, 270, false);
-            AutonomousTasks.parallelDriveAndArm(1,19,270,.7,2400,telemetry);
+
+            AutonomousTasks.parallelDriveAndArm(1,19,270,.7,2200,telemetry);
 
             ElapsedTime timer = new ElapsedTime();
             timer.reset();
@@ -123,11 +124,8 @@ public class RedLoadClose extends LinearOpMode {
             driveTrain.driveDistance(0.7, 12, 90, false);
             foundationMover.unlockFoundation();
             driveTrain.driveDistance(1, 40, 270, false);
-            /*
-            driveTrain.driveDistance(1, 38, 270, false);
-            foundationMover.unlockFoundation();
-            driveTrain.driveDistance(1, 60, 180, false);
-             */
+
+ */
         }
     }
 }
