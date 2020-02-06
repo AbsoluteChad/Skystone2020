@@ -41,15 +41,24 @@ public class RedBuildClose extends LinearOpMode {
             //driveTrain.driveDistance(0.7, 12, 90, false);
 
             driveTrain.driveMecanum(0.7, 45, 1800); //traveling diagonal in order to position with the foundation
-            driveTrain.driveDistance(0.7, 17, 90, false); //moving straight in order to get close enough to the foundation
+            driveTrain.driveDistance(0.7, 19, 90, false); //moving straight in order to get close enough to the foundation
             foundationMover.lockFoundation(); //locking onto Foundation
             ElapsedTime timer = new ElapsedTime();
+            timer.reset();
+            while (timer.milliseconds() < 500) {
+                // finessed
+            }
+            driveTrain.driveDistance(1, 19, 270, false);
             timer.reset();
             while (timer.milliseconds() < 3000) {
                 driveTrain.driveTank(0, -1);
             }
-            driveTrain.driveDistance(0.7, 12, 90, false);
+            driveTrain.driveDistance(1, 12, 90, false);
             foundationMover.unlockFoundation();
+            timer.reset();
+            while (timer.milliseconds() < 500) {
+                // finessed
+            }
             driveTrain.driveDistance(1, 40, 270, false);
             /*driveTrain.driveDistance(0.7, 35, 270, false); //moving back in order to position the foundation to the site
             foundationMover.unlockFoundation(); //unlocking off of foundation

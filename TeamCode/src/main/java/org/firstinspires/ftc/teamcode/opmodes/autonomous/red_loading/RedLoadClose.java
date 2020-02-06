@@ -28,7 +28,7 @@ import org.firstinspires.ftc.teamcode.subsystems.DriveTrain;
 import org.firstinspires.ftc.teamcode.subsystems.ElevatingArm;
 import org.firstinspires.ftc.teamcode.subsystems.FoundationMover;
 import org.firstinspires.ftc.teamcode.subsystems.Gripper;
-
+import  org.firstinspires.ftc.teamcode.opmodes.Constants;
 
 /**
  * This file contains an minimal example of a Linear "OpMode". An OpMode is a 'program' that runs in either
@@ -51,8 +51,6 @@ public class RedLoadClose extends LinearOpMode {
     private ElevatingArm elevatingArm;
     private Gripper gripper;
 
-    private static int BLOCK_WIDTH = 10;
-    private static int STRAFE_DIS_TO_FOUNDATION = 104;
 
     @Override
     public void runOpMode() {
@@ -83,28 +81,27 @@ public class RedLoadClose extends LinearOpMode {
             driveTrain.driveDistance(1, 11, 90, false); */
 
             if ((skystonePosition.equals("center")) || (skystonePosition.equals("nope"))){
-                disToFoundation = STRAFE_DIS_TO_FOUNDATION;
+                disToFoundation = Constants.STRAFE_DIS_TO_FOUNDATION;
             } else if (skystonePosition.equals("left")){
-                disToFoundation = STRAFE_DIS_TO_FOUNDATION + BLOCK_WIDTH ;
-                driveTrain.driveDistance(1, BLOCK_WIDTH, 180, false);
+                disToFoundation = Constants.STRAFE_DIS_TO_FOUNDATION + Constants.BLOCK_WIDTH;
+                driveTrain.driveDistance(1, Constants.BLOCK_WIDTH, 180, false);
             } else if (skystonePosition.equals("right")) {
-                disToFoundation = STRAFE_DIS_TO_FOUNDATION - BLOCK_WIDTH ;
-                driveTrain.driveDistance(1, BLOCK_WIDTH, 0, false);
+                disToFoundation = Constants.STRAFE_DIS_TO_FOUNDATION - Constants.BLOCK_WIDTH ;
+                driveTrain.driveDistance(1, Constants.BLOCK_WIDTH, 0, false);
             }
 
-            elevatingArm.rotateArm(-0.4, -2400, false);
+            elevatingArm.rotateArm(-0, Constants.ARM_OUT_TICKS, false);
 
-            gripper.autoSucc(-1, 1000);
+            gripper.autoSucc(-1, 1500);
             telemetry.addData("checkpoint", 1);
             telemetry.update();
 
-            elevatingArm.rotateArm(0.4, 2200, false);
+            elevatingArm.rotateArm(0.4, Constants.ARM_IN_TICKS, false);
 
-            return;
-/*
 
             driveTrain.driveDistance(1, disToFoundation,0, false);
-            AutonomousTasks.parallelDriveAndArm(1,14,90,-.7,-2200, telemetry);
+            AutonomousTasks.parallelDriveAndArm(1,14,90,-.7,
+                    Constants.ARM_OUT_TICKS - 200, telemetry);
 
 
             //working stuff
@@ -114,18 +111,17 @@ public class RedLoadClose extends LinearOpMode {
             foundationMover.lockFoundation();
 
 
-            AutonomousTasks.parallelDriveAndArm(1,19,270,.7,2200,telemetry);
+            AutonomousTasks.parallelDriveAndArm(1,19,270,.7,Constants.ARM_IN_TICKS,telemetry);
 
             ElapsedTime timer = new ElapsedTime();
             timer.reset();
-            while (timer.milliseconds() < 3000) {
+            while (timer.milliseconds() < 2500) {
                 driveTrain.driveTank(0, -1);
             }
             driveTrain.driveDistance(0.7, 12, 90, false);
             foundationMover.unlockFoundation();
             driveTrain.driveDistance(1, 40, 270, false);
 
- */
         }
     }
 }

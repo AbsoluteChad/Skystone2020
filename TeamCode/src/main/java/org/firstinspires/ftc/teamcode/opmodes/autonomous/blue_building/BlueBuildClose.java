@@ -43,12 +43,21 @@ public class BlueBuildClose extends LinearOpMode {
             foundationMover.lockFoundation(); //locking onto Foundation
             ElapsedTime timer = new ElapsedTime();
             timer.reset();
-            while (timer.milliseconds() < 3000) {
+            while (timer.milliseconds() < 500) {
+                // finessed
+            }
+            driveTrain.driveDistance(1, 19, 270, false);
+            timer.reset();
+            while (timer.milliseconds() < 2700) {
                 driveTrain.driveTank(-1, 0);
             }
-            driveTrain.driveDistance(0.7, 12, 90, false);
+            driveTrain.driveDistance(1, 15, 90, false);
             foundationMover.unlockFoundation();
-            driveTrain.driveDistance(1, 46, 270, false);
+            timer.reset();
+            while (timer.milliseconds() < 500) {
+                // finessed
+            }
+            driveTrain.driveDistance(1, 42, 270, false);
 
             /*driveTrain.driveDistance(0.7, 35, 270, false); //moving back in order to position the foundation to the site
             foundationMover.unlockFoundation(); //unlocking off of foundation
