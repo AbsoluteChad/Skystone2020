@@ -42,11 +42,14 @@ public class BlueLoadClose extends LinearOpMode {
 
         if (opModeIsActive()) {
             //Go forward and sense
-             driveTrain.driveDistance(1, 24, 90, false);
+            //elevatingArm.rotationalArm.setPower(-0.2);
+            driveTrain.driveDistance(1, 20, 90, false);
+            //elevatingArm.rotationalArm.setPower(0);
 
             String skystonePosition = "center"; /* robot.tensorFlow.getSkystonePosition(true, 5000);
             telemetry.addData("Position", skystonePosition);
-            telemetry.update(); */
+            telemetry.update();
+            driveTrain.driveDistance(1, 11, 90, false); */
 
             if ((skystonePosition.equals("center")) || (skystonePosition.equals("nope"))){
                 disToFoundation = Constants.STRAFE_DIS_TO_FOUNDATION;
@@ -58,32 +61,38 @@ public class BlueLoadClose extends LinearOpMode {
                 driveTrain.driveDistance(1, Constants.BLOCK_WIDTH, 0, false);
             }
 
-
             elevatingArm.rotateArm(-0.7, Constants.ARM_OUT_TICKS, false);
             gripper.autoSucc(-1, 1000);
             telemetry.addData("checkpoint", 1);
             telemetry.update();
-            elevatingArm.rotateArm(0.7, Constants.ARM_IN_TICKS, false);
+            //AutonomousTasks.parallelDriveAndArm(.8,disToFoundation,0,.7,2800,telemetry);
+            elevatingArm.rotateArm(0.4, Constants.ARM_IN_TICKS, false);
+
 
             driveTrain.driveDistance(1, disToFoundation,180, false);
 
 
-            AutonomousTasks.parallelDriveAndArm(0.7,14,90,-.7, Constants.ARM_OUT_TICKS_2,telemetry);
+            AutonomousTasks.parallelDriveAndArm(0.7,18,90,-.7, Constants.ARM_OUT_TICKS_2, telemetry);
             gripper.autoSucc(1, Constants.SUCC_UNSCUC);
 
             telemetry.addData("checkpoint", 1);
             telemetry.update();
             foundationMover.lockFoundation();
 
-            AutonomousTasks.parallelDriveAndArm(1,19,270,.7, Constants.ARM_IN_TICKS,telemetry);
+            AutonomousTasks.parallelDriveAndArm(1,19,270,.7, Constants.ARM_IN_TICKS_2, telemetry);
             ElapsedTime timer = new ElapsedTime();
             timer.reset();
-            while (timer.milliseconds() < 2500) {
+            while (timer.milliseconds() < 2700) {
                 driveTrain.driveTank(-1, 0);
             }
-            driveTrain.driveDistance(0.7, 12, 90, false);
+            driveTrain.driveDistance(1, 15, 90, false);
             foundationMover.unlockFoundation();
-            driveTrain.driveDistance(1, 46, 270, false);
+            timer.reset();
+            while (timer.milliseconds() < 500) {
+                // finessed
+            }
+            driveTrain.driveDistance(1, 42, 270, false);
+
         }
     }
 }

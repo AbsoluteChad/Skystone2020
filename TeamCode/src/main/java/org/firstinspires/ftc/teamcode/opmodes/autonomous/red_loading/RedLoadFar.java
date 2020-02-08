@@ -100,7 +100,7 @@ public class RedLoadFar extends LinearOpMode {
             elevatingArm.rotateArm(0.7, Constants.ARM_IN_TICKS, false);
 
             driveTrain.driveDistance(1, disToFoundation,0, false);
-            AutonomousTasks.parallelDriveAndArm(1,14,90,-0.7, Constants.ARM_OUT_TICKS_2, telemetry);
+            AutonomousTasks.parallelDriveAndArm(1,18,90,-0.7, Constants.ARM_OUT_TICKS_2 + 200, telemetry);
             //driveTrain.driveDistance(1, 14, 90, false);
             //elevatingArm.rotateArm(0.7, -2400, false);
 
@@ -113,17 +113,21 @@ public class RedLoadFar extends LinearOpMode {
             foundationMover.lockFoundation();
 
 //            driveTrain.driveDistance(0.7, 19, 270, false);
-            AutonomousTasks.parallelDriveAndArm(1,19,270,0.7, Constants.ARM_IN_TICKS,telemetry);
+            AutonomousTasks.parallelDriveAndArm(1,21,270,0.5, Constants.ARM_IN_TICKS_2 - 200, telemetry);
 
             ElapsedTime timer = new ElapsedTime();
             timer.reset();
-            while (timer.milliseconds() < 2500) {
+            while (timer.milliseconds() < 3000) {
                 driveTrain.driveTank(0, -1);
             }
-            driveTrain.driveDistance(1, 12, 90, false);
+            driveTrain.driveDistance(1, 15, 90, false);
             foundationMover.unlockFoundation();
-            driveTrain.driveMecanum(1, 225, 1550);
-            driveTrain.driveDistance(1, 30, 270, false);
+            timer.reset();
+            while (timer.milliseconds() < 500) {
+                // finessed
+            }
+            driveTrain.driveMecanum(1, 225, 2800);
+            driveTrain.driveDistance(1, 15, 270, false);
 
         }
     }

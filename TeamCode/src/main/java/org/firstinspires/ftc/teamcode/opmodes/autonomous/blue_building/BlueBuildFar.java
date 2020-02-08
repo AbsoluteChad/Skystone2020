@@ -60,7 +60,7 @@ public class BlueBuildFar extends LinearOpMode {
                 // finessed
             }
             driveTrain.driveMecanum(1, 315, 3000);
-            driveTrain.driveDistance(1, 18, 270, false);
+            driveTrain.driveDistance(1, 13, 270, false);
             /*driveTrain.driveDistance(0.7, 35, 270, false); //moving back in order to position the foundation to the site
             foundationMover.unlockFoundation(); //unlocking off of foundation
             driveTrain.driveDistance(0.7, 36, 0, false); //strafing to the left in order for clearance

@@ -53,14 +53,14 @@ public class RedBuildFar extends LinearOpMode {
             while (timer.milliseconds() < 3000) {
                 driveTrain.driveTank(0, -1);
             }
-            driveTrain.driveDistance(1, 12, 90, false);
+            driveTrain.driveDistance(1, 14, 90, false);
             foundationMover.unlockFoundation();
             timer.reset();
             while (timer.milliseconds() < 500) {
                 // finessed
             }
-            driveTrain.driveMecanum(1, 225, 2000);
-            driveTrain.driveDistance(1, 24, 270, false);
+            driveTrain.driveMecanum(1, 225, 2500);
+            driveTrain.driveDistance(1, 18, 270, false);
             /*driveTrain.driveDistance(0.7, 35, 270, false); //moving back in order to position the foundation to the site
             foundationMover.unlockFoundation(); //unlocking off of foundation
             driveTrain.driveDistance(0.7, 34, 180, false); //strafing to the left in order for clearance

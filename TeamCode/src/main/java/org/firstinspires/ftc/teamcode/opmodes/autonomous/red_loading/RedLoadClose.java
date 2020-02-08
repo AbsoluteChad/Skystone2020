@@ -72,7 +72,7 @@ public class RedLoadClose extends LinearOpMode {
         if (opModeIsActive()) {
             //Go forward and sense
             //elevatingArm.rotationalArm.setPower(-0.2);
-            driveTrain.driveDistance(1, 24, 90, false);
+            driveTrain.driveDistance(1, 20, 90, false);
             //elevatingArm.rotationalArm.setPower(0);
 
             String skystonePosition = "center"; /* robot.tensorFlow.getSkystonePosition(true, 5000);
@@ -90,18 +90,15 @@ public class RedLoadClose extends LinearOpMode {
                 driveTrain.driveDistance(1, Constants.BLOCK_WIDTH, 0, false);
             }
 
-            elevatingArm.rotateArm(-0, Constants.ARM_OUT_TICKS, false);
-
-            gripper.autoSucc(-1, 1500);
+            elevatingArm.rotateArm(-0.7, Constants.ARM_OUT_TICKS, false);
+            gripper.autoSucc(-1, 1000);
             telemetry.addData("checkpoint", 1);
             telemetry.update();
-
-            elevatingArm.rotateArm(0.4, Constants.ARM_IN_TICKS, false);
-
+            //AutonomousTasks.parallelDriveAndArm(.8,disToFoundation,0,.7,2800,telemetry);
+            elevatingArm.rotateArm(0.7, Constants.ARM_IN_TICKS, false);
 
             driveTrain.driveDistance(1, disToFoundation,0, false);
-            AutonomousTasks.parallelDriveAndArm(1,14,90,-.7,
-                    Constants.ARM_OUT_TICKS - 200, telemetry);
+            AutonomousTasks.parallelDriveAndArm(1,18,90,-.7,Constants.ARM_OUT_TICKS_2, telemetry);
 
 
             //working stuff
@@ -111,15 +108,19 @@ public class RedLoadClose extends LinearOpMode {
             foundationMover.lockFoundation();
 
 
-            AutonomousTasks.parallelDriveAndArm(1,19,270,.7,Constants.ARM_IN_TICKS,telemetry);
+            AutonomousTasks.parallelDriveAndArm(1,19,270,.5, Constants.ARM_IN_TICKS_2, telemetry);
 
             ElapsedTime timer = new ElapsedTime();
             timer.reset();
-            while (timer.milliseconds() < 2500) {
+            while (timer.milliseconds() < 3000) {
                 driveTrain.driveTank(0, -1);
             }
-            driveTrain.driveDistance(0.7, 12, 90, false);
+            driveTrain.driveDistance(1, 12, 90, false);
             foundationMover.unlockFoundation();
+            timer.reset();
+            while (timer.milliseconds() < 500) {
+                // finessed
+            }
             driveTrain.driveDistance(1, 40, 270, false);
 
         }

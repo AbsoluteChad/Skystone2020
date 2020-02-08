@@ -53,7 +53,7 @@ public class RedBuildClose extends LinearOpMode {
             while (timer.milliseconds() < 3000) {
                 driveTrain.driveTank(0, -1);
             }
-            driveTrain.driveDistance(1, 12, 90, false);
+            driveTrain.driveDistance(1, 14, 90, false);
             foundationMover.unlockFoundation();
             timer.reset();
             while (timer.milliseconds() < 500) {

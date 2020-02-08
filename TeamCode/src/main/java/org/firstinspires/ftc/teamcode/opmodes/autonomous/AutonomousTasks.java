@@ -70,6 +70,7 @@ public class AutonomousTasks {
         while ((driveTrain.topLeft.isBusy() || driveTrain.bottomLeft.isBusy() || driveTrain.topRight.isBusy()
                 || driveTrain.bottomRight.isBusy()) || rotateBusy) {
    //             elevatingArm.rotationalArm.isBusy()) {
+   //         elevatingArm.killArm(armPower);
             //Check if any individual subsystem has finished while the other continues
             telemetry.addData("topLeft busy: " ,driveTrain.topLeft.isBusy() );
             telemetry.addData("bottomLeft busy: " ,driveTrain.bottomLeft.isBusy() );
@@ -86,14 +87,15 @@ public class AutonomousTasks {
             }
 
             //made last minute
-            /*
+
             if(!driveTrain.topLeft.isBusy() && !driveTrain.bottomLeft.isBusy() && !driveTrain.topRight.isBusy()
                     && !driveTrain.bottomRight.isBusy())
             {
                 elevatingArm.rotationalArm.setPower(0);
                 rotateBusy = false;
+                elevatingArm.rotationalArm.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
             }
-            */
+
          /*   if (!driveTrain.topLeft.isBusy()) {
                 driveTrain.driveTank(0, 0);
             } else if (!elevatingArm.rotationalArm.isBusy()) {
