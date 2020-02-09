@@ -1,8 +1,6 @@
 package org.firstinspires.ftc.teamcode.lib.vision;
 
-import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.util.ElapsedTime;
+import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.opencv.core.Core;
 import org.opencv.core.Mat;
@@ -19,57 +17,115 @@ import org.openftc.easyopencv.OpenCvPipeline;
 import java.util.ArrayList;
 import java.util.List;
 
-@Autonomous(name= "EasyOpenCV skystone detector", group="LinearOpMode")
-public class SkystoneDetectorOpMode extends LinearOpMode {
-    private ElapsedTime runtime = new ElapsedTime();
+public class SkystoneDetector {
 
-    //0 means skystone, 1 means yellow stone
-    //-1 for debug, but we can keep it like this because if it works, it should change to either 0 or 255
-    private static int valMid = -1;
+    //Values of the 3 blocks (skystone or not)
     private static int valLeft = -1;
+    private static int valMiddle = -1;
     private static int valRight = -1;
 
+    //Dimensions of rectangles on screen
     private static float rectHeight = .6f/8f;
     private static float rectWidth = 1.5f/8f;
 
     private static float offsetX = 0f/8f;//changing this moves the three rects and the three circles left or right, range : (-2, 2) not inclusive
     private static float offsetY = 0f/8f;//changing this moves the three rects and circles up or down, range: (-4, 4) not inclusive
 
-    private static float[] midPos = {4f/8f+offsetX, 4f/8f+offsetY};//0 = col, 1 = row
-    private static float[] leftPos = {2f/8f+offsetX, 4f/8f+offsetY};
-    private static float[] rightPos = {6f/8f+offsetX, 4f/8f+offsetY};
-    //moves all rectangles right or left by amount. units are in ratio to monitor
+    //Position of rectangles on screen
+    private static float[] leftPos = {2f/8f + offsetX, 4f/8f + offsetY}; //0 = col, 1 = row
+    private static float[] middlePos = {4f/8f + offsetX, 4f/8f + offsetY};
+    private static float[] rightPos = {6f/8f + offsetX, 4f/8f + offsetY};
 
+    //Screen dimensions
     private final int rows = 640;
     private final int cols = 480;
 
-    OpenCvCamera phoneCam;
+    //Declare camera
+    private OpenCvCamera phoneCamera;
 
-    @Override
-    public void runOpMode() throws InterruptedException {
+    public SkystoneDetector(HardwareMap hardwareMap) {
+        //Init phone camera
         int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
-        phoneCam = OpenCvCameraFactory.getInstance().createInternalCamera(OpenCvInternalCamera.CameraDirection.BACK, cameraMonitorViewId);
+        phoneCamera = OpenCvCameraFactory.getInstance().createInternalCamera(OpenCvInternalCamera.CameraDirection.BACK, cameraMonitorViewId);
 
-        phoneCam.openCameraDevice();
-        phoneCam.setPipeline(new StageSwitchingPipeline());//different stages
-        phoneCam.startStreaming(rows, cols, OpenCvCameraRotation.UPRIGHT);//display on RC
-        //width, height
-        //width = height in this case, because camera is in portrait mode.
-
-        waitForStart();
-        runtime.reset();
-        while (opModeIsActive()) {
-            telemetry.addData("Values", valLeft + "   " + valMid + "   " + valRight);
-            telemetry.addData("Height", rows);
-            telemetry.addData("Width", cols);
-
-            telemetry.update();
-            sleep(100);
-        }
+        //Start pipeline
+        openCamera();
+        setPipeline(new SkystonePipeline());
+        startStreaming(rows, cols, OpenCvCameraRotation.UPRIGHT);
     }
 
-     //detection pipeline
-     static class StageSwitchingPipeline extends OpenCvPipeline {
+    /**
+     * Gets the position of the skystone (assuming phone camera sees 3 blocks in which one is a skystone)
+     * @return the skystone position as a char 'L', 'M', or 'R' for "Left" "Middle" and "Right". Will return
+     * 'N' if the skystone cannot properly be sensed.
+     */
+    public char getSkystonePosition() {
+        if (valLeft == 0) {
+            return 'L';
+        } else if (valMiddle == 0) {
+            return 'M';
+        } else if (valRight == 0) {
+            return 'R';
+        }
+        return 'N';
+    }
+
+    /**
+     * Opens camera device
+     */
+    public void openCamera() {
+        phoneCamera.openCameraDevice();
+    }
+
+    /**
+     * Closes camera device
+     */
+    public void closeCamera() {
+        phoneCamera.closeCameraDevice();
+    }
+
+    /**
+     * Sets pipeline for vision
+     * @param pipeline desired vision pipeline
+     */
+    public void setPipeline(OpenCvPipeline pipeline) {
+        phoneCamera.setPipeline(pipeline);
+    }
+
+    /**
+     * Starts viewport to Driver Station phone
+     * @param camRotation rotation of camera mounted on robot
+     */
+    public void startStreaming(int rows, int cols, OpenCvCameraRotation camRotation) {
+        phoneCamera.startStreaming(rows, cols, camRotation);
+    }
+
+    /**
+     * Pauses viewport to driver station phone
+     * NOTE: pipeline does not stop
+     */
+    public void pauseViewport() {
+        phoneCamera.pauseViewport();
+    }
+
+    /**
+     * Resumes viewport to driver station phone (if paused)
+     */
+    public void resumeViewport() {
+        phoneCamera.resumeViewport();
+    }
+
+    /**
+     * @return the camera fps
+     */
+    public double getFPS() {
+        return phoneCamera.getFps();
+    }
+
+    /**
+     * Pipeline class used for detecting skystone
+     */
+    private static class SkystonePipeline extends OpenCvPipeline {
         Mat yCbCrChan2Mat = new Mat();
         Mat thresholdMat = new Mat();
         Mat all = new Mat();
@@ -81,8 +137,8 @@ public class SkystoneDetectorOpMode extends LinearOpMode {
             RAW_IMAGE,//displays raw view
         }
 
-        private Stage stageToRenderToViewport = Stage.DETECTION;
-        private Stage[] stages = Stage.values();
+        private SkystoneDetectorOpMode.StageSwitchingPipeline.Stage stageToRenderToViewport = SkystoneDetectorOpMode.StageSwitchingPipeline.Stage.DETECTION;
+        private SkystoneDetectorOpMode.StageSwitchingPipeline.Stage[] stages = SkystoneDetectorOpMode.StageSwitchingPipeline.Stage.values();
 
         @Override
         public void onViewportTapped() {
@@ -123,8 +179,8 @@ public class SkystoneDetectorOpMode extends LinearOpMode {
 
 
             //get values from frame
-            double[] pixMid = thresholdMat.get((int)(input.rows()* midPos[1]), (int)(input.cols()* midPos[0]));//gets value at circle
-            valMid = (int)pixMid[0];
+            double[] pixMid = thresholdMat.get((int)(input.rows()* middlePos[1]), (int)(input.cols()* middlePos[0]));//gets value at circle
+            valMiddle = (int)pixMid[0];
 
             double[] pixLeft = thresholdMat.get((int)(input.rows()* leftPos[1]), (int)(input.cols()* leftPos[0]));//gets value at circle
             valLeft = (int)pixLeft[0];
@@ -133,7 +189,7 @@ public class SkystoneDetectorOpMode extends LinearOpMode {
             valRight = (int)pixRight[0];
 
             //create three points
-            Point pointMid = new Point((int)(input.cols()* midPos[0]), (int)(input.rows()* midPos[1]));
+            Point pointMid = new Point((int)(input.cols()* middlePos[0]), (int)(input.rows()* middlePos[1]));
             Point pointLeft = new Point((int)(input.cols()* leftPos[0]), (int)(input.rows()* leftPos[1]));
             Point pointRight = new Point((int)(input.cols()* rightPos[0]), (int)(input.rows()* rightPos[1]));
 
@@ -155,11 +211,11 @@ public class SkystoneDetectorOpMode extends LinearOpMode {
             Imgproc.rectangle(//3-5
                     all,
                     new Point(
-                            input.cols()*(midPos[0]-rectWidth/2),
-                            input.rows()*(midPos[1]-rectHeight/2)),
+                            input.cols()*(middlePos[0]-rectWidth/2),
+                            input.rows()*(middlePos[1]-rectHeight/2)),
                     new Point(
-                            input.cols()*(midPos[0]+rectWidth/2),
-                            input.rows()*(midPos[1]+rectHeight/2)),
+                            input.cols()*(middlePos[0]+rectWidth/2),
+                            input.rows()*(middlePos[1]+rectHeight/2)),
                     new Scalar(0, 255, 0), 3);
             Imgproc.rectangle(//5-7
                     all,

@@ -39,7 +39,6 @@ import org.firstinspires.ftc.teamcode.subsystems.*;
  * or add a @Disabled annotation to prevent this OpMode from being added to the Driver Station
  */
 @Autonomous(name="LeAutonomousTest", group="Linear Opmode")
-
 public class LeAutonomousTest extends LinearOpMode {
 
     private RobotMain robot;
@@ -49,7 +48,7 @@ public class LeAutonomousTest extends LinearOpMode {
     private Gripper gripper;
 
     private static int BLOCK_WIDTH = 10;
-    private static int STRAFE_DIS_TO_FOUNDATION = 104;
+    private char skystonePos;
 
     private ElapsedTime timer = new ElapsedTime();
 
@@ -62,17 +61,24 @@ public class LeAutonomousTest extends LinearOpMode {
         gripper = (Gripper) RobotMain.gripper;
 
         foundationMover.unlockFoundation();
+        timer.reset();
+
+        while (timer.seconds() < 5) {
+            skystonePos = robot.skystoneDetector.getSkystonePosition();
+        }
 
         telemetry.addData("Status", "Initialized");
         telemetry.update();
 
-        int disToFoundation = 0; //this variable is used for calculating distance to foundation
-
         waitForStart();
 
         if (opModeIsActive()) {
-            elevatingArm.rotateArm(-0.2, -2000, false, telemetry);
-
+            if (skystonePos == 'L') {
+                driveTrain.driveDistance(0.3, BLOCK_WIDTH, 180, false);
+            } else if (skystonePos == 'R') {
+                driveTrain.driveDistance(0.3, BLOCK_WIDTH, 0, false);
+            }
+            driveTrain.driveDistance(0.3, 22, 90, false);
         }
     }
 }

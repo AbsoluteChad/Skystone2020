@@ -15,6 +15,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackableDefau
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
 import org.firstinspires.ftc.robotcore.external.tfod.TFObjectDetector;
 import org.firstinspires.ftc.teamcode.lib.drive.Pose2d;
+import org.firstinspires.ftc.teamcode.lib.vision.SkystoneDetector;
 import org.firstinspires.ftc.teamcode.subsystems.*;
 
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -55,6 +56,7 @@ public class RobotMain {
     //Declare vision & object dection engines
     private VuforiaLocalizer vuforia;
     private TFObjectDetector tfod;
+    public SkystoneDetector skystoneDetector;
 
     //Declare Vuforia members
     public static final String VUFORIA_KEY = "Aa4qojf/////AAABmUtRp+oA10Tyg9NdvwIzzH4eVE09jioK/9lv2fPHeJLN4mXBj/AfGpZM/0ym7+uvZfeSNpIhhU3UJ" +
@@ -104,7 +106,7 @@ public class RobotMain {
 
         //Init vision
         if (auto) {
-            //tensorFlow = new TensorFlow();
+            skystoneDetector = new SkystoneDetector(hardwareMap);
         }
 
         //Init misc objects
