@@ -85,7 +85,7 @@ public class BlueLoadClose extends LinearOpMode {
             while (timer.milliseconds() < 2700) {
                 driveTrain.driveTank(-1, 0);
             }
-            driveTrain.driveDistance(1, 15, 90, false);
+            driveTrain.driveDistance(1, 20, 90, false);
             foundationMover.unlockFoundation();
             timer.reset();
             while (timer.milliseconds() < 500) {

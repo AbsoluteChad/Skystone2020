@@ -29,7 +29,7 @@ public class ElevatingArm extends Subsystem {
 
     //Declare constants
     private static final double VIDIPT_ELEVATOR_CONTROL = 0.75;
-    private static final double VIDIPT_ROTATIONAL_ARM_CONTROL = 0.4;
+    private static final double VIDIPT_ROTATIONAL_ARM_CONTROL = 0.6;
     private static final double ELEVATOR_TICKS_PER_INCH = 1716;
     private static final double ENCODER_TOLERANCE = 20;
 

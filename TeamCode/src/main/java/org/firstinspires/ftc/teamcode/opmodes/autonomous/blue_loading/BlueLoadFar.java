@@ -46,7 +46,7 @@ public class BlueLoadFar extends LinearOpMode {
         if (opModeIsActive()) {
             //Go forward and sense
             //elevatingArm.rotationalArm.setPower(-0.2);
-            driveTrain.driveDistance(1, 20, 90, false);
+            driveTrain.driveDistance(1, 22, 90, false);
             //elevatingArm.rotationalArm.setPower(0);
 
             String skystonePosition = "center"; /* robot.tensorFlow.getSkystonePosition(true, 5000);
@@ -85,14 +85,14 @@ public class BlueLoadFar extends LinearOpMode {
             telemetry.update();
             foundationMover.lockFoundation();
 
-            AutonomousTasks.parallelDriveAndArm(1,19,270,0.5, Constants.ARM_IN_TICKS_2, telemetry);
+            AutonomousTasks.parallelDriveAndArm(1,20,270,0.5, Constants.ARM_IN_TICKS_2, telemetry);
             //driveTrain.driveDistance(0.7, 18, 270, false);
             ElapsedTime timer = new ElapsedTime();
             timer.reset();
-            while (timer.milliseconds() < 2700) {
+            while (timer.milliseconds() < 2500) {
                 driveTrain.driveTank(-1, 0);
             }
-            driveTrain.driveDistance(1, 15, 90, false);
+            driveTrain.driveDistance(1, 20, 90, false);
             foundationMover.unlockFoundation();
             timer.reset();
             while (timer.milliseconds() < 500) {

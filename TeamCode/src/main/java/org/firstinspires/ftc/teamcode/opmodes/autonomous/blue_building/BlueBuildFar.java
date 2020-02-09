@@ -53,14 +53,14 @@ public class BlueBuildFar extends LinearOpMode {
             while (timer.milliseconds() < 2700) {
                 driveTrain.driveTank(-1, 0);
             }
-            driveTrain.driveDistance(1, 15, 90, false);
+            driveTrain.driveDistance(1, 18, 90, false);
             foundationMover.unlockFoundation();
             timer.reset();
             while (timer.milliseconds() < 500) {
                 // finessed
             }
-            driveTrain.driveMecanum(1, 315, 3000);
-            driveTrain.driveDistance(1, 13, 270, false);
+            driveTrain.driveMecanum(1, 315, 2800);
+            driveTrain.driveDistance(1, 15, 270, false);
             /*driveTrain.driveDistance(0.7, 35, 270, false); //moving back in order to position the foundation to the site
             foundationMover.unlockFoundation(); //unlocking off of foundation
             driveTrain.driveDistance(0.7, 36, 0, false); //strafing to the left in order for clearance

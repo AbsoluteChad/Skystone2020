@@ -90,7 +90,7 @@ public class RedLoadClose extends LinearOpMode {
                 driveTrain.driveDistance(1, Constants.BLOCK_WIDTH, 0, false);
             }
 
-            elevatingArm.rotateArm(-0.7, Constants.ARM_OUT_TICKS, false);
+            elevatingArm.rotateArm(-0.7, Constants.ARM_OUT_TICKS, false, telemetry);
             gripper.autoSucc(-1, 1000);
             telemetry.addData("checkpoint", 1);
             telemetry.update();
@@ -115,7 +115,7 @@ public class RedLoadClose extends LinearOpMode {
             while (timer.milliseconds() < 3000) {
                 driveTrain.driveTank(0, -1);
             }
-            driveTrain.driveDistance(1, 12, 90, false);
+            driveTrain.driveDistance(1, 20, 90, false);
             foundationMover.unlockFoundation();
             timer.reset();
             while (timer.milliseconds() < 500) {

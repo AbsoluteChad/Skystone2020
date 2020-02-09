@@ -73,7 +73,7 @@ public class RedLoadFar extends LinearOpMode {
         if (opModeIsActive()) {
             //Go forward and sense
             //elevatingArm.rotationalArm.setPower(-0.2);
-            driveTrain.driveDistance(1, 20, 90, false);
+            driveTrain.driveDistance(1, 23, 90, false);
             //elevatingArm.rotationalArm.setPower(0);
 
             String skystonePosition = "center"; /* robot.tensorFlow.getSkystonePosition(true, 5000);
@@ -92,7 +92,7 @@ public class RedLoadFar extends LinearOpMode {
             }
 
             elevatingArm.rotateArm(-0.7, Constants.ARM_OUT_TICKS, false);
-            gripper.autoSucc(-1, 1000);
+            gripper.autoSucc(-1, 1200);
             telemetry.addData("checkpoint", 1);
             telemetry.update();
             //AutonomousTasks.parallelDriveAndArm(.8,disToFoundation,0,.7,2800,telemetry);
@@ -119,14 +119,14 @@ public class RedLoadFar extends LinearOpMode {
             while (timer.milliseconds() < 3000) {
                 driveTrain.driveTank(0, -1);
             }
-            driveTrain.driveDistance(1, 15, 90, false);
+            driveTrain.driveDistance(1, 20, 90, false);
             foundationMover.unlockFoundation();
             timer.reset();
             while (timer.milliseconds() < 500) {
                 // finessed
             }
-            driveTrain.driveMecanum(1, 225, 2800);
-            driveTrain.driveDistance(1, 15, 270, false);
+            driveTrain.driveMecanum(1, 225, 2100);
+            driveTrain.driveDistance(1, 24, 270, false);
 
         }
     }
