@@ -16,7 +16,6 @@ import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
 import org.firstinspires.ftc.robotcore.external.tfod.TFObjectDetector;
 import org.firstinspires.ftc.teamcode.lib.drive.Pose2d;
 import org.firstinspires.ftc.teamcode.subsystems.*;
-import org.firstinspires.ftc.teamcode.lib.vision.tensorflow.TensorFlow;
 
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.CRServo;
@@ -54,7 +53,6 @@ public class RobotMain {
     private String alliance;
 
     //Declare vision & object dection engines
-    public TensorFlow tensorFlow;
     private VuforiaLocalizer vuforia;
     private TFObjectDetector tfod;
 
