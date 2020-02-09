@@ -28,7 +28,7 @@ import org.firstinspires.ftc.teamcode.subsystems.DriveTrain;
 import org.firstinspires.ftc.teamcode.subsystems.ElevatingArm;
 import org.firstinspires.ftc.teamcode.subsystems.FoundationMover;
 import org.firstinspires.ftc.teamcode.subsystems.Gripper;
-import  org.firstinspires.ftc.teamcode.opmodes.Constants;
+import org.firstinspires.ftc.teamcode.Constants;
 
 /**
  * This file contains an minimal example of a Linear "OpMode". An OpMode is a 'program' that runs in either

@@ -39,6 +39,7 @@ import org.firstinspires.ftc.teamcode.subsystems.ElevatingArm;
  * or add a @Disabled annotation to prevent this OpMode from being added to the Driver Station
  */
 @TeleOp(name="TeleopSide", group="Iterative Opmode")
+@Disabled
 public class TeleopSide extends OpMode {
 
     private RobotMain robot;

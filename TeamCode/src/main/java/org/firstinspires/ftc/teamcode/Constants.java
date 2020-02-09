@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.opmodes;
+package org.firstinspires.ftc.teamcode;
 
 public final class Constants {
     public static int BLOCK_WIDTH = 10;
@@ -9,5 +9,4 @@ public final class Constants {
     public static int ARM_IN_TICKS_2 = 2100;
     public static int SUCC_UNSCUC = 1500;
     public static int PARK_ANGLE_TIME = 2500;
-
 }
