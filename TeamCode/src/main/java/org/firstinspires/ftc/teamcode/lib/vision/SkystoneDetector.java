@@ -56,16 +56,17 @@ public class SkystoneDetector {
 
     /**
      * Gets the position of the skystone (assuming phone camera sees 3 blocks in which one is a skystone)
-     * @return the skystone position as a char 'L', 'M', or 'R' for "Left" "Middle" and "Right". Will return
-     * 'N' if the skystone cannot properly be sensed.
+     * @return the skystone position as a char 'C', 'M', or 'F' for "Close" "Middle" and "Far" (to the foundation). Will return
+     * 'N' if the skystone cannot properly be detected. Keep in mind that C, M, and F are in different directions depending on the
+     *  alliance color
      */
     public char getSkystonePosition() {
         if (valLeft == 0) {
-            return 'L';
+            return 'C';
         } else if (valMiddle == 0) {
             return 'M';
         } else if (valRight == 0) {
-            return 'R';
+            return 'F';
         }
         return 'N';
     }
@@ -116,7 +117,7 @@ public class SkystoneDetector {
     }
 
     /**
-     * @return the camera fps
+     * @return the camera FPS
      */
     public double getFPS() {
         return phoneCamera.getFps();
