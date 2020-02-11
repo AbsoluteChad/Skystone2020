@@ -20,21 +20,21 @@ import java.util.List;
 public class SkystoneDetector {
 
     //Values of the 3 blocks (skystone or not)
-    private static int valLeft = -1;
-    private static int valMiddle = -1;
-    private static int valRight = -1;
+    private static int leftVal = -1;
+    private static int middleVal = -1;
+    private static int rightVal = -1;
 
     //Dimensions of rectangles on screen
     private static float rectHeight = .6f/8f;
     private static float rectWidth = 1.5f/8f;
 
-    private static float offsetX = 0f/8f;//changing this moves the three rects and the three circles left or right, range : (-2, 2) not inclusive
-    private static float offsetY = 0f/8f;//changing this moves the three rects and circles up or down, range: (-4, 4) not inclusive
+    private static float xOffset = 0f/8f;//changing this moves the three rects and the three circles left or right, range : (-2, 2) not inclusive
+    private static float yOffset = 0f/8f;//changing this moves the three rects and circles up or down, range: (-4, 4) not inclusive
 
     //Position of rectangles on screen
-    private static float[] leftPos = {2f/8f + offsetX, 4f/8f + offsetY}; //0 = col, 1 = row
-    private static float[] middlePos = {4f/8f + offsetX, 4f/8f + offsetY};
-    private static float[] rightPos = {6f/8f + offsetX, 4f/8f + offsetY};
+    private static float[] leftRectPos = {2f/8f + xOffset, 4f/8f + yOffset}; //0 = col, 1 = row
+    private static float[] middleRectPos = {4f/8f + xOffset, 4f/8f + yOffset};
+    private static float[] rightRectPos = {6f/8f + xOffset, 4f/8f + yOffset};
 
     //Screen dimensions
     private final int rows = 640;
@@ -60,11 +60,11 @@ public class SkystoneDetector {
      * 'N' if the skystone cannot properly be sensed.
      */
     public char getSkystonePosition() {
-        if (valLeft == 0) {
+        if (leftVal == 0) {
             return 'L';
-        } else if (valMiddle == 0) {
+        } else if (middleVal == 0) {
             return 'M';
-        } else if (valRight == 0) {
+        } else if (rightVal == 0) {
             return 'R';
         }
         return 'N';
@@ -132,13 +132,12 @@ public class SkystoneDetector {
         List<MatOfPoint> contoursList = new ArrayList<>();
 
         enum Stage {
-            DETECTION,//includes outlines
-            THRESHOLD,//b&w
-            RAW_IMAGE,//displays raw view
+            DETECTION, //Includes outlines
+            THRESHOLD //Black & white
         }
 
-        private SkystoneDetectorOpMode.StageSwitchingPipeline.Stage stageToRenderToViewport = SkystoneDetectorOpMode.StageSwitchingPipeline.Stage.DETECTION;
-        private SkystoneDetectorOpMode.StageSwitchingPipeline.Stage[] stages = SkystoneDetectorOpMode.StageSwitchingPipeline.Stage.values();
+        private Stage viewportRenderStage = Stage.DETECTION;
+        private Stage[] stages = Stage.values();
 
         @Override
         public void onViewportTapped() {
@@ -147,90 +146,94 @@ public class SkystoneDetector {
              * so whatever we do here, we must do quickly.
              */
 
-            int currentStageNum = stageToRenderToViewport.ordinal();
+            int currentStageNum = viewportRenderStage.ordinal();
             int nextStageNum = currentStageNum + 1;
             if(nextStageNum >= stages.length) {
                 nextStageNum = 0;
             }
-            stageToRenderToViewport = stages[nextStageNum];
+            viewportRenderStage = stages[nextStageNum];
         }
 
         @Override
         public Mat processFrame(Mat input) {
+            //Erase existing contours
             contoursList.clear();
+
             /*
-             * This pipeline finds the contours of yellow blobs such as the Gold Mineral
-             * from the Rover Ruckus game.
+             * Determines Cb color difference
+             * Lower Cb -- more blue = white --> skystone
+             * Higher Cb -- less blue = grey --> regular stone
              */
+            Imgproc.cvtColor(input, yCbCrChan2Mat, Imgproc.COLOR_RGB2YCrCb);//Converts RGB to YCbCr
+            Core.extractChannel(yCbCrChan2Mat, yCbCrChan2Mat, 2);//Finds Cb difference and stores
 
-            //color diff cb.
-            //lower cb = more blue = skystone = white
-            //higher cb = less blue = yellow stone = grey
-            Imgproc.cvtColor(input, yCbCrChan2Mat, Imgproc.COLOR_RGB2YCrCb);//converts rgb to ycrcb
-            Core.extractChannel(yCbCrChan2Mat, yCbCrChan2Mat, 2);//takes cb difference and stores
-
-            //b&w
+            //Black & white threshold
             Imgproc.threshold(yCbCrChan2Mat, thresholdMat, 102, 255, Imgproc.THRESH_BINARY_INV);
 
-            //outline/contour
+            //Outline/Contour
             Imgproc.findContours(thresholdMat, contoursList, new Mat(), Imgproc.RETR_LIST, Imgproc.CHAIN_APPROX_SIMPLE);
-            yCbCrChan2Mat.copyTo(all);//copies mat object
-            //Imgproc.drawContours(all, contoursList, -1, new Scalar(255, 0, 0), 3, 8);//draws blue contours
+            yCbCrChan2Mat.copyTo(all);
+            //Imgproc.drawContours(all, contoursList, -1, new Scalar(255, 0, 0), 3, 8); //Draw blue contours
 
+            //Get values from frame at circle
+            double[] leftPixel = thresholdMat.get((int) (input.rows() * leftRectPos[1]), (int) (input.cols() * leftRectPos[0]));
+            leftVal = (int) leftPixel[0];
 
-            //get values from frame
-            double[] pixMid = thresholdMat.get((int)(input.rows()* middlePos[1]), (int)(input.cols()* middlePos[0]));//gets value at circle
-            valMiddle = (int)pixMid[0];
+            double[] middlePixel = thresholdMat.get((int) (input.rows() * middleRectPos[1]), (int) (input.cols() * middleRectPos[0]));
+            middleVal = (int) middlePixel[0];
 
-            double[] pixLeft = thresholdMat.get((int)(input.rows()* leftPos[1]), (int)(input.cols()* leftPos[0]));//gets value at circle
-            valLeft = (int)pixLeft[0];
+            double[] rightPixel = thresholdMat.get((int) (input.rows() * rightRectPos[1]), (int) (input.cols() * rightRectPos[0]));
+            rightVal = (int) rightPixel[0];
 
-            double[] pixRight = thresholdMat.get((int)(input.rows()* rightPos[1]), (int)(input.cols()* rightPos[0]));//gets value at circle
-            valRight = (int)pixRight[0];
+            //Create three points
+            Point pointLeft = new Point((int)(input.cols()* leftRectPos[0]), (int)(input.rows()* leftRectPos[1]));
+            Point pointMiddle = new Point((int)(input.cols()* middleRectPos[0]), (int)(input.rows()* middleRectPos[1]));
+            Point pointRight = new Point((int)(input.cols()* rightRectPos[0]), (int)(input.rows()* rightRectPos[1]));
 
-            //create three points
-            Point pointMid = new Point((int)(input.cols()* middlePos[0]), (int)(input.rows()* middlePos[1]));
-            Point pointLeft = new Point((int)(input.cols()* leftPos[0]), (int)(input.rows()* leftPos[1]));
-            Point pointRight = new Point((int)(input.cols()* rightPos[0]), (int)(input.rows()* rightPos[1]));
+            //Draw circles on those points
+            Imgproc.circle(all, pointLeft, 5, new Scalar(255, 0, 0), 1);
+            Imgproc.circle(all, pointMiddle, 5, new Scalar(255, 0, 0), 1);
+            Imgproc.circle(all, pointRight, 5, new Scalar(255, 0, 0), 1);
 
-            //draw circles on those points
-            Imgproc.circle(all, pointMid,5, new Scalar( 255, 0, 0 ),1 );//draws circle
-            Imgproc.circle(all, pointLeft,5, new Scalar( 255, 0, 0 ),1 );//draws circle
-            Imgproc.circle(all, pointRight,5, new Scalar( 255, 0, 0 ),1 );//draws circle
-
-            //draw 3 rectangles
-            Imgproc.rectangle(//1-3
+            //Draw rectangle 1 (1-3)
+            Imgproc.rectangle(
                     all,
                     new Point(
-                            input.cols()*(leftPos[0]-rectWidth/2),
-                            input.rows()*(leftPos[1]-rectHeight/2)),
+                            input.cols()*(leftRectPos[0]-rectWidth/2),
+                            input.rows()*(leftRectPos[1]-rectHeight/2)),
                     new Point(
-                            input.cols()*(leftPos[0]+rectWidth/2),
-                            input.rows()*(leftPos[1]+rectHeight/2)),
-                    new Scalar(0, 255, 0), 3);
-            Imgproc.rectangle(//3-5
-                    all,
-                    new Point(
-                            input.cols()*(middlePos[0]-rectWidth/2),
-                            input.rows()*(middlePos[1]-rectHeight/2)),
-                    new Point(
-                            input.cols()*(middlePos[0]+rectWidth/2),
-                            input.rows()*(middlePos[1]+rectHeight/2)),
-                    new Scalar(0, 255, 0), 3);
-            Imgproc.rectangle(//5-7
-                    all,
-                    new Point(
-                            input.cols()*(rightPos[0]-rectWidth/2),
-                            input.rows()*(rightPos[1]-rectHeight/2)),
-                    new Point(
-                            input.cols()*(rightPos[0]+rectWidth/2),
-                            input.rows()*(rightPos[1]+rectHeight/2)),
-                    new Scalar(0, 255, 0), 3);
+                            input.cols()*(leftRectPos[0]+rectWidth/2),
+                            input.rows()*(leftRectPos[1]+rectHeight/2)),
+                    new Scalar(0, 255, 0), 3
+            );
 
-            switch (stageToRenderToViewport) {
+            //Draw rectangle 2 (3-5)
+            Imgproc.rectangle(
+                    all,
+                    new Point(
+                            input.cols()*(middleRectPos[0]-rectWidth/2),
+                            input.rows()*(middleRectPos[1]-rectHeight/2)),
+                    new Point(
+                            input.cols()*(middleRectPos[0]+rectWidth/2),
+                            input.rows()*(middleRectPos[1]+rectHeight/2)),
+                    new Scalar(0, 255, 0), 3
+            );
+
+            //Draw rectangle 3 (5-7)
+            Imgproc.rectangle(
+                    all,
+                    new Point(
+                            input.cols()*(rightRectPos[0]-rectWidth/2),
+                            input.rows()*(rightRectPos[1]-rectHeight/2)),
+                    new Point(
+                            input.cols()*(rightRectPos[0]+rectWidth/2),
+                            input.rows()*(rightRectPos[1]+rectHeight/2)),
+                    new Scalar(0, 255, 0), 3
+            );
+
+            switch (viewportRenderStage) {
                 case THRESHOLD: return thresholdMat;
                 case DETECTION: return all;
-                case RAW_IMAGE: return input;
                 default: return input;
             }
         }
