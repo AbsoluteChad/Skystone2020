@@ -99,6 +99,13 @@ public class SkystoneDetector {
     public void startStreaming(int rows, int cols, OpenCvCameraRotation camRotation) {
         phoneCamera.startStreaming(rows, cols, camRotation);
     }
+    
+    /**
+     * Stops viewport to Driver Station phone
+     */
+    public void stopStreaming() {
+        phoneCamera.stopStreaming();
+    }
 
     /**
      * Pauses viewport to driver station phone
