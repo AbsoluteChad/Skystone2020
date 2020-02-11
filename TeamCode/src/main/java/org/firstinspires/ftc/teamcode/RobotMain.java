@@ -85,15 +85,15 @@ public class RobotMain {
     //Declare misc objects
     private ElapsedTime timer;
 
-    public RobotMain(HardwareMap hardwareMap, Gamepad gamepad1, Gamepad gamepad2, String alliance, boolean auto) {
+    public RobotMain(HardwareMap hardwareMap, Gamepad gamepad1, Gamepad gamepad2, String alliance, boolean godtonomous) {
         this.hardwareMap = hardwareMap;
         this.gamepad1 = gamepad1;
         this.gamepad2 = gamepad2;
         this.alliance = alliance.toLowerCase();
-        robotInit(auto);
+        robotInit(godtonomous);
     }
 
-    private void robotInit(boolean auto) {
+    private void robotInit(boolean godtonomous) {
         //Init all subsystems
         for (Subsystem subsystem : allSubsystems) {
             subsystem.subsystemInit(hardwareMap);
@@ -103,7 +103,7 @@ public class RobotMain {
         //gyro = (BNO055IMU) hardwareMap.get(Gyroscope.class, "imu");
 
         //Init vision
-        if (auto) {
+        if (godtonomous) {
             skystoneDetector = new SkystoneDetector(hardwareMap);
         }
 
