@@ -13,7 +13,6 @@ import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackable;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackableDefaultListener;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
-import org.firstinspires.ftc.robotcore.external.tfod.TFObjectDetector;
 import org.firstinspires.ftc.teamcode.lib.drive.Pose2d;
 import org.firstinspires.ftc.teamcode.lib.vision.SkystoneDetector;
 import org.firstinspires.ftc.teamcode.subsystems.*;
@@ -55,7 +54,6 @@ public class RobotMain {
 
     //Declare vision & object dection engines
     private VuforiaLocalizer vuforia;
-    private TFObjectDetector tfod;
     public SkystoneDetector skystoneDetector;
 
     //Declare Vuforia members
