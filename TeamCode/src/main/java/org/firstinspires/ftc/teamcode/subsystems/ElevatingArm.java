@@ -36,7 +36,7 @@ public class ElevatingArm extends Subsystem {
     private ElapsedTime timer = new ElapsedTime();
 
     private PIDCoefficients PIDcoeffs;
-    private org.firstinspires.ftc.teamcode.lib.drive.PIDController PIDController;
+    private PIDController PIDController;
 
     //Private constructor
 
@@ -71,8 +71,6 @@ public class ElevatingArm extends Subsystem {
         PIDcoeffs = new PIDCoefficients(0, 0, 0);
         DcMotor[] motors = {rotationalArm};
         PIDController = new PIDController(motors, PIDcoeffs, 50);
-
-
     }
 
     @Override
@@ -118,7 +116,6 @@ public class ElevatingArm extends Subsystem {
     }
 
     public void rotateArm(double power, double ticks, boolean PID) {
-
         rotationalArm.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         int setPoint = (int) ticks;
 
@@ -145,7 +142,6 @@ public class ElevatingArm extends Subsystem {
     }
 
     public void rotateArm(double power, double ticks, boolean PID, Telemetry telemetry) {
-
         rotationalArm.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         int setPoint = (int) ticks;
 
@@ -170,6 +166,19 @@ public class ElevatingArm extends Subsystem {
                     rotationalArm.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
                     return;
                 }
+            }
+            rotationalArm.setPower(0);
+        }
+    }
+    
+    /**
+     * Should go back until the arm reaches the digital touch and doesn't bounce off of it 
+     * @param power the power at which the arm should go back
+     */
+    public void rotateArmBack(double power) {
+        for (int i = 0; i < 3; i++) {
+            while (!killArm(power)) {
+                rotationalArm.setPower(power);
             }
             rotationalArm.setPower(0);
         }
