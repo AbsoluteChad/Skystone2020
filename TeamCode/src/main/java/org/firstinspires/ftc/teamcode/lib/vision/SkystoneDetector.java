@@ -77,21 +77,21 @@ public class SkystoneDetector {
         startStreaming(rows, cols, OpenCvCameraRotation.UPRIGHT);
     }
 
-
     /**
      * Gets the position of the skystone (assuming phone camera sees 3 blocks in which one is a skystone)
      * @return the skystone position as a char 'L', 'M', or 'R' for "Left" "Middle" and "Right". Will return
      * 'N' if the skystone cannot properly be sensed.
      */
     public char getSkystonePosition() {
+        char skystonePosition = 'N';
         if (leftVal == 0) {
-            return 'L';
+            skystonePosition = 'L';
         } else if (middleVal == 0) {
-            return 'M';
+            skystonePosition = 'M';
         } else if (rightVal == 0) {
-            return 'R';
+            skystonePosition = 'R';
         }
-        return 'N';
+        return skystonePosition;
     }
 
     /**
@@ -100,8 +100,6 @@ public class SkystoneDetector {
     public void openCamera() {
         phoneCamera.openCameraDevice();
     }
-
-
 
     /**
      * Closes camera device
