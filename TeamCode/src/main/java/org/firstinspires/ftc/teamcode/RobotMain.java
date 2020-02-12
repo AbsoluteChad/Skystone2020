@@ -50,11 +50,12 @@ public class RobotMain {
     //public static BNO055IMU gyro;
 
     //Misc
-    private String alliance;
+    public String allianceColor;
 
     //Declare vision & object dection engines
     private VuforiaLocalizer vuforia;
     public SkystoneDetector skystoneDetector;
+    public static char skystonePosition;
 
     //Declare Vuforia members
     public static final String VUFORIA_KEY = "Aa4qojf/////AAABmUtRp+oA10Tyg9NdvwIzzH4eVE09jioK/9lv2fPHeJLN4mXBj/AfGpZM/0ym7+uvZfeSNpIhhU3UJ" +
@@ -85,11 +86,11 @@ public class RobotMain {
     //Declare misc objects
     private ElapsedTime timer;
 
-    public RobotMain(HardwareMap hardwareMap, Gamepad gamepad1, Gamepad gamepad2, String alliance, boolean godtonomous) {
+    public RobotMain(HardwareMap hardwareMap, Gamepad gamepad1, Gamepad gamepad2, String allianceColor, boolean godtonomous) {
         this.hardwareMap = hardwareMap;
         this.gamepad1 = gamepad1;
         this.gamepad2 = gamepad2;
-        this.alliance = alliance.toLowerCase();
+        this.allianceColor = allianceColor.toLowerCase();
         robotInit(godtonomous);
     }
 
@@ -101,14 +102,22 @@ public class RobotMain {
 
         //Init eemuu
         //gyro = (BNO055IMU) hardwareMap.get(Gyroscope.class, "imu");
-
+        
         //Init vision
         if (godtonomous) {
+            //Init vision
             skystoneDetector = new SkystoneDetector(hardwareMap);
+            
+            //Detect for five seconds to get an accurate reading
+            timer = new ElapsedTime();
+            timer.reset();
+            while (timer.seconds() < 5) {
+                skystonePosition = skystoneDetector.getSkystonePosition();
+            }
+            
+            //Shut the camera off before init is complete for power conservation
+            phoneCam.closeCameraDevice();
         }
-
-        //Init misc objects
-        timer = new ElapsedTime();
     }
 
     //For if regular framework stops working
