@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode.lib.vision;
 
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
+import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.opencv.core.Core;
 import org.opencv.core.Mat;
 import org.opencv.core.MatOfPoint;
@@ -54,6 +55,29 @@ public class SkystoneDetector {
         startStreaming(rows, cols, OpenCvCameraRotation.UPRIGHT);
     }
 
+    public SkystoneDetector(HardwareMap hardwareMap, Telemetry telemetry) {
+        //Init phone camera
+        telemetry.addData("Status", "SkystoneDetector");
+        telemetry.update();
+
+        int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
+
+        telemetry.addData("Status", "Syke" + cameraMonitorViewId);
+        telemetry.update();
+
+        phoneCamera = OpenCvCameraFactory.getInstance().createInternalCamera(OpenCvInternalCamera.CameraDirection.BACK, cameraMonitorViewId);
+
+
+        telemetry.addData("Status", "ViewId");
+        telemetry.update();
+
+        //Start pipeline
+        openCamera();
+        setPipeline(new SkystonePipeline());
+        startStreaming(rows, cols, OpenCvCameraRotation.UPRIGHT);
+    }
+
+
     /**
      * Gets the position of the skystone (assuming phone camera sees 3 blocks in which one is a skystone)
      * @return the skystone position as a char 'L', 'M', or 'R' for "Left" "Middle" and "Right". Will return
@@ -76,6 +100,8 @@ public class SkystoneDetector {
     public void openCamera() {
         phoneCamera.openCameraDevice();
     }
+
+
 
     /**
      * Closes camera device

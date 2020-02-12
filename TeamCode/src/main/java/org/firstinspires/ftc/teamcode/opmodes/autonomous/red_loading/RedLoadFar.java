@@ -20,8 +20,10 @@ package org.firstinspires.ftc.teamcode.opmodes.autonomous.red_loading;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
+import org.firstinspires.ftc.teamcode.lib.vision.SkystoneDetector;
 import org.firstinspires.ftc.teamcode.RobotMain;
 import org.firstinspires.ftc.teamcode.Constants;
 import org.firstinspires.ftc.teamcode.opmodes.autonomous.AutonomousTasks;
@@ -50,18 +52,41 @@ public class RedLoadFar extends LinearOpMode {
     private FoundationMover foundationMover;
     private ElevatingArm elevatingArm;
     private Gripper gripper;
-   // private Telemetry telemetry;
+    private SkystoneDetector skystoneDetector;
+    private ElapsedTime timer = new ElapsedTime();
+    private char skystonePos;
+
+    // private Telemetry telemetry;
 
 
     @Override
     public void runOpMode() {
-        robot = new RobotMain(hardwareMap, gamepad1, gamepad2, "red", true);
+
+        robot = new RobotMain(hardwareMap, gamepad1, gamepad2, "blue", true);
         driveTrain = (DriveTrain) RobotMain.driveTrain;
         foundationMover = (FoundationMover) RobotMain.foundationMover;
         elevatingArm = (ElevatingArm) RobotMain.elevatingArm;
         gripper = (Gripper) RobotMain.gripper;
 
+        telemetry.addData("Status", "Subsystems Initialized");
+        telemetry.update();
+
+
+        timer.reset();
+
+        while (timer.seconds() < 5) {
+            skystonePos = robot.skystoneDetector.getSkystonePosition();
+        }
+
+        telemetry.addData("Status", "Initialized");
+        telemetry.update();
+
+        waitForStart();
+
         foundationMover.unlockFoundation();
+
+        telemetry.addData("Status", "Skystone detected");
+        telemetry.update();
 
         telemetry.addData("Status", "Initialized");
         telemetry.update();
@@ -71,24 +96,18 @@ public class RedLoadFar extends LinearOpMode {
         waitForStart();
 
         if (opModeIsActive()) {
-            //Go forward and sense
-            //elevatingArm.rotationalArm.setPower(-0.2);
+
             driveTrain.driveDistance(1, 23, 90, false);
-            //elevatingArm.rotationalArm.setPower(0);
 
-            String skystonePosition = "center"; /* robot.tensorFlow.getSkystonePosition(true, 5000);
-            telemetry.addData("Position", skystonePosition);
-            telemetry.update();
-            driveTrain.driveDistance(1, 11, 90, false); */
-
-            if ((skystonePosition.equals("center")) || (skystonePosition.equals("nope"))){
-                disToFoundation = Constants.STRAFE_DIS_TO_FOUNDATION;
-            } else if (skystonePosition.equals("left")){
-                disToFoundation = Constants.STRAFE_DIS_TO_FOUNDATION + Constants.BLOCK_WIDTH;
-                driveTrain.driveDistance(1, Constants.BLOCK_WIDTH, 180, false);
-            } else if (skystonePosition.equals("right")) {
+            if (skystonePos == 'F' ||  skystonePos == 'N') { //right
                 disToFoundation = Constants.STRAFE_DIS_TO_FOUNDATION - Constants.BLOCK_WIDTH ;
-                driveTrain.driveDistance(1, Constants.BLOCK_WIDTH, 0, false);
+                //disToFoundation = Constants.STRAFE_DIS_TO_FOUNDATION;
+            } else if (skystonePos == 'M'){ //middle
+                disToFoundation = Constants.STRAFE_DIS_TO_FOUNDATION;
+                driveTrain.driveDistance(1, Constants.BLOCK_WIDTH, 180, false);
+            } else if (skystonePos == 'C') { //left
+                disToFoundation = Constants.STRAFE_DIS_TO_FOUNDATION + Constants.BLOCK_WIDTH ;
+                driveTrain.driveDistance(1, (2 * Constants.BLOCK_WIDTH), 180, false);
             }
 
             elevatingArm.rotateArm(-0.7, Constants.ARM_OUT_TICKS, false);
