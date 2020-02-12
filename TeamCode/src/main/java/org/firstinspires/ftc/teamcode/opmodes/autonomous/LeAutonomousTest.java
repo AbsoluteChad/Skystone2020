@@ -63,16 +63,13 @@ public class LeAutonomousTest extends LinearOpMode {
         foundationMover.unlockFoundation();
         timer.reset();
 
-        while (timer.seconds() < 5) {
-            skystonePos = robot.skystoneDetector.getSkystonePosition();
-        }
-
         telemetry.addData("Status", "Initialized");
         telemetry.update();
 
         waitForStart();
 
         if (opModeIsActive()) {
+            char skystonePos = robot.skystonePosition;
             if (skystonePos == 'L') {
                 driveTrain.driveDistance(0.3, BLOCK_WIDTH, 180, false);
             } else if (skystonePos == 'R') {
