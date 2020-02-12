@@ -18,7 +18,7 @@ public class BlueBuildParkFar extends LinearOpMode {
 
     @Override
     public void runOpMode() {
-        robot = new RobotMain(hardwareMap, gamepad1, gamepad2, "blue", true);
+        robot = new RobotMain(hardwareMap, gamepad1, gamepad2, "blue", false);
         driveTrain = (DriveTrain) RobotMain.driveTrain;
         foundationMover = (FoundationMover) RobotMain.foundationMover;
 

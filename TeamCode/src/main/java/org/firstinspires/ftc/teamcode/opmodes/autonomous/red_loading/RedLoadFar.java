@@ -55,7 +55,7 @@ public class RedLoadFar extends LinearOpMode {
 
     @Override
     public void runOpMode() {
-        robot = new RobotMain(hardwareMap, gamepad1, gamepad2, "blue", true);
+        robot = new RobotMain(hardwareMap, gamepad1, gamepad2, "red", true);
         driveTrain = (DriveTrain) RobotMain.driveTrain;
         foundationMover = (FoundationMover) RobotMain.foundationMover;
         elevatingArm = (ElevatingArm) RobotMain.elevatingArm;

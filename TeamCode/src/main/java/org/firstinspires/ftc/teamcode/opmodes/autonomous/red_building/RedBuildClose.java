@@ -21,7 +21,7 @@ public class RedBuildClose extends LinearOpMode {
 
     @Override
     public void runOpMode() {
-        robot = new RobotMain(hardwareMap, gamepad1, gamepad2, "blue", true);
+        robot = new RobotMain(hardwareMap, gamepad1, gamepad2, "red", false);
         driveTrain = (DriveTrain) RobotMain.driveTrain;
         foundationMover = (FoundationMover) RobotMain.foundationMover;
         elevatingArm = (ElevatingArm) RobotMain.elevatingArm;
@@ -35,11 +35,6 @@ public class RedBuildClose extends LinearOpMode {
         waitForStart();
 
         if (opModeIsActive()) {
-
-            //String skystonePos = robot.getSkystonePosition(false, 0);
-
-            //driveTrain.driveDistance(0.7, 12, 90, false);
-
             driveTrain.driveMecanum(0.7, 45, 1800); //traveling diagonal in order to position with the foundation
             driveTrain.driveDistance(0.7, 19, 90, false); //moving straight in order to get close enough to the foundation
             foundationMover.lockFoundation(); //locking onto Foundation
