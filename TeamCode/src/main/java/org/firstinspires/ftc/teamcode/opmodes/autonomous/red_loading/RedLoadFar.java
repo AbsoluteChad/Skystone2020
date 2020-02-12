@@ -54,54 +54,35 @@ public class RedLoadFar extends LinearOpMode {
     private Gripper gripper;
     private SkystoneDetector skystoneDetector;
     private ElapsedTime timer = new ElapsedTime();
-    private char skystonePos;
-
-    // private Telemetry telemetry;
-
 
     @Override
     public void runOpMode() {
-
+        telemetry.addData("Status", "Doin vision stuff");
+        telemetry.update();
         robot = new RobotMain(hardwareMap, gamepad1, gamepad2, "blue", true);
+        
         driveTrain = (DriveTrain) RobotMain.driveTrain;
         foundationMover = (FoundationMover) RobotMain.foundationMover;
         elevatingArm = (ElevatingArm) RobotMain.elevatingArm;
         gripper = (Gripper) RobotMain.gripper;
 
-        telemetry.addData("Status", "Subsystems Initialized");
+        telemetry.addData("Skystone position", robot.skystonePosition);
         telemetry.update();
-
-
-        timer.reset();
-
-        while (timer.seconds() < 5) {
-            skystonePos = robot.skystoneDetector.getSkystonePosition();
-        }
-
-        telemetry.addData("Status", "Initialized");
-        telemetry.update();
-
-        waitForStart();
-
+        
+        int disToFoundation = 0; //this variable is used for calculating distance to foundation
         foundationMover.unlockFoundation();
 
-        telemetry.addData("Status", "Skystone detected");
-        telemetry.update();
-
         telemetry.addData("Status", "Initialized");
         telemetry.update();
-
-        int disToFoundation = 0; //this variable is used for calculating distance to foundation
 
         waitForStart();
 
         if (opModeIsActive()) {
-
+            char skystonePos = robot.skystonePosition;
             driveTrain.driveDistance(1, 23, 90, false);
 
             if (skystonePos == 'F' ||  skystonePos == 'N') { //right
                 disToFoundation = Constants.STRAFE_DIS_TO_FOUNDATION - Constants.BLOCK_WIDTH ;
-                //disToFoundation = Constants.STRAFE_DIS_TO_FOUNDATION;
             } else if (skystonePos == 'M'){ //middle
                 disToFoundation = Constants.STRAFE_DIS_TO_FOUNDATION;
                 driveTrain.driveDistance(1, Constants.BLOCK_WIDTH, 180, false);
