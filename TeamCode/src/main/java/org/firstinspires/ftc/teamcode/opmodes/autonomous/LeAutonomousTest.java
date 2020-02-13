@@ -71,9 +71,9 @@ public class LeAutonomousTest extends LinearOpMode {
         if (opModeIsActive()) {
             char skystonePos = robot.skystonePosition;
             if (skystonePos == 'L') {
+                driveTrain.driveDistance(0.3, 2 * BLOCK_WIDTH, 180, false);
+            } else if (skystonePos == 'M') {
                 driveTrain.driveDistance(0.3, BLOCK_WIDTH, 180, false);
-            } else if (skystonePos == 'R') {
-                driveTrain.driveDistance(0.3, BLOCK_WIDTH, 0, false);
             }
             driveTrain.driveDistance(0.3, 22, 90, false);
         }

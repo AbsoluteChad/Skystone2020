@@ -111,12 +111,12 @@ public class RobotMain {
             //Detect for five seconds to get an accurate reading
             timer = new ElapsedTime();
             timer.reset();
-            while (timer.seconds() < 5) {
+            while (timer.seconds() < 3) {
                 skystonePosition = skystoneDetector.getSkystonePosition();
             }
-            
+
             //Shut the camera off before init is complete for power conservation
-            phoneCam.closeCameraDevice();
+            //phoneCam.closeCameraDevice();
         }
     }
 

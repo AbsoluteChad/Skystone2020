@@ -24,7 +24,7 @@ public class ElevatingArm extends Subsystem {
     public DcMotor rotationalArm;
 
     //Declare sensors
-    //public TouchSensor outSensor;
+    public DigitalChannel outSensor;
     public DigitalChannel inSensor;
 
     //Declare constants
@@ -53,6 +53,9 @@ public class ElevatingArm extends Subsystem {
 
         inSensor = hardwareMap.get(DigitalChannel.class, "inSensor");
         inSensor.setMode(DigitalChannel.Mode.INPUT);
+
+        outSensor = hardwareMap.get(DigitalChannel.class, "outSensor");
+        outSensor.setMode(DigitalChannel.Mode.INPUT);
 
         //Set arm motors to break
         elevatorArmLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
@@ -207,13 +210,12 @@ public class ElevatingArm extends Subsystem {
         if (inSensor.getState() == false && power > 0) {
             rotationalArm.setPower(0);
             return true;
-        } else {
-            return false;
-
-        } /*else if (outSensor.isPressed() && power < 0) {
+        } else if (outSensor.getState() == false && power < 0) {
             rotationalArm.setPower(0);
             return true;
-        } */
+        } else {
+            return false;
+        }
 
     }
 

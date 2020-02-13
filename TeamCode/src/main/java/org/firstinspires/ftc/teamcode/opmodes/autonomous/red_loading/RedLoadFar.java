@@ -57,10 +57,8 @@ public class RedLoadFar extends LinearOpMode {
 
     @Override
     public void runOpMode() {
-        telemetry.addData("Status", "Doin vision stuff");
-        telemetry.update();
         robot = new RobotMain(hardwareMap, gamepad1, gamepad2, "blue", true);
-        
+
         driveTrain = (DriveTrain) RobotMain.driveTrain;
         foundationMover = (FoundationMover) RobotMain.foundationMover;
         elevatingArm = (ElevatingArm) RobotMain.elevatingArm;
@@ -80,21 +78,22 @@ public class RedLoadFar extends LinearOpMode {
         if (opModeIsActive()) {
             char skystonePos = robot.skystonePosition;
             driveTrain.driveDistance(1, 23, 90, false);
-
-            if (skystonePos == 'F' ||  skystonePos == 'N') { //right
-                disToFoundation = Constants.STRAFE_DIS_TO_FOUNDATION - Constants.BLOCK_WIDTH ;
-            } else if (skystonePos == 'M'){ //middle
-                disToFoundation = Constants.STRAFE_DIS_TO_FOUNDATION;
-                driveTrain.driveDistance(1, Constants.BLOCK_WIDTH, 180, false);
-            } else if (skystonePos == 'C') { //left
+            telemetry.addData("skystone pos", skystonePos);
+            telemetry.update();
+            if (skystonePos == 'L') {
+                driveTrain.driveDistance(0.3, 2 * Constants.BLOCK_WIDTH, 180, false);
                 disToFoundation = Constants.STRAFE_DIS_TO_FOUNDATION + Constants.BLOCK_WIDTH ;
-                driveTrain.driveDistance(1, (2 * Constants.BLOCK_WIDTH), 180, false);
+            } else if (skystonePos == 'M') {
+                driveTrain.driveDistance(0.3, Constants.BLOCK_WIDTH, 180, false);
+                disToFoundation = Constants.STRAFE_DIS_TO_FOUNDATION;
+            } else if (skystonePos == 'R' || skystonePos == 'N') {
+                disToFoundation = Constants.STRAFE_DIS_TO_FOUNDATION - Constants.BLOCK_WIDTH ;
             }
+
 
             elevatingArm.rotateArm(-0.7, Constants.ARM_OUT_TICKS, false);
             gripper.autoSucc(-1, 1200);
-            telemetry.addData("checkpoint", 1);
-            telemetry.update();
+
             //AutonomousTasks.parallelDriveAndArm(.8,disToFoundation,0,.7,2800,telemetry);
             elevatingArm.rotateArm(0.7, Constants.ARM_IN_TICKS, false);
 
