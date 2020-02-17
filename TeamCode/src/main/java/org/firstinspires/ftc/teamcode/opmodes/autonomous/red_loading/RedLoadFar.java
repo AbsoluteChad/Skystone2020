@@ -102,18 +102,23 @@ public class RedLoadFar extends LinearOpMode {
             //driveTrain.driveDistance(1, 14, 90, false);
             //elevatingArm.rotateArm(0.7, -2400, false);
 
-            //working stuff
             gripper.autoSucc(1, 1000);
             //           elevatingArm.rotateArm(0.7, 2400, false);
             //           elevatingArm.rotationalArm.setPower(0.1);
             telemetry.addData("checkpoint", 1);
             telemetry.update();
-            foundationMover.lockFoundation();
 
-//            driveTrain.driveDistance(0.7, 19, 270, false);
+            foundationMover.lockFoundation();
+            ElapsedTime timer = new ElapsedTime();
+            timer.reset();
+            while (timer.milliseconds() < 500) {
+                // finessed
+            }
+
+
+//          driveTrain.driveDistance(0.7, 19, 270, false);
             AutonomousTasks.parallelDriveAndArm(1,21,270,0.5, Constants.ARM_IN_TICKS_2 - 200, telemetry);
 
-            ElapsedTime timer = new ElapsedTime();
             timer.reset();
             while (timer.milliseconds() < 3000) {
                 driveTrain.driveTank(0, -1);
