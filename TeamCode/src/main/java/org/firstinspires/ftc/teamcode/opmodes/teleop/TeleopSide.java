@@ -70,7 +70,7 @@ public class TeleopSide extends OpMode {
     public void start() {
         if(gamepad2.a){
             dispenser.setPosition(1);
-        }else if (gamepad2.b) {
+        } else if (gamepad2.b) {
             dispenser.setPosition(-1);
         }
 

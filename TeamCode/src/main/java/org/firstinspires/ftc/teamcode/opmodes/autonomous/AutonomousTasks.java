@@ -86,7 +86,7 @@ public class AutonomousTasks {
                 elevatingArm.rotationalArm.setPower(0);
             }
 
-            //made last minute
+/*            //made last minute
 
             if(!driveTrain.topLeft.isBusy() && !driveTrain.bottomLeft.isBusy() && !driveTrain.topRight.isBusy()
                     && !driveTrain.bottomRight.isBusy())
@@ -95,7 +95,7 @@ public class AutonomousTasks {
                 rotateBusy = false;
                 elevatingArm.rotationalArm.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
             }
-
+*/
          /*   if (!driveTrain.topLeft.isBusy()) {
                 driveTrain.driveTank(0, 0);
             } else if (!elevatingArm.rotationalArm.isBusy()) {

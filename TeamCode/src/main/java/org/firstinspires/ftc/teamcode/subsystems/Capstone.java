@@ -28,7 +28,6 @@ public class Capstone extends Subsystem {
     public void teleopTick() {
         if (RobotMain.gamepad2.a) {
             dispenser.setPosition(1);
-        } else if (RobotMain.gamepad2.b) {
             dispenser.setPosition(0);
         }
     }

@@ -65,7 +65,6 @@ public class RedLoadFar extends LinearOpMode {
         gripper = (Gripper) RobotMain.gripper;
 
         telemetry.addData("Skystone position", robot.skystonePosition);
-        telemetry.update();
         
         int disToFoundation = 0; //this variable is used for calculating distance to foundation
         foundationMover.unlockFoundation();
@@ -81,10 +80,10 @@ public class RedLoadFar extends LinearOpMode {
             telemetry.addData("skystone pos", skystonePos);
             telemetry.update();
             if (skystonePos == 'L') {
-                driveTrain.driveDistance(0.3, 2 * Constants.BLOCK_WIDTH, 180, false);
+                driveTrain.driveDistance(0.7, 2 * Constants.BLOCK_WIDTH, 180, false);
                 disToFoundation = Constants.STRAFE_DIS_TO_FOUNDATION + Constants.BLOCK_WIDTH ;
             } else if (skystonePos == 'M') {
-                driveTrain.driveDistance(0.3, Constants.BLOCK_WIDTH, 180, false);
+                driveTrain.driveDistance(0.7, Constants.BLOCK_WIDTH, 180, false);
                 disToFoundation = Constants.STRAFE_DIS_TO_FOUNDATION;
             } else if (skystonePos == 'R' || skystonePos == 'N') {
                 disToFoundation = Constants.STRAFE_DIS_TO_FOUNDATION - Constants.BLOCK_WIDTH ;
@@ -92,17 +91,17 @@ public class RedLoadFar extends LinearOpMode {
 
 
             elevatingArm.rotateArm(-0.7, Constants.ARM_OUT_TICKS, false);
-            gripper.autoSucc(-1, 1200);
+            gripper.autoSucc(-1, 700);
 
             //AutonomousTasks.parallelDriveAndArm(.8,disToFoundation,0,.7,2800,telemetry);
             elevatingArm.rotateArm(0.7, Constants.ARM_IN_TICKS, false);
 
             driveTrain.driveDistance(1, disToFoundation,0, false);
-            AutonomousTasks.parallelDriveAndArm(1,18,90,-0.7, Constants.ARM_OUT_TICKS_2 + 200, telemetry);
+            AutonomousTasks.parallelDriveAndArm(1,15,90,-0.7, Constants.ARM_OUT_TICKS_2 + 200, telemetry);
             //driveTrain.driveDistance(1, 14, 90, false);
             //elevatingArm.rotateArm(0.7, -2400, false);
 
-            gripper.autoSucc(1, 1000);
+            gripper.autoSucc(1, 700);
             //           elevatingArm.rotateArm(0.7, 2400, false);
             //           elevatingArm.rotationalArm.setPower(0.1);
             telemetry.addData("checkpoint", 1);
@@ -111,26 +110,26 @@ public class RedLoadFar extends LinearOpMode {
             foundationMover.lockFoundation();
             ElapsedTime timer = new ElapsedTime();
             timer.reset();
-            while (timer.milliseconds() < 500) {
+            while (timer.milliseconds() < 250) {
                 // finessed
             }
-
 
 //          driveTrain.driveDistance(0.7, 19, 270, false);
             AutonomousTasks.parallelDriveAndArm(1,21,270,0.5, Constants.ARM_IN_TICKS_2 - 200, telemetry);
 
             timer.reset();
-            while (timer.milliseconds() < 3000) {
+            while (timer.milliseconds() < 2100) {
                 driveTrain.driveTank(0, -1);
             }
-            driveTrain.driveDistance(1, 20, 90, false);
+            driveTrain.driveDistance(1, 15, 90, false);
             foundationMover.unlockFoundation();
+
             timer.reset();
-            while (timer.milliseconds() < 500) {
+            while (timer.milliseconds() < 250) {
                 // finessed
             }
             driveTrain.driveMecanum(1, 225, 2100);
-            driveTrain.driveDistance(1, 24, 270, false);
+            driveTrain.driveDistance(1, 20, 270, false);
 
         }
     }

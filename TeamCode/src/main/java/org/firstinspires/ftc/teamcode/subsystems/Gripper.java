@@ -79,11 +79,7 @@ public class Gripper extends Subsystem {
             }
         }
         gripperRotate(gripperPosition);*/
-        if (RobotMain.gamepad1.a || RobotMain.gamepad2.a) {
-            gripperRotation.setPosition(0.1);
-        } else if (RobotMain.gamepad1.b || RobotMain.gamepad2.b) {
-            gripperRotation.setPosition(0.9);
-        }
+
 
     }
 
