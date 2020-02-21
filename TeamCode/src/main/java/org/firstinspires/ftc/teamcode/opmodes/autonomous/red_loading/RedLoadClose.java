@@ -96,7 +96,7 @@ public class RedLoadClose extends LinearOpMode {
 
 
             elevatingArm.rotateArm(-0.7, Constants.ARM_OUT_TICKS, false, telemetry);
-            gripper.autoSucc(-1, 700);
+            gripper.autoSucc(-1, 1200);
 
             //AutonomousTasks.parallelDriveAndArm(.8,disToFoundation,0,.7,2800,telemetry);
             elevatingArm.rotateArm(0.7, Constants.ARM_IN_TICKS, false);

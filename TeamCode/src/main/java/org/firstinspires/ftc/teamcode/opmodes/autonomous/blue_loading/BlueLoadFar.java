@@ -38,6 +38,9 @@ public class BlueLoadFar extends LinearOpMode {
         capstone = (Capstone) RobotMain.capstone;
 
         capstone.reset();
+
+        telemetry.addData("Skystone position", robot.skystonePosition);
+
         foundationMover.unlockFoundation();
 
         telemetry.addData("Status", "Initialized");
@@ -52,33 +55,29 @@ public class BlueLoadFar extends LinearOpMode {
             driveTrain.driveDistance(1, 23, 90, false);
             telemetry.addData("skystone pos", skystonePos);
             telemetry.update();
-            if (skystonePos == 'L') {
-                driveTrain.driveDistance(0.7, 2 * Constants.BLOCK_WIDTH, 0, false);
-                disToFoundation = Constants.STRAFE_DIS_TO_FOUNDATION + Constants.BLOCK_WIDTH ;
+            if (skystonePos == 'R') {
+                driveTrain.driveDistance(0.7, 2, 0, false);
+                disToFoundation = Constants.STRAFE_DIS_TO_FOUNDATION +  Constants.BLOCK_WIDTH -5;
             } else if (skystonePos == 'M') {
-                driveTrain.driveDistance(0.7, Constants.BLOCK_WIDTH, 0, false);
-                disToFoundation = Constants.STRAFE_DIS_TO_FOUNDATION;
-            } else if (skystonePos == 'R' || skystonePos == 'N') {
-                disToFoundation = Constants.STRAFE_DIS_TO_FOUNDATION - Constants.BLOCK_WIDTH ;
+                driveTrain.driveDistance(0.7, Constants.BLOCK_WIDTH, 180, false);
+                disToFoundation = Constants.STRAFE_DIS_TO_FOUNDATION - 5;
+            } else if (skystonePos == 'L' || skystonePos == 'N') {
+                driveTrain.driveDistance(0.7, 2 * Constants.BLOCK_WIDTH, 180, false);
+                disToFoundation = Constants.STRAFE_DIS_TO_FOUNDATION -  Constants.BLOCK_WIDTH -5;
             }
 
-
             elevatingArm.rotateArm(-0.7, Constants.ARM_OUT_TICKS, false, telemetry);
-            gripper.autoSucc(-1, 700);
+            gripper.autoSucc(-1, 1200);
 
             //AutonomousTasks.parallelDriveAndArm(.8,disToFoundation,0,.7,2800,telemetry);
             elevatingArm.rotateArm(0.7, Constants.ARM_IN_TICKS, false);
 
-
             driveTrain.driveDistance(1, disToFoundation,180, false);
-            AutonomousTasks.parallelDriveAndArm(1,15,90,-0.7, Constants.ARM_OUT_TICKS_2, telemetry);
+            AutonomousTasks.parallelDriveAndArm(0.7,14,90,-0.7, Constants.ARM_OUT_TICKS_2 + 200, telemetry);
             //driveTrain.driveDistance(1, 14, 90, false);
             //elevatingArm.rotateArm(0.7, -2400, false);
+            gripper.autoSucc(1, 1000);
 
-            //working stuff
-            gripper.autoSucc(1, 700);
-            elevatingArm.rotateArm(0.7, Constants.ARM_IN_TICKS, false);
-            //elevatingArm.rotationalArm.setPower(0.1);
             telemetry.addData("checkpoint", 1);
             telemetry.update();
             foundationMover.lockFoundation();
@@ -88,22 +87,20 @@ public class BlueLoadFar extends LinearOpMode {
                 // finessed
             }
 
-            AutonomousTasks.parallelDriveAndArm(1,26,270,0.5, Constants.ARM_IN_TICKS_2, telemetry);
-            //driveTrain.driveDistance(0.7, 18, 270, false);
+            AutonomousTasks.parallelDriveAndArm(0.7,26,270,0.7, Constants.ARM_IN_TICKS_2, telemetry);
 
             timer.reset();
-            while (timer.milliseconds() < 2000) {
-                driveTrain.driveTank(-1, 0);
+            while (timer.milliseconds() < 3000) {
+                driveTrain.driveTank(-0.7, 0);
             }
-
-            driveTrain.driveDistance(1, 15, 90, false);
+            driveTrain.driveDistance(0.7, 15, 90, false);
             foundationMover.unlockFoundation();
             timer.reset();
             while (timer.milliseconds() < 250) {
                 // finessed
             }
-            driveTrain.driveMecanum(1, 315, 2100);
-            driveTrain.driveDistance(1, 15, 270, false);
+            driveTrain.driveMecanum(0.7, 315, 2100);
+            driveTrain.driveDistance(0.7, 15, 270, false);
         }
     }
 }

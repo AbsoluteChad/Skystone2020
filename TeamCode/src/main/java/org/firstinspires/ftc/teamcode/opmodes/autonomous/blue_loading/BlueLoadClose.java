@@ -55,24 +55,25 @@ public class BlueLoadClose extends LinearOpMode {
             driveTrain.driveDistance(1, 23, 90, false);
             telemetry.addData("skystone pos", skystonePos);
             telemetry.update();
-            if (skystonePos == 'L') {
-                driveTrain.driveDistance(0.7, 2 * Constants.BLOCK_WIDTH, 0, false);
-                disToFoundation = Constants.STRAFE_DIS_TO_FOUNDATION + Constants.BLOCK_WIDTH ;
+            if (skystonePos == 'R') {
+                driveTrain.driveDistance(0.7, 2, 0, false);
+                disToFoundation = Constants.STRAFE_DIS_TO_FOUNDATION +  Constants.BLOCK_WIDTH -5;
             } else if (skystonePos == 'M') {
-                driveTrain.driveDistance(0.7, Constants.BLOCK_WIDTH, 0, false);
-                disToFoundation = Constants.STRAFE_DIS_TO_FOUNDATION;
-            } else if (skystonePos == 'R' || skystonePos == 'N') {
-                disToFoundation = Constants.STRAFE_DIS_TO_FOUNDATION - Constants.BLOCK_WIDTH ;
+                driveTrain.driveDistance(0.7, Constants.BLOCK_WIDTH, 180, false);
+                disToFoundation = Constants.STRAFE_DIS_TO_FOUNDATION - 5;
+            } else if (skystonePos == 'L' || skystonePos == 'N') {
+                driveTrain.driveDistance(0.7, 2 * Constants.BLOCK_WIDTH, 180, false);
+                disToFoundation = Constants.STRAFE_DIS_TO_FOUNDATION -  Constants.BLOCK_WIDTH -5;
             }
 
             elevatingArm.rotateArm(-0.7, Constants.ARM_OUT_TICKS, false, telemetry);
-            gripper.autoSucc(-1, 700);
+            gripper.autoSucc(-1, 1200);
 
             //AutonomousTasks.parallelDriveAndArm(.8,disToFoundation,0,.7,2800,telemetry);
             elevatingArm.rotateArm(0.7, Constants.ARM_IN_TICKS, false);
 
             driveTrain.driveDistance(1, disToFoundation,180, false);
-            AutonomousTasks.parallelDriveAndArm(0.7,15,90,-0.7, Constants.ARM_OUT_TICKS_2 + 200, telemetry);
+            AutonomousTasks.parallelDriveAndArm(0.7,14,90,-0.7, Constants.ARM_OUT_TICKS_2 + 200, telemetry);
             //driveTrain.driveDistance(1, 14, 90, false);
             //elevatingArm.rotateArm(0.7, -2400, false);
             gripper.autoSucc(1, 1000);
