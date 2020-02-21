@@ -135,7 +135,7 @@ public class ElevatingArm extends Subsystem {
             PIDController.drive(setPoint, ENCODER_TOLERANCE, reverse);
         } else {
             rotationalArm.setPower(power);
-            while (rotationalArm.isBusy()) {
+            while (rotationalArm.isBusy() && !killArm(power)) {
                 if (killArm(power)) {
                     rotationalArm.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
                     return;
@@ -173,12 +173,12 @@ public class ElevatingArm extends Subsystem {
             rotationalArm.setPower(0);
         }
     }
-    
+
     /**
-     * Should go back until the arm reaches the digital touch and doesn't bounce off of it 
+     * Should go back until the arm reaches the digital touch and doesn't bounce off of it
      * @param power the power at which the arm should go back
      */
-    public void rotateArmBack(double power) {
+    public void rotateArm(double power) {
         for (int i = 0; i < 3; i++) {
             while (!killArm(power)) {
                 rotationalArm.setPower(power);
@@ -186,6 +186,7 @@ public class ElevatingArm extends Subsystem {
             rotationalArm.setPower(0);
         }
     }
+
 
     public void rotateArmTest(double power, Telemetry telemetry) {
         driveRotationalArm(power);
