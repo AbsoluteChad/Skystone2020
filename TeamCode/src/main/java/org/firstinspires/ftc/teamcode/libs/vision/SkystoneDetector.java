@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode.libs.vision;
 
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
+import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.opencv.core.Core;
 import org.opencv.core.Mat;
 import org.opencv.core.MatOfPoint;
@@ -28,13 +29,13 @@ public class SkystoneDetector {
     private static float rectHeight = .6f/8f;
     private static float rectWidth = 1.5f/8f;
 
-    private static float xOffset = 0f/8f;//changing this moves the three rects and the three circles left or right, range : (-2, 2) not inclusive
+    private static float xOffset = -1f/8f;//-4f/8f;//changing this moves the three rects and the three circles left or right, range : (-2, 2) not inclusive
     private static float yOffset = 0f/8f;//changing this moves the three rects and circles up or down, range: (-4, 4) not inclusive
 
     //Position of rectangles on screen
     private static float[] leftRectPos = {2f/8f + xOffset, 4f/8f + yOffset}; //0 = col, 1 = row
     private static float[] middleRectPos = {4f/8f + xOffset, 4f/8f + yOffset};
-    private static float[] rightRectPos = {6f/8f + xOffset, 4f/8f + yOffset};
+    private static float[] rightRectPos = {5.5f/8f + xOffset, 4f/8f + yOffset};
 
     //Screen dimensions
     private final int rows = 640;
@@ -51,7 +52,29 @@ public class SkystoneDetector {
         //Start pipeline
         openCamera();
         setPipeline(new SkystonePipeline());
-        startStreaming(rows, cols, OpenCvCameraRotation.UPRIGHT);
+        startStreaming(rows, cols, OpenCvCameraRotation.SIDEWAYS_RIGHT);
+    }
+
+    public SkystoneDetector(HardwareMap hardwareMap, Telemetry telemetry) {
+        //Init phone camera
+        telemetry.addData("Status", "SkystoneDetector");
+        telemetry.update();
+
+        int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
+
+        telemetry.addData("Status", "Syke" + cameraMonitorViewId);
+        telemetry.update();
+
+        phoneCamera = OpenCvCameraFactory.getInstance().createInternalCamera(OpenCvInternalCamera.CameraDirection.BACK, cameraMonitorViewId);
+
+
+        telemetry.addData("Status", "ViewId");
+        telemetry.update();
+
+        //Start pipeline
+        openCamera();
+        setPipeline(new SkystonePipeline());
+        startStreaming(rows, cols, OpenCvCameraRotation.SIDEWAYS_RIGHT);
     }
 
     /**
@@ -60,14 +83,15 @@ public class SkystoneDetector {
      * 'N' if the skystone cannot properly be sensed.
      */
     public char getSkystonePosition() {
+        char skystonePosition = 'N';
         if (leftVal == 0) {
-            return 'L';
+            skystonePosition = 'L';
         } else if (middleVal == 0) {
-            return 'M';
+            skystonePosition = 'M';
         } else if (rightVal == 0) {
-            return 'R';
+            skystonePosition = 'R';
         }
-        return 'N';
+        return skystonePosition;
     }
 
     /**

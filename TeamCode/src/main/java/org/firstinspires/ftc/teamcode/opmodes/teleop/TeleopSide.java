@@ -21,6 +21,7 @@ package org.firstinspires.ftc.teamcode.opmodes.teleop;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.RobotMain;
@@ -39,19 +40,20 @@ import org.firstinspires.ftc.teamcode.subsystems.ElevatingArm;
  * or add a @Disabled annotation to prevent this OpMode from being added to the Driver Station
  */
 @TeleOp(name="TeleopSide", group="Iterative Opmode")
-@Disabled
+//@Disabled
 public class TeleopSide extends OpMode {
 
     private RobotMain robot;
     private ElevatingArm elevatingArm;
     private DriveTrain driveTrain;
-
+    private Servo dispenser;
 
     @Override
     public void init() {
         robot = new RobotMain(hardwareMap, gamepad1, gamepad2, "blue", true);
         driveTrain = (DriveTrain) RobotMain.driveTrain;
         elevatingArm = (ElevatingArm) RobotMain.elevatingArm;
+        dispenser = hardwareMap.get(Servo.class, "gripperRotation");
     }
 
     /*
@@ -66,6 +68,12 @@ public class TeleopSide extends OpMode {
      */
     @Override
     public void start() {
+        if(gamepad2.a){
+            dispenser.setPosition(1);
+        } else if (gamepad2.b) {
+            dispenser.setPosition(-1);
+        }
+
         /*if (gamepad1.dpad_down) {
             elevatingArm.rotateArmTest(-0.1, telemetry);
         } else if (gamepad1.dpad_up) {
@@ -95,6 +103,13 @@ public class TeleopSide extends OpMode {
      */
     @Override
     public void loop() {
+
+        if(gamepad2.a){
+            dispenser.setPosition(1);
+        }else if (gamepad2.b) {
+            dispenser.setPosition(-1);
+        }
+
         telemetry.addData("is pressed?", elevatingArm.inSensor.getState());
         if (elevatingArm.inSensor.getState() == true) {
             telemetry.addData("is pressed?", "not pressed");

@@ -7,7 +7,7 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.RobotMain;
-import org.firstinspires.ftc.teamcode.libs.drive.PIDController;
+import org.firstinspires.ftc.teamcode.lib.drive.PIDController;
 
 import com.qualcomm.robotcore.hardware.PIDCoefficients;
 import com.qualcomm.robotcore.util.ElapsedTime;
@@ -24,7 +24,7 @@ public class ElevatingArm extends Subsystem {
     public DcMotor rotationalArm;
 
     //Declare sensors
-    //public TouchSensor outSensor;
+    public DigitalChannel outSensor;
     public DigitalChannel inSensor;
 
     //Declare constants
@@ -36,7 +36,7 @@ public class ElevatingArm extends Subsystem {
     private ElapsedTime timer = new ElapsedTime();
 
     private PIDCoefficients PIDcoeffs;
-    private org.firstinspires.ftc.teamcode.libs.drive.PIDController PIDController;
+    private PIDController PIDController;
 
     //Private constructor
 
@@ -53,6 +53,9 @@ public class ElevatingArm extends Subsystem {
 
         inSensor = hardwareMap.get(DigitalChannel.class, "inSensor");
         inSensor.setMode(DigitalChannel.Mode.INPUT);
+
+        outSensor = hardwareMap.get(DigitalChannel.class, "outSensor");
+        outSensor.setMode(DigitalChannel.Mode.INPUT);
 
         //Set arm motors to break
         elevatorArmLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
@@ -71,8 +74,6 @@ public class ElevatingArm extends Subsystem {
         PIDcoeffs = new PIDCoefficients(0, 0, 0);
         DcMotor[] motors = {rotationalArm};
         PIDController = new PIDController(motors, PIDcoeffs, 50);
-
-
     }
 
     @Override
@@ -118,7 +119,6 @@ public class ElevatingArm extends Subsystem {
     }
 
     public void rotateArm(double power, double ticks, boolean PID) {
-
         rotationalArm.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         int setPoint = (int) ticks;
 
@@ -135,7 +135,7 @@ public class ElevatingArm extends Subsystem {
             PIDController.drive(setPoint, ENCODER_TOLERANCE, reverse);
         } else {
             rotationalArm.setPower(power);
-            while (rotationalArm.isBusy()) {
+            while (rotationalArm.isBusy() && !killArm(power)) {
                 if (killArm(power)) {
                     rotationalArm.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
                     return;
@@ -145,7 +145,6 @@ public class ElevatingArm extends Subsystem {
     }
 
     public void rotateArm(double power, double ticks, boolean PID, Telemetry telemetry) {
-
         rotationalArm.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         int setPoint = (int) ticks;
 
@@ -175,6 +174,20 @@ public class ElevatingArm extends Subsystem {
         }
     }
 
+    /**
+     * Should go back until the arm reaches the digital touch and doesn't bounce off of it
+     * @param power the power at which the arm should go back
+     */
+    public void rotateArm(double power) {
+        for (int i = 0; i < 3; i++) {
+            while (!killArm(power)) {
+                rotationalArm.setPower(power);
+            }
+            rotationalArm.setPower(0);
+        }
+    }
+
+
     public void rotateArmTest(double power, Telemetry telemetry) {
         driveRotationalArm(power);
         telemetry.addData("left", rotationalArm.getCurrentPosition());
@@ -198,13 +211,12 @@ public class ElevatingArm extends Subsystem {
         if (inSensor.getState() == false && power > 0) {
             rotationalArm.setPower(0);
             return true;
-        } else {
-            return false;
-
-        } /*else if (outSensor.isPressed() && power < 0) {
+        } else if (outSensor.getState() == false && power < 0) {
             rotationalArm.setPower(0);
             return true;
-        } */
+        } else {
+            return false;
+        }
 
     }
 

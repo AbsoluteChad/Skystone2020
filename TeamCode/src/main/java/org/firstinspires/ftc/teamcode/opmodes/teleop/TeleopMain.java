@@ -22,6 +22,7 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 
 import org.firstinspires.ftc.teamcode.RobotMain;
+import org.firstinspires.ftc.teamcode.subsystems.Capstone;
 import org.firstinspires.ftc.teamcode.subsystems.Subsystem;
 
 /**
@@ -39,10 +40,12 @@ import org.firstinspires.ftc.teamcode.subsystems.Subsystem;
 public class TeleopMain extends OpMode {
 
     private RobotMain robot;
-
+    private Capstone capstone;
     @Override
     public void init() {
         robot = new RobotMain(hardwareMap, gamepad1, gamepad2, "blue", false);
+        capstone = (Capstone) RobotMain.capstone;
+        capstone.reset();
     }
 
     @Override

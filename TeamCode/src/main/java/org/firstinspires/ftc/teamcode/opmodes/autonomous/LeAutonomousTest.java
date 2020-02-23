@@ -39,6 +39,7 @@ import org.firstinspires.ftc.teamcode.subsystems.*;
  * or add a @Disabled annotation to prevent this OpMode from being added to the Driver Station
  */
 @Autonomous(name="LeAutonomousTest", group="Linear Opmode")
+@Disabled
 public class LeAutonomousTest extends LinearOpMode {
 
     private RobotMain robot;
@@ -63,20 +64,17 @@ public class LeAutonomousTest extends LinearOpMode {
         foundationMover.unlockFoundation();
         timer.reset();
 
-        while (timer.seconds() < 5) {
-            skystonePos = robot.skystoneDetector.getSkystonePosition();
-        }
-
         telemetry.addData("Status", "Initialized");
         telemetry.update();
 
         waitForStart();
 
         if (opModeIsActive()) {
+            char skystonePos = robot.skystonePosition;
             if (skystonePos == 'L') {
+                driveTrain.driveDistance(0.3, 2 * BLOCK_WIDTH, 180, false);
+            } else if (skystonePos == 'M') {
                 driveTrain.driveDistance(0.3, BLOCK_WIDTH, 180, false);
-            } else if (skystonePos == 'R') {
-                driveTrain.driveDistance(0.3, BLOCK_WIDTH, 0, false);
             }
             driveTrain.driveDistance(0.3, 22, 90, false);
         }

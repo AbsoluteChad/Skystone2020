@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode.opmodes.autonomous.blue_loading;
 
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
@@ -12,8 +13,10 @@ import org.firstinspires.ftc.teamcode.subsystems.DriveTrain;
 import org.firstinspires.ftc.teamcode.subsystems.ElevatingArm;
 import org.firstinspires.ftc.teamcode.subsystems.FoundationMover;
 import org.firstinspires.ftc.teamcode.subsystems.Gripper;
+import org.firstinspires.ftc.teamcode.subsystems.Capstone;
 
 @Autonomous(name="BlueLoadClose", group="Linear Opmode")
+//@Disabled
 public class BlueLoadClose extends LinearOpMode {
 
     private RobotMain robot;
@@ -21,6 +24,8 @@ public class BlueLoadClose extends LinearOpMode {
     private FoundationMover foundationMover;
     private ElevatingArm elevatingArm;
     private Gripper gripper;
+    private Capstone capstone;
+
 
 
     @Override
@@ -30,6 +35,11 @@ public class BlueLoadClose extends LinearOpMode {
         foundationMover = (FoundationMover) RobotMain.foundationMover;
         elevatingArm = (ElevatingArm) RobotMain.elevatingArm;
         gripper = (Gripper) RobotMain.gripper;
+        capstone = (Capstone) RobotMain.capstone;
+
+        capstone.reset();
+
+        telemetry.addData("Skystone position", robot.skystonePosition);
 
         foundationMover.unlockFoundation();
 
@@ -41,57 +51,59 @@ public class BlueLoadClose extends LinearOpMode {
         waitForStart();
 
         if (opModeIsActive()) {
-            //Go forward and sense
-            //elevatingArm.rotationalArm.setPower(-0.2);
-            driveTrain.driveDistance(1, 20, 90, false);
-            //elevatingArm.rotationalArm.setPower(0);
-
-            String skystonePosition = "center"; /* robot.tensorFlow.getSkystonePosition(true, 5000);
-            telemetry.addData("Position", skystonePosition);
+            char skystonePos = robot.skystonePosition;
+            driveTrain.driveDistance(1, 23, 90, false);
+            telemetry.addData("skystone pos", skystonePos);
             telemetry.update();
-            driveTrain.driveDistance(1, 11, 90, false); */
-
-            if ((skystonePosition.equals("center")) || (skystonePosition.equals("nope"))){
-                disToFoundation = Constants.STRAFE_DIS_TO_FOUNDATION;
-            } else if (skystonePosition.equals("left")){
-                disToFoundation = Constants.STRAFE_DIS_TO_FOUNDATION + Constants.BLOCK_WIDTH;
-                driveTrain.driveDistance(1, Constants.BLOCK_WIDTH, 180, false);
-            } else if (skystonePosition.equals("right")) {
-                disToFoundation = Constants.STRAFE_DIS_TO_FOUNDATION - Constants.BLOCK_WIDTH ;
-                driveTrain.driveDistance(1, Constants.BLOCK_WIDTH, 0, false);
+            if (skystonePos == 'R') {
+                driveTrain.driveDistance(0.7, 2, 0, false);
+                disToFoundation = Constants.STRAFE_DIS_TO_FOUNDATION +  Constants.BLOCK_WIDTH -5;
+            } else if (skystonePos == 'M') {
+                driveTrain.driveDistance(0.7, Constants.BLOCK_WIDTH, 180, false);
+                disToFoundation = Constants.STRAFE_DIS_TO_FOUNDATION - 5;
+            } else if (skystonePos == 'L' || skystonePos == 'N') {
+                driveTrain.driveDistance(0.7, 2 * Constants.BLOCK_WIDTH, 180, false);
+                disToFoundation = Constants.STRAFE_DIS_TO_FOUNDATION -  Constants.BLOCK_WIDTH -5;
             }
 
-            elevatingArm.rotateArm(-0.7, Constants.ARM_OUT_TICKS, false);
-            gripper.autoSucc(-1, 1000);
-            telemetry.addData("checkpoint", 1);
-            telemetry.update();
-            //AutonomousTasks.parallelDriveAndArm(.8,disToFoundation,0,.7,2800,telemetry);
-            elevatingArm.rotateArm(0.4, Constants.ARM_IN_TICKS, false);
+            elevatingArm.rotateArm(-0.7, Constants.ARM_OUT_TICKS, false, telemetry);
+            gripper.autoSucc(-1, 1200);
 
+            //AutonomousTasks.parallelDriveAndArm(.8,disToFoundation,0,.7,2800,telemetry);
+            elevatingArm.rotateArm(0.7, Constants.ARM_IN_TICKS, false);
 
             driveTrain.driveDistance(1, disToFoundation,180, false);
-
-
-            AutonomousTasks.parallelDriveAndArm(0.7,18,90,-.7, Constants.ARM_OUT_TICKS_2, telemetry);
-            gripper.autoSucc(1, Constants.SUCC_UNSCUC);
+            AutonomousTasks.parallelDriveAndArm(0.7,14,90,-0.7, Constants.ARM_OUT_TICKS_2 + 200, telemetry);
+            //driveTrain.driveDistance(1, 14, 90, false);
+            //elevatingArm.rotateArm(0.7, -2400, false);
+            gripper.autoSucc(1, 1000);
 
             telemetry.addData("checkpoint", 1);
             telemetry.update();
             foundationMover.lockFoundation();
-
-            AutonomousTasks.parallelDriveAndArm(1,19,270,.7, Constants.ARM_IN_TICKS_2, telemetry);
             ElapsedTime timer = new ElapsedTime();
             timer.reset();
-            while (timer.milliseconds() < 2700) {
-                driveTrain.driveTank(-1, 0);
-            }
-            driveTrain.driveDistance(1, 20, 90, false);
-            foundationMover.unlockFoundation();
-            timer.reset();
-            while (timer.milliseconds() < 500) {
+            while (timer.milliseconds() < 250) {
                 // finessed
             }
-            driveTrain.driveDistance(1, 42, 270, false);
+
+            AutonomousTasks.parallelDriveAndArm(0.7,26,270,0.7, Constants.ARM_IN_TICKS_2, telemetry);
+
+            timer.reset();
+            while (timer.milliseconds() < 3000) {
+                driveTrain.driveTank(-0.7, 0);
+            }
+            driveTrain.driveDistance(0.7, 15, 90, false);
+            foundationMover.unlockFoundation();
+            timer.reset();
+            while (timer.milliseconds() < 250) {
+                // finessed
+            }
+            driveTrain.driveDistance(1, 40, 270, false);
+            timer.reset();
+            while (timer.milliseconds() < 1000) {
+                // finessed
+            }
 
         }
     }
