@@ -13,8 +13,8 @@ import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackable;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackableDefaultListener;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
-import org.firstinspires.ftc.teamcode.lib.drive.Pose2d;
-import org.firstinspires.ftc.teamcode.lib.vision.SkystoneDetector;
+import org.firstinspires.ftc.teamcode.libs.drive.Pose2d;
+import org.firstinspires.ftc.teamcode.libs.vision.SkystoneDetector;
 import org.firstinspires.ftc.teamcode.subsystems.*;
 
 import com.qualcomm.robotcore.hardware.DcMotor;
